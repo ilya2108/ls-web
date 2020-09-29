@@ -21,7 +21,7 @@ import {
 import { fetcher } from "../../modules/api";
 import { formatDate } from '../../utils/date-utils'
 import { useDispatch } from 'react-redux';
-import { passwordChangeSuccess, passwordChangeFailure } from '../../modules/core/redux/user/user.actions';
+import { passwordChangeSuccess, passwordChangeError } from '../../modules/core/redux/banner/banner.actions';
 
 type Props = {
   userId: string,
@@ -48,8 +48,8 @@ export default function UserPage(props: Props) {
   } = userData || [];
 
   const dispatch = useDispatch();
-  const announcePasswordChangeSuccess = () => dispatch(passwordChangeSuccess());
-  const announcePasswordChangeFailure = () => dispatch(passwordChangeFailure());
+  const dispatchPasswordChangeSuccess = () => dispatch(passwordChangeSuccess());
+  const dispatchPasswordChangeError = (e) => dispatch(passwordChangeError(e));
 
   // handle password-edit event
   const [editPasswordState, setEditPasswordState] = useState(false);
@@ -73,10 +73,10 @@ export default function UserPage(props: Props) {
           }
         }
       
-      }`).catch((e) => announcePasswordChangeFailure());
+      }`).catch((e) => dispatchPasswordChangeError(e));
 
       setEditPasswordState(!editPasswordState);
-      announcePasswordChangeSuccess();
+      dispatchPasswordChangeSuccess();
     }
 
     return err;
