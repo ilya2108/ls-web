@@ -6,8 +6,8 @@ import { Content, PageLayout, Main } from "@atlaskit/page-layout";
 import ContainerNavigation from "../components/ContainerNavigation/ContainerNavigation";
 import LSGlobalNavigation from "../components/LSGlobalNavigation/LSGlobalNavigation";
 import CustomBanner from "../components/CustomBanner/CustomBanner";
-import WarningIcon from "@atlaskit/icon/glyph/warning";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { closeBanner } from '../modules/core/redux/banner/banner.actions';
 interface ILayoutProps {
   children: React.ReactNode;
 }
@@ -17,18 +17,22 @@ const Padding = styled.div`
 `;
 
 const Layout = ({ children }: ILayoutProps) => {
-  const banner = useSelector((state) => state.user.banner);
-  return (
+  const { showBanner } = useSelector((state) => state.banner);
+  const dispatch = useDispatch();
+  const dispatchCloseBanner = () => dispatch(closeBanner());
+
+  (showBanner) ? setTimeout(() =>
+    dispatchCloseBanner(),1800) : null;
+
+  return(
     <Page>
       <NavigationProvider>
-        {banner ? (
-          <CustomBanner icon={<WarningIcon label="" />}>Hello</CustomBanner>
-        ) : null}
+          <CustomBanner/>
         <LayoutManager
           globalNavigation={LSGlobalNavigation}
           productNavigation={() => null}
           containerNavigation={ContainerNavigation}
-          topOffset={banner ? 52 : 0}
+          topOffset={(showBanner) ? 52 : 0}
         >
           <PageLayout>
             <Content>
@@ -40,7 +44,7 @@ const Layout = ({ children }: ILayoutProps) => {
         </LayoutManager>
       </NavigationProvider>
     </Page>
-  );
+)
 };
 
 export default Layout;

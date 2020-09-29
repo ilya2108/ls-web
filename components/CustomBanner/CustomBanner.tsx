@@ -1,22 +1,29 @@
-import React, { ReactComponentElement } from "react";
+import React from "react";
 import { Container, Text, IconWrapper, Icon } from "./CustomBanner.styles";
+import WarningIcon from "@atlaskit/icon/glyph/warning";
+import ErrorIcon from "@atlaskit/icon/glyph/error";
+import CheckIcon from '@atlaskit/icon/glyph/check';
+import { useSelector } from "react-redux";
 
-interface ICustomBannerProps {
-    children: string,
-    icon: React.ReactNode
-}
+const CustomBanner = () => {
+  const { showBanner, content, type } = useSelector((state) => state.banner);
 
-const CustomBanner = ({children, icon}) => (
-    <Container>
-        <IconWrapper>
-            <Icon>
-                {icon}
-            </Icon>
-        </IconWrapper>
-        <Text>
-            {children}
-        </Text>
+  return (
+    <Container visible={showBanner} type={type}>
+      <IconWrapper>
+        <Icon>
+          {type === "warning" ? (
+            <WarningIcon label="" />
+          ) : type === "error" ? (
+            <ErrorIcon label="" primaryColor="#ffffff" secondaryColor="#de350b"/>
+          ) : type === "success" ? (
+            <CheckIcon label="" />
+          ) : null}
+        </Icon>
+      </IconWrapper>
+      <Text>{content}</Text>
     </Container>
-);
+  );
+};
 
 export default CustomBanner;

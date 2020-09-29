@@ -1,7 +1,25 @@
 import styled from "styled-components";
 
+const warning = `
+  background-color: #ffab00;
+  color: #253858;
+  fill: #ffab00;
+`;
+
+const success = `
+  background-color: #00875A;
+  color: #ffffff;
+  fill: #00875A;
+`;
+
+const error = `
+  background-color: #de350b;
+  color: #ffffff;
+  fill: #de350b;
+`;
+
 export const Container = styled.div`
-  height: 52px;
+  height: ${(props) => (props.visible ? "52px" : "0px")};
   left: 0;
   position: fixed;
   top: 0;
@@ -10,9 +28,14 @@ export const Container = styled.div`
   overflow: hidden;
   transition: max-height 0.25s ease-in-out 0s;
 
-  background-color: rgb(255, 171, 0);
-  color: rgb(37, 56, 88);
-  fill: rgb(255, 171, 0);
+  ${(props) =>
+    props.type === "success"
+      ? success
+      : props.type === "warning"
+      ? warning
+      : props.type === "error"
+      ? error
+      : null}
   webkit-box-align: center;
   align-items: center;
   display: flex;
@@ -20,7 +43,7 @@ export const Container = styled.div`
   -webkit-box-pack: center;
   justify-content: center;
   text-align: center;
-  padding: 12px;
+  padding: ${(props) => (props.visible ? "12px" : "0px")};
   margin: auto;
   transition: color 0.25s ease-in-out 0s;
 `;
@@ -39,8 +62,6 @@ export const IconWrapper = styled.span`
   flex: 0 0 auto;
 `;
 export const Icon = styled.span`
-  color: currentcolor;
-  fill: inherit;
   display: inline-block;
   flex-shrink: 0;
   line-height: 1;
