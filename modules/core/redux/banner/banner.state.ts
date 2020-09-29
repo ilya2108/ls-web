@@ -1,6 +1,7 @@
 const INITIAL_STATE = {
-    banner: false,
-    passwordChange: null,
+    showBanner: false,
+    type: null,
+    content: null,
     error: null
 };
 

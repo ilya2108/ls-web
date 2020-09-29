@@ -7,8 +7,6 @@ import thunkMiddleware from 'redux-thunk'
 
 const middlewares = [thunkMiddleware];
 
-// const store = createStore(rootReducer, applyMiddleware(...middlewares));
-
 let store;
 
 function initStore(initialState) {

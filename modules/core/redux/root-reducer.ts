@@ -1,9 +1,8 @@
 import { combineReducers } from 'redux';
-
-import userReducer from './user/user.reducer';
+import bannerReducer from './banner/banner.reducer';
 
 const rootReducer = combineReducers({
-  user: userReducer,
+  banner: bannerReducer
 });
 
 export default rootReducer;
