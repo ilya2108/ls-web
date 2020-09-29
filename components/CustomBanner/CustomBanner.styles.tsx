@@ -36,7 +36,7 @@ export const Container = styled.div`
       : props.type === "error"
       ? error
       : null}
-  webkit-box-align: center;
+  box-align: center;
   align-items: center;
   display: flex;
   font-weight: 500;
