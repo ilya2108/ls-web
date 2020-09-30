@@ -7,7 +7,7 @@ import ContainerNavigation from "../components/ContainerNavigation/ContainerNavi
 import LSGlobalNavigation from "../components/LSGlobalNavigation/LSGlobalNavigation";
 import CustomBanner from "../components/CustomBanner/CustomBanner";
 import { useSelector, useDispatch } from "react-redux";
-import { closeBanner } from '../modules/core/redux/banner/banner.actions';
+import { closeBanner } from "../modules/core/redux/banner/banner.actions";
 interface ILayoutProps {
   children: React.ReactNode;
 }
@@ -21,18 +21,19 @@ const Layout = ({ children }: ILayoutProps) => {
   const dispatch = useDispatch();
   const dispatchCloseBanner = () => dispatch(closeBanner());
 
-  (showBanner) ? setTimeout(() =>
-    dispatchCloseBanner(),1800) : null;
+  const bannerTTL = 1800;
 
-  return(
+  showBanner ? setTimeout(() => dispatchCloseBanner(), bannerTTL) : null;
+
+  return (
     <Page>
       <NavigationProvider>
-          <CustomBanner/>
+        <CustomBanner />
         <LayoutManager
           globalNavigation={LSGlobalNavigation}
           productNavigation={() => null}
           containerNavigation={ContainerNavigation}
-          topOffset={(showBanner) ? 52 : 0}
+          topOffset={showBanner ? 52 : 0}
         >
           <PageLayout>
             <Content>
@@ -44,7 +45,7 @@ const Layout = ({ children }: ILayoutProps) => {
         </LayoutManager>
       </NavigationProvider>
     </Page>
-)
+  );
 };
 
 export default Layout;
