@@ -20,6 +20,9 @@ const error = `
 
 export const Container = styled.div`
   max-height: ${(props) => (props.visible ? "52px" : "0px")};
+  position: absolute;
+  right: 0;
+  top: 0;
   width: 100%;
 
   overflow: hidden;

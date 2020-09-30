@@ -15,24 +15,24 @@ const Padding = styled.div`
 `;
 
 const Layout = ({ children }: ILayoutProps) => (
-    <Page>
-      <NavigationProvider>
-        <LayoutManager
-          globalNavigation={LSGlobalNavigation}
-          productNavigation={() => null}
-          containerNavigation={ContainerNavigation}
-        >
-          <PageLayout>
-            <Content>
-              <Main>
-        <CustomBanner />
-                <Padding>{children}</Padding>
-              </Main>
-            </Content>
-          </PageLayout>
-        </LayoutManager>
-      </NavigationProvider>
-    </Page>
-  );
+  <Page>
+    <NavigationProvider>
+      <LayoutManager
+        globalNavigation={LSGlobalNavigation}
+        productNavigation={() => null}
+        containerNavigation={ContainerNavigation}
+      >
+        <PageLayout>
+          <Content>
+            <Main>
+              <CustomBanner />
+              <Padding>{children}</Padding>
+            </Main>
+          </Content>
+        </PageLayout>
+      </LayoutManager>
+    </NavigationProvider>
+  </Page>
+);
 
 export default Layout;
