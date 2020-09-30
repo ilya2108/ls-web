@@ -1,7 +1,6 @@
-import {useMemo} from 'react';
+import { useMemo } from 'react';
 import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from "redux-devtools-extension";
-import logger from 'redux-logger';
 import rootReducer from './root-reducer';
 import thunkMiddleware from 'redux-thunk'
 
@@ -9,24 +8,24 @@ const middlewares = [thunkMiddleware];
 
 let store;
 
-function initStore(initialState) {
-    return createStore(
+export const initializeStore = (preloadedState) => {
+    let _store = store ?? createStore(
         rootReducer,
-        initialState,
+        preloadedState,
         composeWithDevTools(applyMiddleware(...middlewares))
     )
-}
-
-export const initializeStore = (preloadedState) => {
-    let _store = store ?? initStore(preloadedState)
 
     // After navigating to a page with an initial Redux state, merge that state
     // with the current state in the store, and create a new store
     if (preloadedState && store) {
-        _store = initStore({
-            ...store.getState(),
-            ...preloadedState,
-        })
+        _store = createStore(
+            rootReducer,
+            {
+                ...store.getState(),
+                ...preloadedState,
+            },
+            composeWithDevTools(applyMiddleware(...middlewares))
+        )
         // Reset the current store
         store = undefined
     }
