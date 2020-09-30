@@ -19,10 +19,7 @@ const error = `
 `;
 
 export const Container = styled.div`
-  height: ${(props) => (props.visible ? "52px" : "0px")};
-  left: 0;
-  position: fixed;
-  top: 0;
+  max-height: ${(props) => (props.visible ? "52px" : "0px")};
   width: 100%;
 
   overflow: hidden;
@@ -45,7 +42,6 @@ export const Container = styled.div`
   text-align: center;
   padding: ${(props) => (props.visible ? "12px" : "0px")};
   margin: auto;
-  transition: color 0.25s ease-in-out 0s;
 `;
 export const Text = styled.span`
   text-overflow: ellipsis;
