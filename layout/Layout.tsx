@@ -14,6 +14,7 @@ const Padding = styled.div`
   padding: 40px;
 `;
 
+// TODO: make a grid
 const Layout = ({ children }: ILayoutProps) => (
   <Page>
     <NavigationProvider>

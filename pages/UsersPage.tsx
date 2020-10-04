@@ -14,6 +14,7 @@ import {
   ResultItemGroup,
   PersonResult,
 } from "@atlaskit/quick-search";
+import { Container } from "../pages-styles/UsersPage/UsersPage.styles";
 
 export default function UsersPage() {
   const router = useRouter();
@@ -134,7 +135,7 @@ export default function UsersPage() {
       {!error && !data ? (
         <HugeSpinner />
       ) : (
-        <section>
+        <Container>
           {/* <DynamicTable
             caption={null}
             head={tableHeadRow}
@@ -158,7 +159,7 @@ export default function UsersPage() {
               {userList(filterUsers())}
             </ResultItemGroup>
           </QuickSearch>
-        </section>
+        </Container>
       )}
     </Layout>
   );
