@@ -11,22 +11,19 @@ import HugeSpinner from "../components/HugeSpinner/HugeSpinner";
 import Textfield from "@atlaskit/textfield";
 import { SearchWrapper } from "../pages-styles/UsersPage/UsersPage.styles";
 import EditorSearchIcon from "@atlaskit/icon/glyph/editor/search";
+import ShortcutIcon from "@atlaskit/icon/glyph/shortcut";
+import Button from '@atlaskit/button';
 
 export default function UsersPage() {
   const [inputVal, setInputVal] = useState("");
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
   // TODO: figure out a way to render a loading state
-  // Similar to componentDidMount and componentDidUpdate:
-  // useEffect(() => {
-  //   setLoading(false);
-  // });
+  const [loading, setLoading] = useState(false);
 
   const handleSearchEvent = (event) => {
-    const {value} = event.target;
+    const { value } = event.target;
     const debounce = 250;
     setTimeout(() => setInputVal(value), debounce);
-  }
+  };
 
   const { data, error } = useSWR(
     gql`
@@ -50,7 +47,6 @@ export default function UsersPage() {
     fetcher
   );
 
-  // TODO: Loading.
   const users = data?.UserList?.results || [];
 
   // Generating user table header
@@ -94,9 +90,17 @@ export default function UsersPage() {
           key: parallels.results.id,
           content: parallels.results.id,
         },
+        {
+          content: (
+            <Button
+              iconAfter={<ShortcutIcon label="" />}
+              appearance="subtle-link"
+              href={`/users/${encodeURIComponent(id)}`}
+            />
+          ),
+        },
       ],
       key: id,
-      onClick: () => router.push(`/users/${encodeURIComponent(id)}`)
     })
   );
 
@@ -134,7 +138,7 @@ export default function UsersPage() {
             head={tableHeadRow}
             rows={tableRows}
             loadingSpinnerSize="large"
-            isLoading={loading}
+            isLoading={false}
             isFixedSize
             defaultSortKey="Name"
             defaultSortOrder="ASC"
