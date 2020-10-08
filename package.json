@@ -8,7 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@atlaskit/atlassian-navigation": "^0.11.4",
+    "@atlaskit/atlassian-navigation": "^0.11.5",
     "@atlaskit/banner": "^11.0.3",
     "@atlaskit/breadcrumbs": "^10.0.5",
     "@atlaskit/css-reset": "^6.0.1",
