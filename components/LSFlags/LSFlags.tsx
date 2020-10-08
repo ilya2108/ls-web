@@ -1,20 +1,21 @@
 import React, { ReactElement } from "react";
 import SuccessIcon from "@atlaskit/icon/glyph/check-circle";
 import ErrorIcon from "@atlaskit/icon/glyph/error";
-import { G400, R400 } from "@atlaskit/theme/colors";
+import WarningIcon from "@atlaskit/icon/glyph/warning";
+import { G400, R400, Y200 } from "@atlaskit/theme/colors";
 
 type action = {
-  content: string,
-  onClick: Function
-}
+  content: string;
+  onClick: Function;
+};
 
 type flagData = {
-  created: number,
-  appearance?: string,
-  description?: string,
-  icon: ReactElement,
-  title: string,
-  actions?: Array<action>
+  created: number;
+  appearance?: string;
+  description?: string;
+  icon: ReactElement;
+  title: string;
+  actions?: Array<action>;
 };
 
 export const PasswordChangeSuccessFlag = (dismissFlag: Function): flagData => ({
@@ -25,12 +26,15 @@ export const PasswordChangeSuccessFlag = (dismissFlag: Function): flagData => ({
   actions: [
     {
       content: "Thanks!",
-      onClick: dismissFlag
-    }
-  ]
+      onClick: dismissFlag,
+    },
+  ],
 });
 
-export const PasswordChangeErrorFlag = (e: any, dismissFlag: Function): flagData => ({
+export const PasswordChangeErrorFlag = (
+  e: any,
+  dismissFlag: Function
+): flagData => ({
   created: Date.now(),
   appearance: "error",
   icon: <ErrorIcon label="Error" secondaryColor={R400} />,
@@ -39,7 +43,17 @@ export const PasswordChangeErrorFlag = (e: any, dismissFlag: Function): flagData
   actions: [
     {
       content: "Ok",
-      onClick: dismissFlag
-    }
-  ]
+      onClick: dismissFlag,
+    },
+  ],
+});
+
+export const ConnectionIssuesFlag = (refresh: Function): flagData => ({
+  created: Date.now(),
+  appearance: "warning",
+  icon: <WarningIcon label="Warning" secondaryColor={Y200} />,
+  title: "Having trouble connecting…",
+  description:
+    "We’re running into some difficulties connecting to HQ right now.",
+  actions: [{ content: "Try again", onClick: refresh }],
 });
