@@ -5,7 +5,7 @@ import Page from "@atlaskit/page";
 import { Content, PageLayout, Main } from "@atlaskit/page-layout";
 import ContainerNavigation from "../components/ContainerNavigation/ContainerNavigation";
 import LSGlobalNavigation from "../components/LSGlobalNavigation/LSGlobalNavigation";
-import CustomBanner from "../components/CustomBanner/CustomBanner";
+import LSFlagGroup from "../components/LSFlagGroup/LSFlagGroup";
 interface ILayoutProps {
   children: React.ReactNode;
 }
@@ -16,6 +16,7 @@ const Padding = styled.div`
 
 const Layout = ({ children }: ILayoutProps) => (
   <Page>
+    <LSFlagGroup/>
     <NavigationProvider>
       <LayoutManager
         globalNavigation={LSGlobalNavigation}
@@ -25,7 +26,6 @@ const Layout = ({ children }: ILayoutProps) => (
         <PageLayout>
           <Content>
             <Main>
-              <CustomBanner />
               <Padding>{children}</Padding>
             </Main>
           </Content>

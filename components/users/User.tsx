@@ -19,18 +19,25 @@ import {
   ButtonCell,
 } from "../../pages-styles/UserPage/UserPage.styles";
 import { fetcher } from "../../modules/api";
-import { formatDate } from '../../utils/date-utils'
-import { useDispatch } from 'react-redux';
-import { passwordChangeSuccess, passwordChangeError } from '../../modules/core/redux/banner/banner.actions';
+import { formatDate } from "../../utils/date-utils";
+import { useDispatch } from "react-redux";
+import {
+  addFlag,
+  dismissFlag,
+} from "../../modules/core/redux/flag/flag.actions";
+import {
+  PasswordChangeSuccessFlag,
+  PasswordChangeErrorFlag,
+} from "../LSFlags/LSFlags";
 
 type Props = {
-  userId: string,
-  error: Error,
-  userData: any,
-}
+  userId: string;
+  error: Error;
+  userData: any;
+};
 
 export default function UserPage(props: Props) {
-  const { userId, error, userData } = props
+  const { userId, error, userData } = props;
 
   const {
     firstName,
@@ -48,8 +55,11 @@ export default function UserPage(props: Props) {
   } = userData || [];
 
   const dispatch = useDispatch();
-  const dispatchPasswordChangeSuccess = () => dispatch(passwordChangeSuccess());
-  const dispatchPasswordChangeError = (e) => dispatch(passwordChangeError(e));
+  const dispatchDismissFlag = () => dispatch(dismissFlag());
+  const dispatchPasswordChangeSuccess = () =>
+    dispatch(addFlag(PasswordChangeSuccessFlag(dispatchDismissFlag)));
+  const dispatchPasswordChangeError = (e) =>
+    dispatch(addFlag(PasswordChangeErrorFlag(e, dispatchDismissFlag)));
 
   // handle password-edit event
   const [editPasswordState, setEditPasswordState] = useState(false);

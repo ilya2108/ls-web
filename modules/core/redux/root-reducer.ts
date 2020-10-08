@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import bannerReducer from './banner/banner.reducer';
+import flagReducer from './flag/flag.reducer';
 
 const rootReducer = combineReducers({
-  banner: bannerReducer
+  flagGroup: flagReducer
 });
 
 export default rootReducer;
