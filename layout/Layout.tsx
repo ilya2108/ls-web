@@ -1,10 +1,6 @@
 import React from "react";
-import { LayoutManager, NavigationProvider } from "@atlaskit/navigation-next";
 import styled from "styled-components";
-import Page from "@atlaskit/page";
 import { Content, PageLayout, Main } from "@atlaskit/page-layout";
-import ContainerNavigation from "../components/ContainerNavigation/ContainerNavigation";
-import LSGlobalNavigation from "../components/LSGlobalNavigation/LSGlobalNavigation";
 import LSFlagGroup from "../components/LSFlagGroup/LSFlagGroup";
 import LSNavigation from "../components/LSNavigation/LSNavigation";
 interface ILayoutProps {
@@ -12,35 +8,21 @@ interface ILayoutProps {
 }
 
 const Padding = styled.div`
-  padding: 40px;
+  padding: 0 40px 0 40px;
 `;
 
 const Layout = ({ children }: ILayoutProps) => (
   <div>
     <LSFlagGroup />
-    <LSNavigation/>
+    <LSNavigation />
+    <PageLayout>
+      <Content>
+        <Main>
+          <Padding>{children}</Padding>
+        </Main>
+      </Content>
+    </PageLayout>
   </div>
 );
-
-// const Layout = ({ children }: ILayoutProps) => (
-//   <Page>
-//     <LSFlagGroup/>
-//     <NavigationProvider>
-//       <LayoutManager
-//         globalNavigation={LSGlobalNavigation}
-//         productNavigation={() => null}
-//         containerNavigation={ContainerNavigation}
-//       >
-//         <PageLayout>
-//           <Content>
-//             <Main>
-//               <Padding>{children}</Padding>
-//             </Main>
-//           </Content>
-//         </PageLayout>
-//       </LayoutManager>
-//     </NavigationProvider>
-//   </Page>
-// );
 
 export default Layout;
