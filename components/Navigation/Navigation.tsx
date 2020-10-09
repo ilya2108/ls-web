@@ -4,7 +4,7 @@ import {
   Help as AKHelp,
 } from "@atlaskit/atlassian-navigation";
 import PrimaryItems from "./PrimaryItems/PrimaryItems";
-import ProductHome from "./SecondaryItems/ProductHome";
+import ProductHome from "./PrimaryItems/ProductHome";
 import Profile from "./SecondaryItems/Profile";
 import Search from "./SecondaryItems/Search";
 import Settings from "./SecondaryItems/Settings";
