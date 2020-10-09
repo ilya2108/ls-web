@@ -17,6 +17,7 @@
     "@atlaskit/form": "^8.1.4",
     "@atlaskit/global-navigation": "^10.0.3",
     "@atlaskit/icon": "^21.0.3",
+    "@atlaskit/icon-object": "^6.0.5",
     "@atlaskit/logo": "^13.0.3",
     "@atlaskit/lozenge": "^10.0.4",
     "@atlaskit/navigation-next": "^9.0.5",

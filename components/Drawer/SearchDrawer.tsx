@@ -1,95 +1,89 @@
-// documentation
-// Drawer: https://atlaskit.atlassian.com/packages/design-system/drawer
-// Quick search: https://atlaskit.atlassian.com/packages/search/quick-search
-
-// TODO: Make search logic
-import React from "react";
+import { useState } from "react";
+import { default as AKDrawer } from "@atlaskit/drawer";
+import { useSelector, useDispatch } from "react-redux";
+import { closeSearchDrawer } from "../../modules/core/redux/drawer/drawer.actions";
 import {
-  ObjectResult,
-  ResultItemGroup,
   QuickSearch,
+  ObjectResult,
+  PersonResult,
+  ResultItemGroup,
 } from "@atlaskit/quick-search";
+import Page24Icon from "@atlaskit/icon-object/glyph/page/24";
+import Issue24Icon from "@atlaskit/icon-object/glyph/issue/24";
 
-import Avatar from "@atlaskit/avatar";
-import ContainerNavigation from "../ContainerNavigation/ContainerNavigation";
+const result = [
+  <ResultItemGroup title="Tasks" key="Tasks">
+    <ObjectResult
+      key="task1"
+      resultId="JRA-123"
+      name="Fix this and that"
+      objectKey="JRA-123"
+      avatar={<Page24Icon label="Task1" />}
+    />
+    <ObjectResult
+      key="task2"
+      resultId="JRA-124"
+      name="More stuff"
+      objectKey="JRA-124"
+      avatar={<Page24Icon label="Task2" />}
+    />
+  </ResultItemGroup>,
+  <ResultItemGroup title="Exams" key="Exams">
+    <ObjectResult
+      key="exam1"
+      resultId="Exam 1"
+      name="Exam 1"
+      objectKey="Exam 1"
+      avatar={<Issue24Icon label="Exam1" />}
+    />
+    <ObjectResult
+      key="exam2"
+      resultId="Exam 2"
+      name="Exam 2"
+      objectKey="Exam 2"
+      avatar={<Issue24Icon label="Exam2" />}
+    />
+  </ResultItemGroup>,
+  <ResultItemGroup title="Users" key="Users">
+    <PersonResult
+      resultId="User1"
+      mentionPrefix="#"
+      name="David Soundararaj"
+      presenceMessage="@dteen"
+    />
+    <PersonResult
+      resultId="User2"
+      mentionPrefix="#"
+      name="David Soundararaj"
+      presenceMessage="@dteen"
+    />
+  </ResultItemGroup>,
+];
 
-const defaultProps = {
-  resultId: "result_id",
+const SearchDrawer = () => {
+  const [searchInput, setSearchInput] = useState();
+  const { searchDrawer } = useSelector((state) => state.drawers);
+  const dispatch = useDispatch();
+  const dispatchCloseSearchDrawer = () => dispatch(closeSearchDrawer());
+
+  return (
+    <AKDrawer
+      onClose={dispatchCloseSearchDrawer}
+      isOpen={searchDrawer}
+      width="medium"
+    >
+      <QuickSearch
+        isLoading={false}
+        // @ts-ignore
+        onSearchInput={({ target }) => setSearchInput((value) => target.value)}
+        value={searchInput}
+      >
+        <div css={{marginLeft: "12px"}}>
+        {result}
+        </div>
+      </QuickSearch>
+    </AKDrawer>
+  );
 };
 
-const dummyAvatarComponent = (
-  <Avatar
-    src="https://hello.atlassian.net/secure/projectavatar?pid=30630"
-    appearance="square"
-  />
-);
-
-const avatarUrl = "https://hello.atlassian.net/secure/projectavatar?pid=30630";
-
-class SearchDrawer extends React.Component<
-  {},
-  { isLoading: boolean; query: string }
-> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: false,
-      query: "",
-    };
-  }
-
-  search(value?: string) {
-    this.setState({
-      query: value,
-    });
-  }
-
-  render() {
-    return (
-      <QuickSearch
-        isLoading={this.state.isLoading}
-        onSearchInput={({ target }: React.FormEvent<HTMLInputElement>) => {
-          // if (!target.value) {
-          //   return
-          // }
-
-
-          // @ts-ignore
-          this.search(target.value);
-        }}
-        value={this.state.query}
-      >
-        <ResultItemGroup title="xObject examples">
-          <ObjectResult
-            {...defaultProps}
-            name="quick-search is too hilarious!"
-            avatarUrl={avatarUrl}
-            objectKey="AK-007"
-            containerName="Search'n'Smarts"
-          />
-          <ObjectResult
-            {...defaultProps}
-            avatarUrl={avatarUrl}
-            name="Yeah, I cut my dev loop in half, but you'll never guess what happened next!"
-            containerName="Buzzfluence"
-          />
-          <ObjectResult
-            {...defaultProps}
-            avatarUrl={avatarUrl}
-            name="Prank schedule: April 2017"
-            containerName="The Scream Team"
-            isPrivate
-          />
-          <ObjectResult
-            {...defaultProps}
-            avatar={dummyAvatarComponent}
-            name="This one has an avatar component!"
-            containerName="The Scream Team"
-            isPrivate
-          />
-        </ResultItemGroup>
-      </QuickSearch>
-    );
-  }
-}
 export default SearchDrawer;

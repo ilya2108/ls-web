@@ -12,6 +12,8 @@ import { ProductHome } from "@atlaskit/atlassian-navigation";
 import ReposIcon from "@atlaskit/icon/glyph/bitbucket/repos";
 import PersonIcon from "@atlaskit/icon/glyph/person";
 import PrimaryItems from "./PrimaryItems";
+import { useDispatch } from "react-redux";
+import {openSearchDrawer} from "../../modules/core/redux/drawer/drawer.actions";
 
 const LSProductHome = () => (
   <ProductHome
@@ -30,14 +32,18 @@ const DefaultProfile = () => (
   />
 );
 
-const DefaultSearch = () => (
+const DefaultSearch = () => {
+  const dispatch = useDispatch();
+  const dispatchOpenSearchDrawer = () => dispatch(openSearchDrawer());
+  
+  return (
   <Search
-    onClick={() => console.log("Search button!")}
+    onClick={() => dispatchOpenSearchDrawer()}
     placeholder="Search..."
     tooltip="Search"
     label="Search"
   />
-);
+);}
 
 const DefaultSettings = () => <Settings tooltip="Product settings" />;
 

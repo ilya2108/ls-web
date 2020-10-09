@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { Content, PageLayout, Main } from "@atlaskit/page-layout";
 import LSFlagGroup from "../components/LSFlagGroup/LSFlagGroup";
 import LSNavigation from "../components/LSNavigation/LSNavigation";
+import SearchDrawer from "../components/Drawer/SearchDrawer"
+
 interface ILayoutProps {
   children: React.ReactNode;
 }
@@ -15,6 +17,7 @@ const Layout = ({ children }: ILayoutProps) => (
   <div>
     <LSFlagGroup />
     <LSNavigation />
+    <SearchDrawer />
     <PageLayout>
       <Content>
         <Main>
