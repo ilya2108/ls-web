@@ -9,7 +9,7 @@ const PrimaryItem = ({ href, children }) => {
 
   return (
     <PrimaryButton
-      isHighlighted={router.pathname === href}
+      isHighlighted={router.pathname.startsWith(href)}
       onClick={() => redirect(href)}
     >
       {children}
