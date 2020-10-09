@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Content, PageLayout, Main } from "@atlaskit/page-layout";
 import LSFlagGroup from "../components/LSFlagGroup/LSFlagGroup";
-import LSNavigation from "../components/LSNavigation/LSNavigation";
+import Navigation from "../components/Navigation/Navigation";
 import SearchDrawer from "../components/Drawer/SearchDrawer"
 
 interface ILayoutProps {
@@ -16,7 +16,7 @@ const Padding = styled.div`
 const Layout = ({ children }: ILayoutProps) => (
   <div>
     <LSFlagGroup />
-    <LSNavigation />
+    <Navigation />
     <SearchDrawer />
     <PageLayout>
       <Content>

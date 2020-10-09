@@ -1,22 +1,22 @@
 import {
   AtlassianNavigation,
   Create,
-  Help,
-  Profile,
-  Search,
-  Settings,
-  Notifications,
+  Help as AKHelp,
+  Profile as AKProfile,
+  Search as AKSearch,
+  Settings as AKSettings,
+  Notifications as AKNotifications,
+  ProductHome as AKProductHome
 } from "@atlaskit/atlassian-navigation";
 import { NotificationIndicator } from "@atlaskit/notification-indicator";
-import { ProductHome } from "@atlaskit/atlassian-navigation";
 import ReposIcon from "@atlaskit/icon/glyph/bitbucket/repos";
 import PersonIcon from "@atlaskit/icon/glyph/person";
 import PrimaryItems from "./PrimaryItems";
 import { useDispatch } from "react-redux";
 import {openSearchDrawer} from "../../modules/core/redux/drawer/drawer.actions";
 
-const LSProductHome = () => (
-  <ProductHome
+const ProductHome = () => (
+  <AKProductHome
     icon={ReposIcon}
     logo={ReposIcon}
     href="/"
@@ -24,20 +24,20 @@ const LSProductHome = () => (
   />
 );
 
-const DefaultProfile = () => (
-  <Profile
+const Profile = () => (
+  <AKProfile
     icon={<PersonIcon label="" />}
     onClick={() => console.log("Profile button!")}
     tooltip="Your profile and settings"
   />
 );
 
-const DefaultSearch = () => {
+const Search = () => {
   const dispatch = useDispatch();
   const dispatchOpenSearchDrawer = () => dispatch(openSearchDrawer());
   
   return (
-  <Search
+  <AKSearch
     onClick={() => dispatchOpenSearchDrawer()}
     placeholder="Search..."
     tooltip="Search"
@@ -45,7 +45,7 @@ const DefaultSearch = () => {
   />
 );}
 
-const DefaultSettings = () => <Settings tooltip="Product settings" />;
+const Settings = () => <AKSettings tooltip="Product settings" />;
 
 const NotificationsBadge = () => (
   <NotificationIndicator
@@ -54,19 +54,19 @@ const NotificationsBadge = () => (
   />
 );
 
-const LSNavigation = () => (
+const Navigation = () => (
   <AtlassianNavigation
     label="Navigation"
     primaryItems={PrimaryItems}
-    renderProductHome={LSProductHome}
-    renderHelp={() => <Help tooltip="Get help!" />}
-    renderProfile={DefaultProfile}
-    renderSearch={DefaultSearch}
-    renderSettings={DefaultSettings}
+    renderProductHome={ProductHome}
+    renderHelp={() => <AKHelp tooltip="Get help!" />}
+    renderProfile={Profile}
+    renderSearch={Search}
+    renderSettings={Settings}
     renderNotifications={() => (
-      <Notifications badge={NotificationsBadge} tooltip="Notifications" />
+      <AKNotifications badge={NotificationsBadge} tooltip="Notifications" />
     )}
   />
 );
 
-export default LSNavigation;
+export default Navigation;

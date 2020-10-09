@@ -5,10 +5,6 @@
 import React from "react";
 import GlobalNavigation from "@atlaskit/global-navigation";
 
-// components
-import SearchDrawer from "../Drawer/SearchDrawer";
-import CreateDrawer from "../Drawer/CreateDrawer";
-
 // ICONS
 import ReposIcon from "@atlaskit/icon/glyph/bitbucket/repos";
 
@@ -68,26 +64,6 @@ class LSGlobalNavigation extends React.Component<{}, ILSGlobalNavigationState> {
         productIcon={() => <ReposIcon label="" size="xlarge" />}
         productHref="#"
         productTooltip="Learnshell 2.0"
-        // Search Drawer
-        onSearchClick={this.openSearchDrawer}
-        searchTooltip="Search"
-        isSearchDrawerOpen={isSearchDrawerOpen}
-        searchDrawerContents={SearchDrawer}
-        onSearchDrawerClose={this.closeSearchDrawer}
-        onSearchDrawerCloseComplete={this.onCloseComplete}
-        shouldSearchDrawerUnmountOnExit={unmountOnExit}
-        isSearchDrawerFocusLockEnabled={isSearchDrawerFocusLockEnabled}
-        searchDrawerWidth="medium"
-        // Create Drawer
-        onCreateClick={this.openCreateDrawer}
-        createTooltip="Create"
-        isCreateDrawerOpen={isCreateDrawerOpen}
-        createDrawerContents={CreateDrawer}
-        onCreateDrawerClose={this.closeCreatehDrawer}
-        onCreateDrawerCloseComplete={this.onCloseComplete}
-        shouldCreateDrawerUnmountOnExist={unmountOnExit}
-        isCreateDrawerFocusLockEnabled={isCreateDrawerFocusLockEnabled}
-        createDrawerWidth="narrow"
       />
     );
   }
