@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Popup from "@atlaskit/popup";
-import {
-  PrimaryButton,
-  PrimaryDropdownButton,
-} from "@atlaskit/atlassian-navigation";
+import { PrimaryDropdownButton } from "@atlaskit/atlassian-navigation";
+import { MenuGroup, Section, ButtonItem, LinkItem } from "@atlaskit/menu";
 
 const PrimaryItemDropdown = (props) => {
   const router = useRouter();
@@ -19,17 +17,23 @@ const PrimaryItemDropdown = (props) => {
       isOpen={isOpen}
       onClose={() => setIsOpen((state) => !state)}
       placement="bottom-start"
-      content={() =>
-        items.map(({ link, text, action }, id) => (
-          <PrimaryButton
-            key={id}
-            isHighlighted={router.pathname === link}
-            onClick={link ? () => redirect(link) : action}
-          >
-            {text}
-          </PrimaryButton>
-        ))
-      }
+      content={() => {
+        return (
+          <MenuGroup>
+            <Section>
+              {items.map(({ link, text, action }, id) => (
+                <ButtonItem
+                  key={id}
+                  isSelected={router.pathname === link}
+                  onClick={link ? () => redirect(link) : action}
+                >
+                  {text}
+                </ButtonItem>
+              ))}
+            </Section>
+          </MenuGroup>
+        );
+      }}
       trigger={(triggerProps) => (
         <PrimaryDropdownButton
           isHighlighted={router.pathname === path}
