@@ -11,6 +11,8 @@ const PrimaryItemDropdown = (props) => {
   const { items, title, path } = props.dropdownItems;
 
   const redirect = (link) => router.push(link);
+  const shouldHighlight = (stringToCompare) =>
+    router.pathname.toLocaleLowerCase().includes(stringToCompare.toLowerCase());
 
   return (
     <Popup
@@ -24,7 +26,7 @@ const PrimaryItemDropdown = (props) => {
               {items.map(({ link, text, action }, id) => (
                 <ButtonItem
                   key={id}
-                  isSelected={router.pathname === link}
+                  isSelected={link ? shouldHighlight(link) : false}
                   onClick={link ? () => redirect(link) : action}
                 >
                   {text}
@@ -36,7 +38,7 @@ const PrimaryItemDropdown = (props) => {
       }}
       trigger={(triggerProps) => (
         <PrimaryDropdownButton
-          isHighlighted={router.pathname === path}
+          isHighlighted={shouldHighlight(title)}
           {...triggerProps}
           isSelected={isOpen}
           onClick={() => setIsOpen((state) => !state)}

@@ -6,10 +6,12 @@ const PrimaryItem = ({ href, children }) => {
   const router = useRouter();
 
   const redirect = (link) => router.push(link);
+  const shouldHighlight = (stringToCompare) =>
+    router.pathname.toLocaleLowerCase().includes(stringToCompare.toLowerCase());
 
   return (
     <PrimaryButton
-      isHighlighted={router.pathname.startsWith(href)}
+      isHighlighted={shouldHighlight(children)}
       onClick={() => redirect(href)}
     >
       {children}
