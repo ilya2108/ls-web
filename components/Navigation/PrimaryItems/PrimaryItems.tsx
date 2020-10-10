@@ -1,17 +1,16 @@
-import PrimaryItemDropdown from "./PrimaryItemDropdown";
+import PrimaryItemDropdown, {dropdownItemsType} from "./PrimaryItemDropdown";
 import PrimaryItem from "./PrimaryItem";
 
 const TasksDropdown = () => {
-  const dropdownItems = {
+  const dropdownItems: dropdownItemsType = {
     title: "Tasks",
-    path: "/TasksPage",
     items: [
       {
-        text: "Create Task",
+        label: "Create Task",
         action: () => console.log("Create Task!"),
       },
       {
-        text: "Show Tasks",
+        label: "Show Tasks",
         link: "/TasksPage",
       },
     ],
@@ -20,20 +19,19 @@ const TasksDropdown = () => {
 };
 
 const ExamsDropdown = () => {
-  const dropdownItems = {
+  const dropdownItems: dropdownItemsType = {
     title: "Exams",
-    path: "/ExamsPage",
     items: [
       {
-        text: "Start Exam!",
+        label: "Start Exam!",
         action: () => console.log("Start Exam!"),
       },
       {
-        text: "Create Exam",
+        label: "Create Exam",
         action: () => console.log("Create Exam!"),
       },
       {
-        text: "Show Exams",
+        label: "Show Exams",
         link: "/ExamsPage",
       },
     ],

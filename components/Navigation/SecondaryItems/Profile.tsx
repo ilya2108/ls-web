@@ -28,7 +28,7 @@ const Profile = () => {
         <AKProfile
           {...triggerProps}
           icon={<PersonIcon label="Person Icon" />}
-          onClick={() => setIsOpen((value) => !isOpen)}
+          onClick={() => setIsOpen(state => !state)}
           tooltip="Your profile and settings"
           isSelected={isOpen}
         />

@@ -2,7 +2,12 @@ import { PrimaryButton } from "@atlaskit/atlassian-navigation";
 
 import { useRouter } from "next/router";
 
-const PrimaryItem = ({ href, children }) => {
+interface IPrimaryItemProps {
+  href?: string,
+  children: string
+}
+
+const PrimaryItem = ({ href, children }: IPrimaryItemProps) => {
   const router = useRouter();
 
   const redirect = (link) => router.push(link);
