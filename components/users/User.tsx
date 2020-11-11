@@ -265,6 +265,21 @@ export default function UserPage(props: Props) {
                   </Button>
                 )}
               </ButtonCell>
+              <Button
+                  appearance="primary"
+                  spacing="compact"
+                  onClick={() => dispatchPasswordChangeError('Trosku delsi text, test, test')}
+                >
+                  Zobraz error
+                </Button>
+
+              <Button
+                  appearance="primary"
+                  spacing="compact"
+                  onClick={() => dispatchPasswordChangeSuccess()}
+                >
+                  Zobraz success
+                </Button>
             </Row>
           }
         </Table>

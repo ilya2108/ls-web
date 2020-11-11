@@ -120,3 +120,11 @@ a {
   display: flex;
   flex-direction: column;
 }
+
+.css-t01sf2-FlagGroup {
+  position: fixed;
+  top: 100px;
+  right: 500px;
+  bottom: unset !important;
+  left: unset !important;
+}
