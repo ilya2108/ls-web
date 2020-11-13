@@ -8,6 +8,7 @@ import { fetcher } from "../../modules/api";
 import Layout from "../../layout/Layout";
 import Loading from "../../components/Loading";
 import Error from "../../components/Error";
+import Button from "@atlaskit/button";
 
 
 
@@ -112,7 +113,7 @@ export default function Parallel() {
       return `${exam.id}` === chosenExamId
     })
     if (chosenExamDetail?.hasStarted) {
-      setStatus('Cannot add studens, exam has started.')
+      setStatus('Cannot add students, exam has started.')
       return
     }
     if (chosenExamDetail?.enrollmentCompleted) {
@@ -140,6 +141,7 @@ export default function Parallel() {
     Promise.all(jobs)
       .then(() => {
         setStatus('All students were added, you can Complete enrollment.')
+        window.location.pathname = `/exams/edit/${chosenExamId}`
       })
       .catch((e) => {
         setStatus('There were some errors')
@@ -236,13 +238,27 @@ export default function Parallel() {
           <br />
           <br />
           <select ref={selectRef} defaultValue={availableExams[0].id}>
-            {availableExams.map((exam) => {
-              return <option value={exam.id}>{exam.name}</option>
-            })}
+            {availableExams
+              .sort((e1, e2) => {
+                if (e1.name > e2.name) {
+                  return -1
+                }
+
+                if (e2.name > e1.name) {
+                  return 1
+                }
+
+                return 0
+              })
+              .map((exam) => {
+                return <option value={exam.id}>{exam.name}</option>
+              })
+            }
           </select>
-          <button className="butt" onClick={handleExamStudentAdd}>Add selected students to this Exam</button>
-          <button className="butt" onClick={handleExamComplete}>Complete enrollment</button>
-          <button className="butt" onClick={handleExamStart}>Start exam</button>
+          <br />
+          <Button appearance="primary" onClick={handleExamStudentAdd}>Add selected students to this Exam</Button>
+          {/* <button className="butt" onClick={handleExamComplete}>Complete enrollment</button>
+          <button className="butt" onClick={handleExamStart}>Start exam</button> */}
           <br />
           <br />
           <br />
@@ -250,6 +266,10 @@ export default function Parallel() {
           <div className="status">
             {status}
           </div>
+          <br />
+          <br />
+          <br />
+          <a href="/exams/admin/list">See all exams</a>
           <br />
         </div>
       }

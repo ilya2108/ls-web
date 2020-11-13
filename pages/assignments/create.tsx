@@ -54,14 +54,16 @@ export default function CreateAssignment({ assignment, owner, userId }: Props = 
   }
 
   const handleTestCaseRemove = (indexToRemove: number) => {
-    updateTestCases(testCases.reduce((cases, testCase, i) => {
+    const nextTestCases = testCases.reduce((cases, testCase, i) => {
       if (indexToRemove !== i) {
         cases.push(testCase)
         return cases
       }
 
       return cases
-    }, []))
+    }, [])
+
+    updateTestCases(nextTestCases)
   }
 
   const handleTestcaseNameChange = (index: number, e: ChangeEvent<HTMLInputElement>) => {
@@ -144,6 +146,36 @@ export default function CreateAssignment({ assignment, owner, userId }: Props = 
     }, []))
   }
 
+  const handleTest = () => {
+    console.log("Initiating assignment test", solution, testCases)
+
+    fetcher(gql`mutation testass {
+      AssignmentTest(data: { id: ${assignment.id} }) {
+        job {
+          id
+        }
+      }
+    }
+    `)
+    .then((response) => {
+      const jobId = response.AssignmentTest?.job?.id
+      if (!jobId) {
+        dispatch(assignmentCreatedFlag('error', `Failed to prepare assignment test`))
+        return
+      }
+
+      console.log("Assignment test prepared ", {jobId})
+      dispatch(assignmentCreatedFlag('success', `Assignment test prepared, redirecting`))
+
+      window.location.pathname = `/assignments/test/${jobId}`
+    })
+    .catch((error) => {
+      dispatch(assignmentCreatedFlag('error', `Failed to prepare assignment test`))
+      console.error(error)
+    })
+
+  }
+
   const handleOwnershipChange = () => {
     fetcher(gql`mutation aco {
       AssignmentChangeOwner(data: {id: ${assignment.id}, ownerId: ${userId}}) {
@@ -187,11 +219,11 @@ export default function CreateAssignment({ assignment, owner, userId }: Props = 
 
     const mutation = assignment ? 'AssignmentUpdate': 'AssignmentCreate'
     const idpart = assignment ? `id: ${assignment.id}` : ''
-    const action = assignment ? 'create' : 'edit'
+    const action = assignment ? 'edit' : 'create'
 
     fetcher(gql`mutation submit {
       ${mutation}(data: {
-        id: ${assignment.id || null}
+        ${idpart},
         courseId: 1,
         templateId: 1,
         name: "${name}",
@@ -213,6 +245,9 @@ export default function CreateAssignment({ assignment, owner, userId }: Props = 
 
       console.log("Created assignment", {assignmentTemplateId})
       dispatch(assignmentCreatedFlag('success', `Assignment ${action} successful`))
+      setTimeout(() => {
+        window.location.href = `/assignments/edit/${assignmentTemplateId}`
+      }, 1000)
     })
     .catch((error) => {
       dispatch(assignmentCreatedFlag('error', `Failed to ${action} assignment`))
@@ -266,7 +301,6 @@ export default function CreateAssignment({ assignment, owner, userId }: Props = 
         <>
           <Button
             appearance="primary"
-            spacing="compact"
             href={`${process.env.BACKEND_ROOT_URI}/admin/assignment/assignment/${assignment.id}/change/`}
             target="_blank"
           >
@@ -302,29 +336,29 @@ export default function CreateAssignment({ assignment, owner, userId }: Props = 
             <div key={`testcase-${i}`}>
               <div>---- Test case {i+1} ------ <i className="hints-toggle-handle" onClick={() => handleTestCaseRemove(i)}>(remove) </i></div>
               <br />
-              <input placeholder="Name" className='testcase-name-input' defaultValue={testcase.name} onChange={(e) => handleTestcaseNameChange(i, e)} />
+              <input placeholder="Name" name={`testcase-name-input-${i}`} className='testcase-name-input' value={testcase.name} onChange={(e) => handleTestcaseNameChange(i, e)} />
               <div className="textarea-wrapper">
                 <textarea
                   className="textarea"
                   rows={15}
                   spellCheck="false"
                   placeholder="Lidl"
-                  defaultValue={testcase.lidl}
+                  value={testcase.lidl}
                   onChange={(e) => handleTestcaseLidlChange(i, e)}
                 />
               </div>
-              <input type="number" placeholder="Repetitions" defaultValue={testcase.num_repetitions} onChange={(e) => handleTestcaseRepetitionsChange(i, e)} /> Repetitions <br/>
-              <input type="number" placeholder="Score" defaultValue={testcase.score} onChange={(e) => handleTestcaseScoreChange(i, e)} /> Score <br/>
+              <input type="number" placeholder="Repetitions" value={testcase.num_repetitions} onChange={(e) => handleTestcaseRepetitionsChange(i, e)} /> Repetitions <br/>
+              <input type="number" placeholder="Score" value={testcase.score} onChange={(e) => handleTestcaseScoreChange(i, e)} /> Score <br/>
               <br />
               <br />
-              <input defaultChecked={testcase.check_stdout} type="checkbox" onClick={(e) => handleTestcaseCheckboxToggle(i, "check_stdout")} /> Check stdout <br /> 
-              <input defaultChecked={testcase.check_stderr} type="checkbox" onClick={(e) => handleTestcaseCheckboxToggle(i, "check_stderr")} /> Check stderr <br /> 
-              <input defaultChecked={testcase.check_files} type="checkbox" onClick={(e) => handleTestcaseCheckboxToggle(i, "check_files")} /> Check files <br /> 
-              <input defaultChecked={testcase.check_excessive_files} type="checkbox" onClick={(e) => handleTestcaseCheckboxToggle(i, "check_excessive_files")} /> Check excessive files <br /> 
-              <input defaultChecked={testcase.check_files_content} type="checkbox" onClick={(e) => handleTestcaseCheckboxToggle(i, "check_files_content")} /> Check file content <br /> 
-              <input defaultChecked={testcase.check_hardlinks} type="checkbox" onClick={(e) => handleTestcaseCheckboxToggle(i, "check_hardlinks")} /> Check hardlinks <br /> 
-              <input defaultChecked={testcase.check_return_code} type="checkbox" onClick={(e) => handleTestcaseCheckboxToggle(i, "check_return_code")} /> Check return code <br /> 
-              <input defaultChecked={testcase.check_permissions} type="checkbox" onClick={(e) => handleTestcaseCheckboxToggle(i, "check_permissions")} /> Check permissions <br /> 
+              <input checked={testcase.check_stdout} type="checkbox" onClick={(e) => handleTestcaseCheckboxToggle(i, "check_stdout")} /> Check stdout <br />
+              <input checked={testcase.check_stderr} type="checkbox" onClick={(e) => handleTestcaseCheckboxToggle(i, "check_stderr")} /> Check stderr <br />
+              <input checked={testcase.check_files} type="checkbox" onClick={(e) => handleTestcaseCheckboxToggle(i, "check_files")} /> Check files <br />
+              <input checked={testcase.check_excessive_files} type="checkbox" onClick={(e) => handleTestcaseCheckboxToggle(i, "check_excessive_files")} /> Check excessive files <br />
+              <input checked={testcase.check_files_content} type="checkbox" onClick={(e) => handleTestcaseCheckboxToggle(i, "check_files_content")} /> Check file content <br />
+              <input checked={testcase.check_hardlinks} type="checkbox" onClick={(e) => handleTestcaseCheckboxToggle(i, "check_hardlinks")} /> Check hardlinks <br />
+              <input checked={testcase.check_return_code} type="checkbox" onClick={(e) => handleTestcaseCheckboxToggle(i, "check_return_code")} /> Check return code <br />
+              <input checked={testcase.check_permissions} type="checkbox" onClick={(e) => handleTestcaseCheckboxToggle(i, "check_permissions")} /> Check permissions <br />
               <br />
               <br />
             </div>
@@ -343,8 +377,24 @@ export default function CreateAssignment({ assignment, owner, userId }: Props = 
         <i> (NOTE: (1) BI-PS1, (2) BIE-PS1, (3) BIK-PS1)</i> <br />
         <br />
       </div>
-      <br />      
-      <button onClick={handleSubmit}>{assignment ? 'Edit assignment' : 'Submit assignment draft'}</button>
+      <br />
+
+
+      <Button
+        appearance="primary"
+        onClick={handleSubmit}
+      >
+          {assignment ? 'Save assignment' : 'Submit assignment draft'}
+      </Button>
+      &nbsp;&nbsp;&nbsp;
+      {assignment &&
+        <Button
+          appearance="warning"
+          onClick={handleTest}
+        >
+          Test this
+        </Button>
+      }
     </Layout>
   )
 }

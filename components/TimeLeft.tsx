@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import dayjs, { unix } from 'dayjs'
+import dayjs, { unix } from 'dayjs'
 
 type Props = {
   timeLeft: number
