@@ -128,3 +128,12 @@ a {
   bottom: unset !important;
   left: unset !important;
 }
+
+.flag-container {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.flag-container--error {
+  color: red;
+}

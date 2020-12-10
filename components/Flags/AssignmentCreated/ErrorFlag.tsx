@@ -26,7 +26,15 @@ const AssignmentCreatedErrorFlag = (props: any) => {
     description: props.description
   };
 
-  return <AutoDismissFlag actions={Actions} {...Props} />;
+  if (props.description) {
+    console.log(props.description)
+  }
+
+  return (
+    <div className='flag-container flag-container--error' onClick={dispatchDismissFlag}>
+      {props.error}
+    </div>
+  )
 };
 
 export default AssignmentCreatedErrorFlag;

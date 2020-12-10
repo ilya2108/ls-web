@@ -25,7 +25,12 @@ const AssignmentCreatedMsgFlag = (props: any) => {
     },
   ];
 
-  return <AutoDismissFlag actions={Actions} {...Props} />;
+  // return <AutoDismissFlag actions={Actions} {...Props} />;
+  return (
+    <div className='flag-container' onClick={dispatchDismissFlag}>
+      {props.title}
+    </div>
+  )
 };
 
 export default AssignmentCreatedMsgFlag;

@@ -16,6 +16,10 @@ import AssignmentDescription from "../../components/AssignmentDescription";
 
 const POLL_CORRECTION_TIMEOUT = 5000
 
+const isTeacher = (generatedFor: string) => {
+  return ['zitnyjak', 'muzikar', 'cermada1', 'cernyvi2', 'soch', 'jancijak', 'barinkl', 'kaspaji3', 'trdlicka', 'horskyma7'].includes(generatedFor)
+}
+
 export default function Assignment() {
   const router = useRouter();
   const { assignmentId } = router.query;
@@ -26,25 +30,53 @@ export default function Assignment() {
   const [extraAttemptsHidden, updateExtraAttemptsHidden] = useState(true)
   const [queryId, updateQueryId] = useState(queryIdGenerator())
 
+  // const { data, error } = useSWR(
+  //   gql`query ${queryId} {
+  //     UserMyself {
+  //       assignments {
+  //         totalCount
+  //         results {
+  //           id
+  //           name
+  //           descriptionHtml
+  //           submissions {
+  //             results {
+  //               submissionData
+  //               correction {
+  //                 id
+  //                 score
+  //                 createdAt
+  //                 data
+  //               }
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }`,
+  //   fetcher
+  // )
+
   const { data, error } = useSWR(
     gql`query ${queryId} {
-      UserMyself {
-        assignments {
-          totalCount
+      GeneratedAssignmentDetail(id: ${assignmentId}) {
+        id
+        name
+        student {
+          username
+        }
+        assignment {
+          id
+        }
+        descriptionHtml
+        submissions {
           results {
-            id
-            name
-            descriptionHtml
-            submissions {
-              results {
-                submissionData
-                correction {
-                  id
-                  score
-                  createdAt
-                  data
-                }
-              }
+            submissionData
+            correction {
+              id
+              score
+              createdAt
+              data
             }
           }
         }
@@ -59,9 +91,10 @@ export default function Assignment() {
     updateQueryId(queryIdGenerator())
   }
 
-  const assignment = data?.UserMyself?.assignments?.results?.find((a) => {
-    return `${a.id}` === assignmentId
-  })
+  const assignment = data?.GeneratedAssignmentDetail
+  // const assignment = data?.UserMyself?.assignments?.results?.find((a) => {
+  //   return `${a.id}` === assignmentId
+  // })
 
   if (!assignment) {
     return <Loading />
@@ -178,6 +211,13 @@ export default function Assignment() {
         onClick={handleReload}
         appearance="primary"
       >reload</Button>
+      &nbsp;&nbsp;&nbsp;
+      {isTeacher(assignment.student.username) && assignment.assignment.id&&
+        <Button
+          href={`/assignments/edit/${assignment.assignment.id}`}
+          appearance="warning"
+        >go back</Button>
+      }
       {(corrections.length || loadingCorrection) &&
         <SubmissionAttempts
           toggledHint={toggledHint}
