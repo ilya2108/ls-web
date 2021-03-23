@@ -4,9 +4,11 @@ import GetColours, {
   ChartContainer,
   Title,
 } from "../../../pages-styles/UserPage/UserPage.styles";
+import Tooltip from "../Tooltip";
 
 type Props = {
   title: string;
+  description?: string;
   data: {
     datasets: any;
     label: any;
@@ -17,7 +19,7 @@ export default function LineChart(props: Props) {
   return (
     <ChartContainer>
       <Title>{props.title}</Title>
-      <img src={"info.svg"} alt={"info"} style={{ width: 20 }} />
+      {props.description && <Tooltip description={props.description} />}
       <Line
         data={{
           labels: props.data.label,

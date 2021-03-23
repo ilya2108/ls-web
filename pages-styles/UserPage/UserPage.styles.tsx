@@ -173,3 +173,21 @@ export default function GetColours(colour: string, range: number, i = -1) {
 
   return i === -1 ? res : res[i];
 }
+
+export const InfoTooltip = styled.span`
+  ${({ hovered }) =>
+    !hovered &&
+    `visibility: hidden;`
+  }
+  
+  border-radius: 6px;
+  padding: 5px 0;
+  width: 180px;
+  background-color: #4d4d4d;
+  color: white;
+  text-align: center;
+  position: absolute;
+  z-index: 1;
+  top: -5px;
+  left: 105%;
+`;

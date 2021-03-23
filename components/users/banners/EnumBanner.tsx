@@ -1,8 +1,10 @@
 import React from "react";
 import { ChartContainer } from "../../../pages-styles/UserPage/UserPage.styles";
+import Tooltip from "../Tooltip";
 
 type Props = {
   title: string;
+  description?: string;
   data: any;
 };
 
@@ -11,7 +13,7 @@ export default function EnumBanner(props: Props) {
     // TODO
     <ChartContainer>
       <span style={{ fontSize: 19, fontWeight: 500 }}>{props.title}</span>
-      <img src={"info.svg"} alt={"info"} style={{ width: 20 }} />
+        {props.description && <Tooltip description={props.description} />}
     </ChartContainer>
   );
 }

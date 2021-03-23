@@ -27,9 +27,11 @@ export default function StudentsDashboard(props: Props) {
           datasets: [[12, 19, 30, 55, 201, 37]],
           label: ["A", "B", "C", "D", "E", "F"],
         }}
+        description={"Chart shows final grades of last course students with similar score in the same time"}
       />
       <BarChart
         title={"Students' Score Histogram"}
+        description={"Histogram of students score"}
         data={{
           datasets: [
             [
@@ -113,6 +115,7 @@ export default function StudentsDashboard(props: Props) {
       />
       <LineChart
         title={"History of Median"}
+        description={"Chart shows history of median of all students score and compares it to my score"}
         data={{
           datasets: [
             [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
@@ -137,6 +140,7 @@ export default function StudentsDashboard(props: Props) {
       />
       <LineChart
         title={"History of Percentil"}
+        description={"Chart shows history of my percentil"}
         data={{
           datasets: [[14, 35, 66, 54, 68, 73, 72, 65, 71, 78, 81, 82, 85]],
           label: [
