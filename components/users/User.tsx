@@ -35,8 +35,8 @@ import {
   passwordChangeSuccessFlag,
 } from "../../modules/core/redux/flag/flag.actions";
 import UserSubmissionsSection from "./UserSubmissionsSection";
-import StudentsDashboard from "./StudentsDashboard";
-import TeachersDashboard from "./TeachersDashboard";
+import StudentsDashboard from "../Dashboards/StudentsDashboard";
+import TeachersDashboard from "../Dashboards/TeachersDashboard";
 
 type Props = {
   userId: string;
