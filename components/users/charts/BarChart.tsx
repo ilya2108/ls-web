@@ -11,6 +11,7 @@ type Props = {
   data: {
     datasets: any;
     label: any;
+    datasetNames: any
   };
 };
 
@@ -23,7 +24,7 @@ export default function BarChart(props: Props) {
         data={{
           labels: props.data.label,
           datasets: props.data.datasets.map((set, index) => ({
-            label: "TODO",
+            label: props.data.datasetNames[index],
             data: set,
             backgroundColor: GetColours(
               "#004da3",

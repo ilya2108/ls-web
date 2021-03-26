@@ -36,6 +36,7 @@ import {
 } from "../../modules/core/redux/flag/flag.actions";
 import UserSubmissionsSection from "./UserSubmissionsSection";
 import StudentsDashboard from "./StudentsDashboard";
+import TeachersDashboard from "./TeachersDashboard";
 
 type Props = {
   userId: string;
@@ -302,7 +303,8 @@ export default function UserPage(props: Props) {
           {active == "Assignments" && !profile && (
             <UserSubmissionsSection userData={userData} />
           )}
-          {active == "Dashboard" && <StudentsDashboard userData={userData} />}
+          {active == "Dashboard" && !isStaff && <StudentsDashboard userData={userData} />}
+          {active == "Dashboard" && profile && isStaff && <TeachersDashboard userData={userData} />}
         </TabContent>
       )}
     </Layout>

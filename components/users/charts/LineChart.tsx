@@ -12,6 +12,7 @@ type Props = {
   data: {
     datasets: any;
     label: any;
+    datasetNames: any;
   };
 };
 
@@ -24,7 +25,7 @@ export default function LineChart(props: Props) {
         data={{
           labels: props.data.label,
           datasets: props.data.datasets.map((set, index) => ({
-            label: "dd",
+            label: props.data.datasetNames[index],
             fill: false,
             borderColor: GetColours(
               "#004da3",

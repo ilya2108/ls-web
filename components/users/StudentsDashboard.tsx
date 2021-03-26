@@ -7,19 +7,23 @@ import {
 import InfoBanner from "./banners/InfoBanner";
 import LineChart from "./charts/LineChart";
 import EnumBanner from "./banners/EnumBanner";
+import {calculateSemesterScore} from "../../utils/score-utils";
+import React from "react";
 
 type Props = {
   userData: any;
 };
 
 export default function StudentsDashboard(props: Props) {
+    const score = calculateSemesterScore(props.userData.assignments);
+
   return (
     <Dashboard>
       <InfoBannersContainer>
-        <InfoBanner text={"Score:"} value={"14"} />
-        <InfoBanner text={"Percentil:"} value={"85"} />
-        <InfoBanner text={"Median:"} value={"8"} />
-        <InfoBanner text={"Grade:"} value={"F"} />
+        <InfoBanner text={"Score:"} value={score} />
+        <InfoBanner text={"Percentil:"} value={"hardcoded"} />
+        <InfoBanner text={"Median:"} value={"hardcoded"} />
+        <InfoBanner text={"Grade:"} value={"hardcoded"} />
       </InfoBannersContainer>
       <PieChart
         title={"Last year's students result"}
@@ -111,6 +115,7 @@ export default function StudentsDashboard(props: Props) {
             "85",
             "91",
           ],
+          datasetNames: [""]
         }}
       />
       <LineChart
@@ -136,6 +141,7 @@ export default function StudentsDashboard(props: Props) {
             "week 12",
             "week 13",
           ],
+          datasetNames: ["My score", "Students overall median"]
         }}
       />
       <LineChart
@@ -158,9 +164,21 @@ export default function StudentsDashboard(props: Props) {
             "week 12",
             "week 13",
           ],
+          datasetNames: ["Percentil history"]
         }}
       />
-      <EnumBanner title={"Least successful assignment"} data={{}} />
+      <EnumBanner title={"Least successful assignment"}
+        data={{
+          headers: ["Assignment name", "My Score", "Percentil", "Median"],
+          rows: [
+              ["awk1", 0, 10, 4],
+              ["awk2", 2, 15, 4],
+              ["sed DU", 1, 23, 4],
+              ["grep", 0, 30, 4],
+              ["grep DU", 2, 37, 4]
+          ]
+        }}
+      />
     </Dashboard>
   );
 }
