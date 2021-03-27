@@ -178,6 +178,8 @@ export default function StudentsDashboard(props: Props) {
               ["grep DU", 2, 37, 4]
           ]
         }}
+        defaultSortKey={"Percentil"}
+        defaultSortOrder={"ASC"}
       />
     </Dashboard>
   );

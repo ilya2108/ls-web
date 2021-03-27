@@ -102,7 +102,9 @@ export const Dashboard = styled.div`
 `;
 
 export const ChartContainer = styled.div`
-  width: 500px;
+  ${({ normalWidth }) =>
+      !normalWidth &&
+      ` width: 500px; `}
   background: #f4f5f7;
   border-radius: 10px;
   padding: 10px;

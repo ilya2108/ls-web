@@ -2,6 +2,8 @@ import {Dashboard, InfoBannersContainer} from "../../pages-styles/UserPage/UserP
 import InfoBanner from "./banners/InfoBanner";
 import React from "react";
 import BarChart from "./charts/BarChart";
+import LineChart from "./charts/LineChart";
+import EnumBanner from "./banners/EnumBanner";
 
 
 type Props = {
@@ -10,6 +12,7 @@ type Props = {
 
 export default function TeachersDashboard(props: Props) {
     return (
+        <>
         <Dashboard>
             <InfoBannersContainer>
                 <InfoBanner text={"Median:"} value={"hardcoded"} />
@@ -101,6 +104,69 @@ export default function TeachersDashboard(props: Props) {
                     datasetNames: [""]
                 }}
             />
+            <LineChart
+                title={"History of Median"}
+                description={"Chart shows history of median of students score and compares it to last year's data"}
+                data={{
+                    datasets: [
+                        [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
+                        [12, 56, 89, 57, 47, 69, 69, 48, 37, 63, 59, 67, 88],
+                        [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
+                    ],
+                    label: [
+                        "week 1",
+                        "week 2",
+                        "week 3",
+                        "week 4",
+                        "week 5",
+                        "week 6",
+                        "week 7",
+                        "week 8",
+                        "week 9",
+                        "week 10",
+                        "week 11",
+                        "week 12",
+                        "week 13",
+                    ],
+                    datasetNames: ["Median", "Students overall median", "Last year overall median"]
+                }}
+                />
+                <EnumBanner title={"Least successful assignment"}
+                            data={{
+                                headers: ["Assignment name", "Median", "Median percentage", "Max possible Score"],
+                                rows: [
+                                    ["awk1", 0, 10, 4],
+                                    ["awk2", 2, 15, 4],
+                                    ["sed DU", 1, 23, 4],
+                                    ["grep", 0, 30, 4],
+                                    ["grep DU", 2, 37, 4],
+                                    ["awk1", 0, 10, 4],
+                                    ["awk2", 2, 15, 4],
+                                    ["sed DU", 1, 23, 4],
+                                    ["grep", 0, 30, 4],
+                                    ["grep DU", 2, 37, 4],
+                                    ["awk1", 0, 10, 4],
+                                    ["awk2", 2, 15, 4],
+                                    ["sed DU", 1, 23, 4],
+                                    ["grep", 0, 30, 4],
+                                    ["grep DU", 2, 37, 4],
+                                ]
+                            }}
+                            defaultSortKey={"Median percentage"}
+                            defaultSortOrder={"ASC"}
+                />
         </Dashboard>
+
+            {props.userData.isSuperuser && (
+                <>
+                    <h3>Teacher's Performance</h3>
+                    <Dashboard>
+                    </Dashboard>
+                    <h3>Student's Dashboard Settings</h3>
+                </>
+            )
+            }
+
+    </>
     )
 }
