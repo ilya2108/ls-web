@@ -1,9 +1,10 @@
 import {Dashboard, InfoBannersContainer} from "../../pages-styles/UserPage/UserPage.styles";
 import InfoBanner from "./banners/InfoBanner";
-import React from "react";
+import React, {useState} from "react";
 import BarChart from "./charts/BarChart";
 import LineChart from "./charts/LineChart";
 import EnumBanner from "./banners/EnumBanner";
+import Select from "@atlaskit/select";
 
 
 type Props = {
@@ -11,13 +12,70 @@ type Props = {
 }
 
 export default function TeachersDashboard(props: Props) {
+
+    const [filter, setFilter] = useState('All students');
+    const parallels=["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8"];   // todo fetch parallels which teacher teaches, supersuer can see all of them
+    const assignments=["awk", "sed", "grep"];                           // todo fetch
+    const [data, setData] = useState(                                   // todo fetch
+        {'All students': {
+            median: "all data",
+            maxScore: "all data",
+            minScore: "all data",
+        }})
+
+    const fetchData = (value) => {
+
+        // fetch data if not cached already
+        if (!data.hasOwnProperty(value)) {
+            // TODO fetch data and add to variable 'data'
+            data[value] = {
+                median: "parallel " + value + " data",
+                maxScore: "parallel " + value + " data",
+                minScore: "parallel " + value + " data",
+            }
+            setData(data);
+        }
+
+        setFilter(value);
+    }
+
     return (
         <>
-        <Dashboard>
+            <div style={{display: "flex", justifyContent: "center"}}>
+                <span style={{width: "50%"}}>
+            <Select
+                className="single-select"
+                classNamePrefix="react-select"
+                onChange={value => fetchData(value.value)}
+                options={[
+                    {
+                        options: [
+                            {label: 'All students', value: 'All students'}
+                        ],
+                    },
+                    {
+                        label: 'Parallels',
+                        options: parallels.map((parallel) => (
+                            {label: parallel, value: "p:--" + parallel}
+                        ))
+                    },
+                    {
+                        label: 'Assignments',
+                        options: assignments.map((assignment) => (
+                            {label: assignment, value: "a:--" + assignment}
+                        ))
+                    }
+                ]}
+                placeholder="Filter students"
+            />
+            </span>
+            </div>
+        <Dashboard style={{paddingTop: "25px"}}>
             <InfoBannersContainer>
-                <InfoBanner text={"Median:"} value={"hardcoded"} />
-                <InfoBanner text={"Max Score:"} value={"hardcoded"} />
-                <InfoBanner text={"Min Score:"} value={"hardcoded"} />
+                <InfoBanner text={"Median:"} value={data[filter].median} />
+                <InfoBanner text={"Max Score:"} value={data[filter].maxScore} />
+                <InfoBanner text={"Min Score:"} value={data[filter].minScore} />
+                <InfoBanner text={"number of students:"} value={data[filter].minScore} />
             </InfoBannersContainer>
             <BarChart
                 title={"Students' Score Histogram"}
@@ -131,30 +189,27 @@ export default function TeachersDashboard(props: Props) {
                     datasetNames: ["Median", "Students overall median", "Last year overall median"]
                 }}
                 />
-                <EnumBanner title={"Least successful assignment"}
-                            data={{
-                                headers: ["Assignment name", "Median", "Median percentage", "Max possible Score"],
-                                rows: [
-                                    ["awk1", 0, 10, 4],
-                                    ["awk2", 2, 15, 4],
-                                    ["sed DU", 1, 23, 4],
-                                    ["grep", 0, 30, 4],
-                                    ["grep DU", 2, 37, 4],
-                                    ["awk1", 0, 10, 4],
-                                    ["awk2", 2, 15, 4],
-                                    ["sed DU", 1, 23, 4],
-                                    ["grep", 0, 30, 4],
-                                    ["grep DU", 2, 37, 4],
-                                    ["awk1", 0, 10, 4],
-                                    ["awk2", 2, 15, 4],
-                                    ["sed DU", 1, 23, 4],
-                                    ["grep", 0, 30, 4],
-                                    ["grep DU", 2, 37, 4],
-                                ]
-                            }}
-                            defaultSortKey={"Median percentage"}
-                            defaultSortOrder={"ASC"}
-                />
+            {filter.substr(0, 4) !== "a:--" &&
+            <EnumBanner title={"Assignments"}
+                        data={{
+                            headers: ["Assignment name", "Median", "Median percentage", "Max possible Score"],
+                            rows: [
+                                ["awk1", 0, 10, 4],
+                                ["awk2", 2, 15, 4],
+                                ["sed DU", 1, 23, 4],
+                                ["grep", 0, 30, 4],
+                                ["grep DU", 2, 37, 4],
+                                ["awk1", 0, 10, 4],
+                                ["awk2", 2, 15, 4],
+                                ["sed DU", 1, 23, 4],
+                                ["grep", 0, 30, 4],
+                                ["grep DU", 2, 37, 4],
+                            ]
+                        }}
+                        defaultSortKey={"Median percentage"}
+                        defaultSortOrder={"ASC"}
+            />
+            }
         </Dashboard>
 
             {props.userData.isSuperuser && (

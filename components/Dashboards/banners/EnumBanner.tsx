@@ -60,16 +60,16 @@ export default function EnumBanner(props: Props) {
     const tableRows = filterAssignment(props.data.rows).map(
         (row, i) => {
             return {
-                cells: row.map((rowItem) => (
+                cells: row.map((rowItem,index) => (
                     {
-                        key: rowItem + i,
+                        key: rowItem + "-" + i + "-" + index,
                         content: (
                             <span>{rowItem}</span>
                         ),
                     }
                 )),
 
-                key: row[0] + i,
+                key: "id-row-" + i,
             }
         }
     );
