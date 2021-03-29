@@ -18,15 +18,34 @@ type Props = {
 export default function TeachersDashboard(props: Props) {
 
     const [filter, setFilter] = useState('All students');
-    const parallels= (props.userData.isSuperuser ?                      // todo fetch parallels which teacher teaches, supersuer can see all of them
+    const parallels= (props.userData.isSuperuser ?                      // todo fetch all parallels
         ["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8"] :
         props.userData.parallels.results.name);
     const assignments=["awk", "sed", "grep"];                           // todo fetch all assignments
-    const [data, setData] = useState(                                   // todo fetch data without filtering
+
+    // representative data - todo fetch data without filtering
+    const [data, setData] = useState(
         {'All students': {
             median: "all data",
             maxScore: "all data",
             minScore: "all data",
+            studentsNumber: 105,
+            overallMedianHistory: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
+            medianHistory: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
+            lastYearOverallMedian: [12, 56, 89, 57, 47, 69, 69, 48, 37, 63, 59, 67, 88],
+            scoreHistogram: {
+                label: ["0", "3", "5", "7", "7.5", "8", "11", "14", "19", "24", "25", "26", "27", "28", "28", "34",
+                    "35", "36", "39", "41", "42", "44", "45.5", "46", "48", "50", "51", "53", "54", "55", "68",
+                    "75", "77", "81", "85", "91"],
+                frequency: [12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55,
+                    201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37]
+            },
+            assignments: {
+                assignmentName: ["awk1", "awk2", "sed DU", "grep", "grep DU"],
+                assignmentMedianPercentage: [10, 15, 23, 30, 37],
+                assignmentMedian: [4, 3, 2, 4, 6],
+                assignmentMaxScore: [5, 4, 4, 6, 8]
+            }
         }})
 
     const createDefaultOptions = [
@@ -58,25 +77,79 @@ export default function TeachersDashboard(props: Props) {
     const fetchData = (value) => {
         // fetch data if not cached already
         if (!data.hasOwnProperty(value)) {
-            if(value.substr(0,4) === "p:--") {                  // todo fetch data - filtered parallel
+            // todo fetch data - filtered parallel with id
+            if(value.substr(0,4) === "p:--") {
                 data[value] = {
-                    median: "parallel " + value + " data",
-                    maxScore: "parallel " + value + " data",
-                    minScore: "parallel " + value + " data",
+                    median: "parallel data",
+                    maxScore: "parallel data",
+                    minScore: "parallel data",
+                    studentsNumber: 105,
+                    overallMedianHistory: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
+                    medianHistory: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
+                    lastYearOverallMedian: [12, 56, 89, 57, 47, 69, 69, 48, 37, 63, 59, 67, 88],
+                    scoreHistogram: {
+                        label: ["0", "3", "5", "7", "7.5", "8", "11", "14", "19", "24", "25", "26", "27", "28", "28", "34",
+                            "35", "36", "39", "41", "42", "44", "45.5", "46", "48", "50", "51", "53", "54", "55", "68",
+                            "75", "77", "81", "85", "91"],
+                        frequency: [12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55,
+                            201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37]
+                    },
+                    assignments: {
+                        assignmentName: ["awk1", "awk2", "sed DU", "grep", "grep DU"],
+                        assignmentMedianPercentage: [10, 15, 23, 30, 37],
+                        assignmentMedian: [4, 3, 2, 4, 6],
+                        assignmentMaxScore: [5, 4, 4, 6, 8]
+                    }
                 }
             }
-            else if (value.substr(0,4) === "a:--") {            // todo fetch data - filtered assignment
+            // todo fetch data - filtered assignment with id
+            else if (value.substr(0,4) === "a:--") {
                 data[value] = {
-                    median: "assignment " + value + " data",
-                    maxScore: "assignment " + value + " data",
-                    minScore: "assignment " + value + " data",
+                    median: "assignment data",
+                    maxScore: "assignment data",
+                    minScore: "assignment data",
+                    studentsNumber: 105,
+                    overallMedianHistory: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
+                    medianHistory: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
+                    lastYearOverallMedian: [12, 56, 89, 57, 47, 69, 69, 48, 37, 63, 59, 67, 88],
+                    scoreHistogram: {
+                        label: ["0", "3", "5", "7", "7.5", "8", "11", "14", "19", "24", "25", "26", "27", "28", "28", "34",
+                            "35", "36", "39", "41", "42", "44", "45.5", "46", "48", "50", "51", "53", "54", "55", "68",
+                            "75", "77", "81", "85", "91"],
+                        frequency: [12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55,
+                            201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37]
+                    },
+                    assignments: {
+                        assignmentName: ["awk1", "awk2", "sed DU", "grep", "grep DU"],
+                        assignmentMedianPercentage: [10, 15, 23, 30, 37],
+                        assignmentMedian: [4, 3, 2, 4, 6],
+                        assignmentMaxScore: [5, 4, 4, 6, 8]
+                    }
                 }
             }
-            else {                                                          // todo fetch data - filtered score
+            // todo fetch data - filtered score
+            else {
                 data[value] = {
-                    median: "custom " + value + " data",
-                    maxScore: "custom " + value + " data",
-                    minScore: "custom " + value + " data",
+                    median: "custom data",
+                    maxScore: "custom data",
+                    minScore: "custom data",
+                    studentsNumber: 105,
+                    overallMedianHistory: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
+                    medianHistory: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
+                    lastYearOverallMedian: [12, 56, 89, 57, 47, 69, 69, 48, 37, 63, 59, 67, 88],
+                    scoreHistogram: {
+                        label: ["0", "3", "5", "7", "7.5", "8", "11", "14", "19", "24", "25", "26", "27", "28", "28", "34",
+                            "35", "36", "39", "41", "42", "44", "45.5", "46", "48", "50", "51", "53", "54", "55", "68",
+                            "75", "77", "81", "85", "91"],
+                        frequency: [12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55,
+                            201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37]
+                    },
+                    assignments: {
+                        assignmentName: ["awk1", "awk2", "sed DU", "grep", "grep DU"],
+                        assignmentMedianPercentage: [10, 15, 23, 30, 37],
+                        assignmentMedian: [4, 3, 2, 4, 6],
+                        assignmentMaxScore: [5, 4, 4, 6, 8]
+                    }
                 }
             }
         }
@@ -140,93 +213,17 @@ export default function TeachersDashboard(props: Props) {
             </div>
         <Dashboard style={{paddingTop: "25px"}}>
             <InfoBannersContainer>
-                <InfoBanner text={"Median:"} value={data[filter].median} />
+                <InfoBanner text={"Median:"} value={data[filter].medianHistory[data[filter].medianHistory.length - 1]}/>
                 <InfoBanner text={"Max Score:"} value={data[filter].maxScore} />
                 <InfoBanner text={"Min Score:"} value={data[filter].minScore} />
-                <InfoBanner text={"# of students:"} value={data[filter].minScore} />
+                <InfoBanner text={"# of students:"} value={data[filter].studentsNumber} />
             </InfoBannersContainer>
             <BarChart
                 title={"Students' Score Histogram"}
                 description={"Histogram of students score"}
                 data={{
-                    datasets: [
-                        [
-                            12,
-                            19,
-                            30,
-                            55,
-                            201,
-                            37,
-                            12,
-                            19,
-                            30,
-                            55,
-                            201,
-                            37,
-                            12,
-                            19,
-                            30,
-                            55,
-                            201,
-                            37,
-                            12,
-                            19,
-                            30,
-                            55,
-                            201,
-                            37,
-                            12,
-                            19,
-                            30,
-                            55,
-                            201,
-                            37,
-                            12,
-                            19,
-                            30,
-                            55,
-                            201,
-                            37,
-                        ],
-                    ],
-                    label: [
-                        "0",
-                        "3",
-                        "5",
-                        "7",
-                        "7.5",
-                        "8",
-                        "11",
-                        "14",
-                        "19",
-                        "24",
-                        "25",
-                        "26",
-                        "27",
-                        "28",
-                        "28",
-                        "34",
-                        "35",
-                        "36",
-                        "39",
-                        "41",
-                        "42",
-                        "44",
-                        "45.5",
-                        "46",
-                        "48",
-                        "50",
-                        "51",
-                        "53",
-                        "54",
-                        "55",
-                        "68",
-                        "75",
-                        "77",
-                        "81",
-                        "85",
-                        "91",
-                    ],
+                    datasets: [data[filter].scoreHistogram.frequency],
+                    label: data[filter].scoreHistogram.label,
                     datasetNames: [""]
                 }}
             />
@@ -235,9 +232,9 @@ export default function TeachersDashboard(props: Props) {
                 description={"Chart shows history of median of students score and compares it to last year's data"}
                 data={{
                     datasets: [
-                        [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
-                        [12, 56, 89, 57, 47, 69, 69, 48, 37, 63, 59, 67, 88],
-                        [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
+                        data[filter].medianHistory,
+                        data[filter].overallMedianHistory,
+                        data[filter].lastYearOverallMedian,
                     ],
                     label: [
                         "week 1",
@@ -261,35 +258,24 @@ export default function TeachersDashboard(props: Props) {
             <EnumBanner title={"Assignments"}
                         data={{
                             headers: ["Assignment name", "Median", "Median percentage", "Max possible Score"],
-                            rows: [
-                                ["awk1", 0, 10, 4],
-                                ["awk2", 2, 15, 4],
-                                ["sed DU", 1, 23, 4],
-                                ["grep", 0, 30, 4],
-                                ["grep DU", 2, 37, 4],
-                                ["awk1", 0, 10, 4],
-                                ["awk2", 2, 15, 4],
-                                ["sed DU", 1, 23, 4],
-                                ["grep", 0, 30, 4],
-                                ["grep DU", 2, 37, 4],
-                            ]
+                            rows: data[filter].assignments.assignmentName.map((item, i) => [
+                                data[filter].assignments.assignmentName[i],
+                                data[filter].assignments.assignmentMedian[i],
+                                data[filter].assignments.assignmentMedianPercentage[i],
+                                data[filter].assignments.assignmentMaxScore[i]])
                         }}
                         defaultSortKey={"Median percentage"}
                         defaultSortOrder={"ASC"}
             />
             }
         </Dashboard>
-
-            {props.userData.isSuperuser && (
-                <>
-                    <h3>Teacher's Performance</h3>
-                    <Dashboard>
-                    </Dashboard>
-                    <h3>Student's Dashboard Settings</h3>
-                </>
-            )
-            }
-
+        <hr style={{ height: "2px", borderWidth: 0, color: "#42526e", backgroundColor: "#42526e", margin: "10px"}} />
+        <>
+            <h3>Teacher's Performance</h3>
+            <Dashboard>
+                {/*TODO*/}
+            </Dashboard>
+        </>
     </>
     )
 }
