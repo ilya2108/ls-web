@@ -127,11 +127,13 @@ export default function TeachersDashboard(props: Props) {
                     }
                 }
             }
-            // todo fetch data - filtered score
+            // custom data - todo fetch data
             else {
+                // filtering items
+                const [sgt, slt, pgt, plt, wgt, wlt] = value.substr(4).split("|")
                 data[value] = {
                     median: "custom data",
-                    maxScore: "custom data",
+                    maxScore: value.substr(4),
                     minScore: "custom data",
                     studentsNumber: 105,
                     overallMedianHistory: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
@@ -157,41 +159,42 @@ export default function TeachersDashboard(props: Props) {
     }
 
     const validateInput = (inputValue: string) => {
-        const input = inputValue.trim().split(' ');
+        const predicates = inputValue.toLowerCase().trim().split('and');
 
-        if (!(input.length >= 3 &&
-            input[0] === "SCORE" &&
-            (input[1] === "<" || input[1] === ">") &&
-            parseInt(input[2])
-        ))
-            return false;
+        const res = ["","","","","",""]
 
-        if (input.length === 3)
-            return true
+        predicates.map((predicate) => {
+            const pred = predicate.trim().split(' ');
+            if (pred.length !== 3) return;
 
-        if (!(input.length === 7 &&
-            input[3] === "AND" &&
-            input[4] === "SCORE" &&
-            (input[5] === "<" || input[5] === ">") &&
-            input[5] !== input[1] &&
-            parseInt(input[6])
-        ))
-            return false
-        return true;
+            if (pred[0] === 'score' && (pred[1] === '<' || pred[1] === '>') && parseInt(pred[2])){
+                res[pred[1] === '>' ? 0 : 1] = pred[2];
+            }
+            else if (pred[0] === 'percentile' && (pred[1] === '<' || pred[1] === '>') && parseInt(pred[2])) {
+                res[pred[1] === '>' ? 2 : 3] = pred[2];
+            }
+            else if (pred[0] === 'week' && (pred[1] === '<' || pred[1] === '>') && parseInt(pred[2])) {
+                res[pred[1] === '>' ? 4 : 5] = pred[2];
+            }
+            else return;
+        })
+
+        return res.join("|");
     }
 
     const handleCreate = (inputValue: any) => {
-        if (!validateInput(inputValue))
+        const value = validateInput(inputValue);
+        if (value === "|||||")
             return
 
         const newOption = {
             label: inputValue,
-            value: "c:--" + inputValue
+            value: "c:--" + value
         }
 
         options[3].options.push(newOption);
         setOptions(options);
-        fetchData(inputValue)
+        fetchData("c:--" + value)
     };
 
     return (
