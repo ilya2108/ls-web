@@ -7,11 +7,14 @@ import React from "react";
 import {
   ObjectResult,
   ResultItemGroup,
-  QuickSearch,
+  QuickSearch, ContainerResult,
 } from "@atlaskit/quick-search";
 
 import Avatar from "@atlaskit/avatar";
 import ContainerNavigation from "../ContainerNavigation/ContainerNavigation";
+import {searchFetcher} from "../../modules/api";
+import {gql} from "graphql-request";
+import {router} from "next/client";
 
 const defaultProps = {
   resultId: "result_id",
@@ -26,67 +29,68 @@ const dummyAvatarComponent = (
 
 const avatarUrl = "https://hello.atlassian.net/secure/projectavatar?pid=30630";
 
+interface UserDocument {
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  ipAddress: string;
+  isStaff: boolean;
+  id: number;
+}
+
 class SearchDrawer extends React.Component<
   {},
-  { isLoading: boolean; query: string }
+  { isLoading: boolean; query: string, searchResult: []}
 > {
   constructor(props) {
     super(props);
     this.state = {
       isLoading: false,
       query: "",
+      searchResult: [],
     };
   }
 
   search(value?: string) {
     this.setState({
       query: value,
+      isLoading: true
     });
+    const sendQuery = async () => {
+      const data = await searchFetcher(gql`query searchByGivenQuery($query: String!) {
+        userIndex(query: $query) {
+          username
+          firstName
+          lastName
+          email
+          ipAddress
+          isStaff
+          id
+        }
+      }`, {'query' : value});
+      console.log(data);
+      this.setState({searchResult: data.userIndex, isLoading: false});
+    };
+    sendQuery();
   }
 
   render() {
+    const objectResults = this.state.searchResult.map((el:UserDocument) => {
+      return <ObjectResult onClick={() => router.push(`/users/${el.id}`)} resultId={el.id} name={el.username} avatarUrl={avatarUrl} containerName="users" caption="Caption test..."/>
+    });
+
     return (
       <QuickSearch
         isLoading={this.state.isLoading}
-        onSearchInput={({ target }: React.FormEvent<HTMLInputElement>) => {
-          // if (!target.value) {
-          //   return
-          // }
-
-
+        onSearchInput={(event ) => {
           // @ts-ignore
-          this.search(target.value);
+          this.search(event.target.value);
         }}
         value={this.state.query}
       >
-        <ResultItemGroup title="xSearch examples">
-          {/* <ObjectResult
-            {...defaultProps}
-            name="quick-search is too hilarious!"
-            avatarUrl={avatarUrl}
-            objectKey="AK-007"
-            containerName="Search'n'Smarts"
-          />
-          <ObjectResult
-            {...defaultProps}
-            avatarUrl={avatarUrl}
-            name="Yeah, I cut my dev loop in half, but you'll never guess what happened next!"
-            containerName="Buzzfluence"
-          />
-          <ObjectResult
-            {...defaultProps}
-            avatarUrl={avatarUrl}
-            name="Prank schedule: April 2017"
-            containerName="The Scream Team"
-            isPrivate
-          />
-          <ObjectResult
-            {...defaultProps}
-            avatar={dummyAvatarComponent}
-            name="This one has an avatar component!"
-            containerName="The Scream Team"
-            isPrivate
-          /> */}
+        <ResultItemGroup title="xSearch result">
+          {objectResults}
         </ResultItemGroup>
       </QuickSearch>
     );

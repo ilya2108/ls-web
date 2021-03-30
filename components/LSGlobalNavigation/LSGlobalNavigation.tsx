@@ -39,16 +39,12 @@ class LSGlobalNavigation extends React.Component<Props, ILSGlobalNavigationState
   // Search drawer methods
   openSearchDrawer = () => this.setState({ isSearchDrawerOpen: true });
 
-  closeSearchDrawer = () => {
-    this.setState({ isSearchDrawerOpen: false });
-  };
+  closeSearchDrawer = () => this.setState({ isSearchDrawerOpen: false });
 
   // Create drawer methods
   openCreateDrawer = () => this.setState({ isCreateDrawerOpen: true });
 
-  closeCreatehDrawer = () => {
-    this.setState({ isCreateDrawerOpen: false });
-  };
+  closeCreateDrawer = () => this.setState({ isCreateDrawerOpen: false });
 
   // Universal methods
   onCloseComplete = (node) => {}
@@ -74,7 +70,7 @@ class LSGlobalNavigation extends React.Component<Props, ILSGlobalNavigationState
         createTooltip: "Create",
         isCreateDrawerOpen: isCreateDrawerOpen,
         createDrawerContents: CreateDrawer,
-        onCreateDrawerClose: this.closeCreatehDrawer,
+        onCreateDrawerClose: this.closeCreateDrawer,
         onCreateDrawerCloseComplete: this.onCloseComplete,
         shouldCreateDrawerUnmountOnExist: unmountOnExit,
         isCreateDrawerFocusLockEnabled: isCreateDrawerFocusLockEnabled,

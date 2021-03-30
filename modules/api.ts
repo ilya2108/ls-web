@@ -28,6 +28,25 @@ export async function fetcher (query: string) {
   }
 }
 
+export async function searchFetcher (query: string, variables: Object = {}) {
+  try {
+    const endpoint = 'http://localhost:8000/graphql_search/';
+    const client = new GraphQLClient(endpoint, {
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    return await client.request(query, variables);
+  } catch (e) {
+    if (e?.response?.data) {
+      return e.response.data
+    }
+
+    throw e
+  }
+}
+
 export async function auth() {
   return fetcher(
     gql`
