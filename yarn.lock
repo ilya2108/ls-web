@@ -305,7 +305,7 @@
     "@babel/runtime" "^7.0.0"
     url-parse "^1.4.5"
 
-"@atlaskit/icon@^21.0.0", "@atlaskit/icon@^21.0.3", "@atlaskit/icon@^21.1.0":
+"@atlaskit/icon@^21.0.0", "@atlaskit/icon@^21.1.0":
   version "21.1.4"
   resolved "https://registry.yarnpkg.com/@atlaskit/icon/-/icon-21.1.4.tgz#c6c3cd749148ff4374405d469f8dba8a6db9ce27"
   integrity sha512-FTSD2hdq1isdVKLWqwb4stBwbIMpKw/BqeQ/1UltT/i8u7N2ozVN2hO44Spsm2kucY58TGu7acYQvDIbShkKNA==
@@ -318,6 +318,15 @@
   version "21.4.0"
   resolved "https://registry.yarnpkg.com/@atlaskit/icon/-/icon-21.4.0.tgz#aefac76f83d9b08d6d9aed8e8d27b46d2f30724a"
   integrity sha512-z1BjToj5mTRKwCfNOxygktDsxv/faXZD1P0n9yS/c6HLrQJVdsqUK2YDC8Fpb/Bto3dk8ezfFsbn294QJtbeVQ==
+  dependencies:
+    "@atlaskit/theme" "^11.0.0"
+    "@babel/runtime" "^7.0.0"
+    "@emotion/core" "^10.0.9"
+
+"@atlaskit/icon@^21.5.0":
+  version "21.5.0"
+  resolved "https://registry.yarnpkg.com/@atlaskit/icon/-/icon-21.5.0.tgz#2f231d34f074024e54dba17859dfd34065af6e0d"
+  integrity sha512-gTzETPAh1jlGipyugRLIutFhAiTh2bsht481JlXoqO4dLYzhUWTBpmjR14uVZhTo+pRaOaeNmdjugD5CQBwfzA==
   dependencies:
     "@atlaskit/theme" "^11.0.0"
     "@babel/runtime" "^7.0.0"

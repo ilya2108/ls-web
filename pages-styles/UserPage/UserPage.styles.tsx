@@ -75,7 +75,6 @@ export const Tab = styled.button`
     hovered &&
     !active &&
     `
- 
     opacity: 0.3;
     `}
   ${({ active }) =>
@@ -135,34 +134,26 @@ export const Title = styled.span`
 `;
 
 function LightenDarkenColor(col, amt) {
-  let usePound = false;
+  const usePound = col[0] == "#";
 
-  if (col[0] == "#") {
+  if (col[0] == "#")
     col = col.slice(1);
-    usePound = true;
-  }
 
   const num = parseInt(col, 16);
 
-  let r = (num >> 16) + amt;
+  const rShift = ((num >> 16) + amt);
+  const r = rShift > 255 ? 255 : (rShift < 0 ? 0 : rShift);
 
-  if (r > 255) r = 255;
-  else if (r < 0) r = 0;
+  const bShift = ((num >> 8) & 0x00ff) + amt;
+  const b = bShift > 255 ? 255 : (bShift < 0 ? 0 : bShift);
 
-  let b = ((num >> 8) & 0x00ff) + amt;
-
-  if (b > 255) b = 255;
-  else if (b < 0) b = 0;
-
-  let g = (num & 0x0000ff) + amt;
-
-  if (g > 255) g = 255;
-  else if (g < 0) g = 0;
+  const gShift = (num & 0x0000ff) + amt;
+  const g = gShift > 255 ? 255 : (gShift < 0 ? 0 : gShift);
 
   return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16);
 }
 
-export default function GetColours(colour: string, range: number, i = -1) {
+export default function getColours(colour: string, range: number, i = -1) {
   if (range > 15) return colour;
 
   const res = Array(range)

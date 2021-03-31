@@ -1,4 +1,3 @@
-import PieChart from "./charts/PieChart";
 import BarChart from "./charts/BarChart";
 import {
   Dashboard,
@@ -35,7 +34,8 @@ export default function StudentsDashboard(props: Props) {
             assignmentPercentile: [10, 15, 23, 30, 37],
             assignmentMedian: [4, 3, 2, 4, 6],
             assignmentMaxScore: [5, 4, 4, 6, 8]
-        }
+        },
+        numberOfWeeks: 13
     }
 
   return (
@@ -45,14 +45,6 @@ export default function StudentsDashboard(props: Props) {
         <InfoBanner text={"Percentile:"} value={data.overallPercentileHistory[data.overallPercentileHistory.length - 1]} />
         <InfoBanner text={"Median:"} value={data.overallMedianHistory[data.overallMedianHistory.length - 1]} />
       </InfoBannersContainer>
-      {/*<PieChart*/}
-      {/*  title={"Last year's students result"}*/}
-      {/*  data={{*/}
-      {/*    datasets: [[12, 19, 30, 55, 201, 37]],*/}
-      {/*    label: ["A", "B", "C", "D", "E", "F"],*/}
-      {/*  }}*/}
-      {/*  description={"Chart shows final grades of last course students with similar score in the same time"}*/}
-      {/*/>*/}
       <BarChart
         title={"Students' Score Histogram"}
         description={"Histogram of students score"}
@@ -67,21 +59,7 @@ export default function StudentsDashboard(props: Props) {
         description={"Chart shows history of median of all students score and compares it to my score"}
         data={{
           datasets: [data.scoreHistory, data.overallMedianHistory],
-          label: [
-            "week 1",
-            "week 2",
-            "week 3",
-            "week 4",
-            "week 5",
-            "week 6",
-            "week 7",
-            "week 8",
-            "week 9",
-            "week 10",
-            "week 11",
-            "week 12",
-            "week 13",
-          ],
+          label: Array(data.numberOfWeeks).fill(null).map((_, i) => ("week " + (i + 1))),
           datasetNames: ["My score", "Students overall median"]
         }}
       />
@@ -90,21 +68,7 @@ export default function StudentsDashboard(props: Props) {
         description={"Chart shows history of my percentile"}
         data={{
           datasets: [data.overallPercentileHistory],
-          label: [
-            "week 1",
-            "week 2",
-            "week 3",
-            "week 4",
-            "week 5",
-            "week 6",
-            "week 7",
-            "week 8",
-            "week 9",
-            "week 10",
-            "week 11",
-            "week 12",
-            "week 13",
-          ],
+          label: Array(data.numberOfWeeks).fill(null).map((_, i) => ("week " + (i + 1))),
           datasetNames: ["Percentile history"]
         }}
       />

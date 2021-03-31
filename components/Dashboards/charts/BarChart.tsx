@@ -1,6 +1,6 @@
 import React from "react";
 import { Bar } from "react-chartjs-2";
-import GetColours, {
+import getColours, {
   ChartContainer, Title,
 } from "../../../pages-styles/UserPage/UserPage.styles";
 import Tooltip from "../Tooltip";
@@ -26,7 +26,7 @@ export default function BarChart(props: Props) {
           datasets: props.data.datasets.map((set, index) => ({
             label: props.data.datasetNames[index],
             data: set,
-            backgroundColor: GetColours(
+            backgroundColor: getColours(
               "#004da3",
               props.data.datasets[0].length,
               index
