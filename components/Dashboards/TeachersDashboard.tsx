@@ -73,6 +73,7 @@ export default function TeachersDashboard(props: Props) {
     ]
 
     const [options, setOptions] = useState(createDefaultOptions)
+    const [validation, setValidation] = useState("default")
 
     const fetchData = (value) => {
         // fetch data if not cached already
@@ -184,8 +185,10 @@ export default function TeachersDashboard(props: Props) {
 
     const handleCreate = (inputValue: any) => {
         const value = validateInput(inputValue);
-        if (value === "|||||")
+        if (value === "|||||") {
+            setValidation("error")
             return
+        }
 
         const newOption = {
             label: inputValue,
@@ -194,6 +197,7 @@ export default function TeachersDashboard(props: Props) {
 
         options[3].options.push(newOption);
         setOptions(options);
+        setValidation("success")
         fetchData("c:--" + value)
     };
 
@@ -207,10 +211,11 @@ export default function TeachersDashboard(props: Props) {
             <CreatableSelect
                 className="single-select"
                 classNamePrefix="react-select"
-                onChange={value => fetchData(value.value)}
+                onChange={value => {setValidation("default");fetchData(value.value)}}
                 onCreateOption={handleCreate}
                 options={options}
                 placeholder="Filter students"
+                validationState={validation}
                 />
             </span>
             </div>
