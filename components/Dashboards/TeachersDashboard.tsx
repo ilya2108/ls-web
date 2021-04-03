@@ -9,6 +9,7 @@ import Tooltip from "./Tooltip";
 import useSWR from "swr";
 import {gql} from "graphql-request";
 import {fetcher} from "../../modules/api";
+import {validateInput} from "../../utils/dashboard-utils";
 
 
 type Props = {
@@ -18,10 +19,8 @@ type Props = {
 export default function TeachersDashboard(props: Props) {
 
     const [filter, setFilter] = useState('All students');
-    const parallels= (props.userData.isSuperuser ?                      // todo fetch all parallels
-        ["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8"] :
-        props.userData.parallels.results.name);
-    const assignments=["awk", "sed", "grep"];                           // todo fetch all assignments
+    const parallels= ["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8"]              // todo fetch all parallels
+    const assignments=["awk", "sed", "grep"];                                      // todo fetch all assignments
 
     // representative data - todo fetch data without filtering
     const [data, setData] = useState(
@@ -159,33 +158,9 @@ export default function TeachersDashboard(props: Props) {
         setFilter(value);
     }
 
-    const validateInput = (inputValue: string) => {
-        const predicates = inputValue.toLowerCase().trim().split('and');
-
-        const res = ["","","","","",""]
-
-        predicates.map((predicate) => {
-            const pred = predicate.trim().split(' ');
-            if (pred.length !== 3) return;
-
-            if (pred[0] === 'score' && (pred[1] === '<' || pred[1] === '>') && parseInt(pred[2])){
-                res[pred[1] === '>' ? 0 : 1] = pred[2];
-            }
-            else if (pred[0] === 'percentile' && (pred[1] === '<' || pred[1] === '>') && parseInt(pred[2])) {
-                res[pred[1] === '>' ? 2 : 3] = pred[2];
-            }
-            else if (pred[0] === 'week' && (pred[1] === '<' || pred[1] === '>') && parseInt(pred[2])) {
-                res[pred[1] === '>' ? 4 : 5] = pred[2];
-            }
-            else return;
-        })
-
-        return res.join("|");
-    }
-
     const handleCreate = (inputValue: any) => {
         const value = validateInput(inputValue);
-        if (value === "|||||") {
+        if (value === "") {
             setValidation("error")
             return
         }
