@@ -10,7 +10,11 @@ import useSWR from "swr";
 import {gql} from "graphql-request";
 import {fetcher} from "../../modules/api";
 import {validateInput} from "../../utils/dashboard-utils";
-
+import allStudentsData from'./__fixtures__/allStudentsData-TD.json'
+import parallelData from'./__fixtures__/parallelData-TD.json'
+import assignmentData from './__fixtures__/assignmentData-TD.json'
+import customData from './__fixtures__/customData-TD.json'
+import dataForFiltering from './__fixtures__/dataForFiltering-TD.json'
 
 type Props = {
     userData: any;
@@ -19,33 +23,11 @@ type Props = {
 export default function TeachersDashboard(props: Props) {
 
     const [filter, setFilter] = useState('All students');
-    const parallels= ["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8"]              // todo fetch all parallels
-    const assignments=["awk", "sed", "grep"];                                      // todo fetch all assignments
+    const parallels=dataForFiltering.parallels                                     // todo fetch all parallels
+    const assignments=dataForFiltering.assignments                                 // todo fetch all assignments
 
     // representative data - todo fetch data without filtering
-    const [data, setData] = useState(
-        {'All students': {
-            median: "all data",
-            maxScore: "all data",
-            minScore: "all data",
-            studentsNumber: 105,
-            overallMedianHistory: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
-            medianHistory: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
-            lastYearOverallMedian: [12, 56, 89, 57, 47, 69, 69, 48, 37, 63, 59, 67, 88],
-            scoreHistogram: {
-                label: ["0", "3", "5", "7", "7.5", "8", "11", "14", "19", "24", "25", "26", "27", "28", "28", "34",
-                    "35", "36", "39", "41", "42", "44", "45.5", "46", "48", "50", "51", "53", "54", "55", "68",
-                    "75", "77", "81", "85", "91"],
-                frequency: [12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55,
-                    201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37]
-            },
-            assignments: {
-                assignmentName: ["awk1", "awk2", "sed DU", "grep", "grep DU"],
-                assignmentMedianPercentage: [10, 15, 23, 30, 37],
-                assignmentMedian: [4, 3, 2, 4, 6],
-                assignmentMaxScore: [5, 4, 4, 6, 8]
-            }
-        }})
+    const [data, setData] = useState(allStudentsData)
 
     const createDefaultOptions = [
         {
@@ -79,80 +61,18 @@ export default function TeachersDashboard(props: Props) {
         if (!data.hasOwnProperty(value)) {
             // todo fetch data - filtered parallel with id
             if(value.substr(0,4) === "p:--") {
-                data[value] = {
-                    median: "parallel data",
-                    maxScore: "parallel data",
-                    minScore: "parallel data",
-                    studentsNumber: 105,
-                    overallMedianHistory: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
-                    medianHistory: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
-                    lastYearOverallMedian: [12, 56, 89, 57, 47, 69, 69, 48, 37, 63, 59, 67, 88],
-                    scoreHistogram: {
-                        label: ["0", "3", "5", "7", "7.5", "8", "11", "14", "19", "24", "25", "26", "27", "28", "28", "34",
-                            "35", "36", "39", "41", "42", "44", "45.5", "46", "48", "50", "51", "53", "54", "55", "68",
-                            "75", "77", "81", "85", "91"],
-                        frequency: [12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55,
-                            201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37]
-                    },
-                    assignments: {
-                        assignmentName: ["awk1", "awk2", "sed DU", "grep", "grep DU"],
-                        assignmentMedianPercentage: [10, 15, 23, 30, 37],
-                        assignmentMedian: [4, 3, 2, 4, 6],
-                        assignmentMaxScore: [5, 4, 4, 6, 8]
-                    }
-                }
+                data[value] = parallelData
             }
             // todo fetch data - filtered assignment with id
             else if (value.substr(0,4) === "a:--") {
-                data[value] = {
-                    median: "assignment data",
-                    maxScore: "assignment data",
-                    minScore: "assignment data",
-                    studentsNumber: 105,
-                    overallMedianHistory: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
-                    medianHistory: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
-                    lastYearOverallMedian: [12, 56, 89, 57, 47, 69, 69, 48, 37, 63, 59, 67, 88],
-                    scoreHistogram: {
-                        label: ["0", "3", "5", "7", "7.5", "8", "11", "14", "19", "24", "25", "26", "27", "28", "28", "34",
-                            "35", "36", "39", "41", "42", "44", "45.5", "46", "48", "50", "51", "53", "54", "55", "68",
-                            "75", "77", "81", "85", "91"],
-                        frequency: [12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55,
-                            201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37]
-                    },
-                    assignments: {
-                        assignmentName: ["awk1", "awk2", "sed DU", "grep", "grep DU"],
-                        assignmentMedianPercentage: [10, 15, 23, 30, 37],
-                        assignmentMedian: [4, 3, 2, 4, 6],
-                        assignmentMaxScore: [5, 4, 4, 6, 8]
-                    }
-                }
+                data[value] = assignmentData
             }
             // custom data - todo fetch data
             else {
                 // filtering items
                 const [sgt, slt, pgt, plt, wgt, wlt] = value.substr(4).split("|")
-                data[value] = {
-                    median: "custom data",
-                    maxScore: value.substr(4),
-                    minScore: "custom data",
-                    studentsNumber: 105,
-                    overallMedianHistory: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
-                    medianHistory: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55],
-                    lastYearOverallMedian: [12, 56, 89, 57, 47, 69, 69, 48, 37, 63, 59, 67, 88],
-                    scoreHistogram: {
-                        label: ["0", "3", "5", "7", "7.5", "8", "11", "14", "19", "24", "25", "26", "27", "28", "28", "34",
-                            "35", "36", "39", "41", "42", "44", "45.5", "46", "48", "50", "51", "53", "54", "55", "68",
-                            "75", "77", "81", "85", "91"],
-                        frequency: [12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55,
-                            201, 37, 12, 19, 30, 55, 201, 37, 12, 19, 30, 55, 201, 37]
-                    },
-                    assignments: {
-                        assignmentName: ["awk1", "awk2", "sed DU", "grep", "grep DU"],
-                        assignmentMedianPercentage: [10, 15, 23, 30, 37],
-                        assignmentMedian: [4, 3, 2, 4, 6],
-                        assignmentMaxScore: [5, 4, 4, 6, 8]
-                    }
-                }
+                data[value] = customData
+                data[value]["maxScore"] = value.substr(4)
             }
         }
         setFilter(value);
@@ -219,21 +139,7 @@ export default function TeachersDashboard(props: Props) {
                         data[filter].overallMedianHistory,
                         data[filter].lastYearOverallMedian,
                     ],
-                    label: [
-                        "week 1",
-                        "week 2",
-                        "week 3",
-                        "week 4",
-                        "week 5",
-                        "week 6",
-                        "week 7",
-                        "week 8",
-                        "week 9",
-                        "week 10",
-                        "week 11",
-                        "week 12",
-                        "week 13",
-                    ],
+                    label: Array(data[filter].numberOfWeeks).fill(null).map((_, i) => ("week " + (i + 1))),
                     datasetNames: ["Median", "Students overall median", "Last year overall median"]
                 }}
                 />
