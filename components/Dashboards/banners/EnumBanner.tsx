@@ -6,6 +6,8 @@ import Textfield from "@atlaskit/textfield";
 import EditorSearchIcon from "@atlaskit/icon/glyph/editor/search";
 import {SearchWrapper} from "../../../pages-styles/UsersPage/UsersPage.styles";
 import debounce from "lodash/debounce";
+import DownloadIcon from '@atlaskit/icon/glyph/download';
+import {CSVLink} from "react-csv";
 
 type Props = {
   title: string;
@@ -78,6 +80,18 @@ export default function EnumBanner(props: Props) {
     <ChartContainer normalWidth>
       <span style={{ fontSize: 19, fontWeight: 500 }}>{props.title}</span>
       {props.description && <Tooltip description={props.description} />}
+
+      <span style={{paddingLeft: "10px"}}>
+          <CSVLink
+            headers={props.data.headers}
+            data={props.data.rows}
+            filename={"lsData.csv"}
+            separator={";"}
+        >
+            <DownloadIcon size={"medium"} label={"download"} />
+        </CSVLink>
+      </span>
+
         <SearchWrapper style={{paddingTop: "10px"}}>
             <Textfield
                 name="basic"
