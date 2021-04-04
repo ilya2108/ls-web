@@ -96,7 +96,7 @@ export default function EnumBanner(props: Props) {
             <Textfield
                 name="basic"
                 isCompact
-                placeholder="Search assignment"
+                placeholder={"Search " + props.title}
                 elemAfterInput={<EditorSearchIcon label="" />}
                 onChange={(event) => handleSearchEvent(event)}
             />

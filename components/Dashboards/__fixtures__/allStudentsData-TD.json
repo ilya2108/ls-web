@@ -119,6 +119,20 @@
       "assignmentMedian": [4, 3, 2, 4, 6],
       "assignmentMaxScore": [5, 4, 4, 6, 8]
     },
-    "numberOfWeeks": 13
+    "numberOfWeeks": 13,
+    "parallels": {
+      "name": ["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8"],
+      "teacher": ["spefa", "fenas", "osead", "ceagfos", "afowu", "wafygy", "fusefu", "efefysv"],
+      "numOfStudents": [24, 24, 24, 18, 23, 24, 24, 24],
+      "median": [24, 22, 20, 24, 28, 26, 22, 20],
+      "percentileAverage": [64, 55, 39, 49, 70, 66, 50, 42]
+    },
+    "students": {
+      "name": ["xzma", "dawdwd", "aefesf", "ppooldw", "awd", "plj"],
+      "username": ["xzma", "dawdwd", "aefesf", "ppooldw", "awd", "plj"],
+      "parallel": ["p1", "p1", "p1", "p1", "p1", "p1"],
+      "score": [12, 0, 17, 17, 7, 7],
+      "percentile": [45, 0, 88, 74, 25, 23.3]
+    }
   }
 }

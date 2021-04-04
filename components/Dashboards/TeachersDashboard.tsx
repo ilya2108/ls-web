@@ -11,9 +11,6 @@ import {gql} from "graphql-request";
 import {fetcher} from "../../modules/api";
 import {validateInput} from "../../utils/dashboard-utils";
 import allStudentsData from'./__fixtures__/allStudentsData-TD.json'
-import parallelData from'./__fixtures__/parallelData-TD.json'
-import assignmentData from './__fixtures__/assignmentData-TD.json'
-import customData from './__fixtures__/customData-TD.json'
 import dataForFiltering from './__fixtures__/dataForFiltering-TD.json'
 
 type Props = {
@@ -61,17 +58,27 @@ export default function TeachersDashboard(props: Props) {
         if (!data.hasOwnProperty(value)) {
             // todo fetch data - filtered parallel with id
             if(value.substr(0,4) === "p:--") {
-                data[value] = parallelData
+                data[value] = allStudentsData["All students"]
+                data[value]["maxScore"] = "parallel Data"
+                // data[value].parallels = {
+                //     "teacher": "Chuck Norris",
+                //     "percentileAverage": 75
+                // }
             }
             // todo fetch data - filtered assignment with id
             else if (value.substr(0,4) === "a:--") {
-                data[value] = assignmentData
+                data[value] = allStudentsData["All students"]
+                data[value]["maxScore"] = "assignment Data"
+                // data[value].assignments = {
+                //     "assignmentMedianPercentage": 65,
+                //     "assignmentMaxScore": 8
+                // }
             }
             // custom data - todo fetch data
             else {
                 // filtering items
                 const [sgt, slt, pgt, plt, wgt, wlt] = value.substr(4).split("|")
-                data[value] = customData
+                data[value] = allStudentsData["All students"]
                 data[value]["maxScore"] = value.substr(4)
             }
         }
@@ -121,6 +128,18 @@ export default function TeachersDashboard(props: Props) {
                 <InfoBanner text={"Min Score:"} value={data[filter].minScore} />
                 <InfoBanner text={"# of students:"} value={data[filter].studentsNumber} />
             </InfoBannersContainer>
+            {filter.substr(0, 4) === "a:--" &&
+            <InfoBannersContainer>
+                <InfoBanner text={"Median Percentage:"} value={data[filter].assignments.assignmentMedianPercentage[0]}/>
+                <InfoBanner text={"Max possible Score:"} value={data[filter].assignments.assignmentMaxScore[0]}/>
+            </InfoBannersContainer>
+            }
+            {filter.substr(0, 4) === "p:--" &&
+            <InfoBannersContainer>
+                <InfoBanner text={"Teacher:"} value={data[filter].parallels.teacher[0]}/>
+                <InfoBanner text={"Percentile Average:"} value={data[filter].parallels.percentileAverage[0]}/>
+            </InfoBannersContainer>
+            }
             <BarChart
                 title={"Students' Score Histogram"}
                 description={"Histogram of students score"}
@@ -157,12 +176,40 @@ export default function TeachersDashboard(props: Props) {
                         defaultSortOrder={"ASC"}
             />
             }
+            {filter.substr(0, 4) !== "p:--" &&
+            <EnumBanner title={"Parallels"}
+                        data={{
+                            headers: ["Parallel", "Teacher", "# of students", "Median", "Percentile average"],
+                            rows: data[filter].parallels.teacher.map((_, i) => [
+                                data[filter].parallels.name[i],
+                                data[filter].parallels.teacher[i],
+                                data[filter].parallels["numOfStudents"][i],
+                                data[filter].parallels.median[i],
+                                data[filter].parallels.percentileAverage[i]])
+                        }}
+                        defaultSortKey={"Median"}
+                        defaultSortOrder={"ASC"}
+            />
+            }
+            <EnumBanner title={"Students"}
+                        data={{
+                            headers: ["Name", "Username", "Parallel", "Score", "Percentile"],
+                            rows: data[filter].students.name.map((_, i) => [
+                                data[filter].students.name[i],
+                                data[filter].students.username[i],
+                                data[filter].students.parallel[i],
+                                data[filter].students.score[i],
+                                data[filter].students.percentile[i]])
+                        }}
+                        defaultSortKey={"Percentile"}
+                        defaultSortOrder={"ASC"}
+            />
         </Dashboard>
-        <hr style={{ height: "2px", borderWidth: 0, color: "#42526e", backgroundColor: "#42526e", margin: "10px"}} />
+        <hr style={{ height: "2px", borderWidth: 0, color: "#42526e", backgroundColor: "#42526e", margin: "40px"}} />
         <>
-            <h3>Teacher's Performance</h3>
+            <h3>Global Performance</h3>
             <Dashboard>
-                {/*TODO*/}
+                {/*TODO Znamky studentu z kosu z minulych let? Pruchodnost z minula?*/}
             </Dashboard>
         </>
     </>
