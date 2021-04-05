@@ -26,6 +26,39 @@ const dummyAvatarComponent = (
 
 const avatarUrl = "https://hello.atlassian.net/secure/projectavatar?pid=30630";
 
+// Free icons from flation.com
+const examAvatar = (
+    <Avatar
+        src="https://www.flaticon.com/svg/vstatic/svg/1945/1945985.svg?token=exp=1617625492~hmac=f4343d8ae8e4cda7c26d9222779754ce"
+        appearance="square"
+        size="large"
+        />
+);
+
+const userAvatar = (
+    <Avatar
+        src="https://www.flaticon.com/svg/vstatic/svg/2948/2948035.svg?token=exp=1617625966~hmac=af4f601f5e794e6f3926b6166453b526"
+        appearance="square"
+        size="large"
+    />
+);
+
+const assignmentAvatar = (
+    <Avatar
+        src="https://www.flaticon.com/svg/vstatic/svg/1975/1975283.svg?token=exp=1617626152~hmac=f93c0803bf2e22eaa71923983a7b7c9e"
+        appearance="square"
+        size="large"
+    />
+);
+
+const submissionAvatar = (
+    <Avatar
+        src="https://www.flaticon.com/svg/vstatic/svg/2681/2681062.svg?token=exp=1617626509~hmac=264ca8c6b29d2347c17b9fbd76fe26a9"
+        appearance="square"
+        size="large"
+    />
+);
+
 interface UserDocument {
     username: string;
     firstName: string;
@@ -44,22 +77,12 @@ const allDocumentTypes = [{label: 'Assignment', value: 'assignmentIndex'}, {labe
 export default function SearchDrawer() {
     const [isLoading, setIsLoading] = useState(false);
     const [query, setQuery] = useState("");
-    const [result, setResult] = useState({
-        'userIndex': [],
-        'assignmentIndex': [],
-        'examIndex': [],
-        'submissionIndex': []
-    });
+    const [result, setResult] = useState({});
     const [filterList, setFilterList] = useState([]);
 
     const search = async (searchQuery: string = "") => {
         if (searchQuery == "") {
-            setResult({
-                'userIndex': [],
-                'assignmentIndex': [],
-                'examIndex': [],
-                'submissionIndex': []
-            });
+            setResult({});
             return;
         }
 
@@ -67,7 +90,7 @@ export default function SearchDrawer() {
         setIsLoading(true);
 
         const data = await handleQuery(searchQuery, filterList);
-        console.log(data);
+        // console.log(data);
 
         setResult(data);
         setIsLoading(false);
@@ -77,6 +100,7 @@ export default function SearchDrawer() {
         event ??= []
         const filterList = event.map((el: { label: string, value: string }) => el);
         setFilterList(filterList);
+        search(query);
     }
 
     const isDocumentTypeToggled = (docType: string): boolean => {
@@ -85,20 +109,21 @@ export default function SearchDrawer() {
 
     const users = isDocumentTypeToggled('userIndex') ? result.userIndex?.map((el: UserDocument) => {
         return <ObjectResult key={el.id} onClick={() => router.push(`/users/${el.id}`)} resultId={el.id} name={el.username}
-                             avatarUrl={avatarUrl} containerName="users" caption="Caption test..."/>
+                             avatar={userAvatar} containerName="users" caption={el.email}/>
     }) ?? [] : [];
     const assignments = isDocumentTypeToggled('assignmentIndex') ? result.assignmentIndex?.map((el) => {
-        return <ObjectResult key={el.id} onClick={() => router.push(`/users/${el.id}`)} resultId={el.id} name={el.name}
-                             avatarUrl={avatarUrl} containerName="assignments" caption="Caption test..."/>
+        return <ObjectResult key={el.id} onClick={() => router.push(`/assignments/edit/${el.id}`)} resultId={el.id} name={el.name}
+                             avatar={assignmentAvatar} containerName="assignments" caption={el.description}/>
     }) ?? [] : [];
+    // Todo: add assignment template name and move submitted_code to caption
     const submissions = isDocumentTypeToggled('submissionIndex') ? result.submissionIndex?.map((el) => {
-        return <ObjectResult key={el.id} onClick={() => router.push(`/users/${el.id}`)} resultId={el.id}
+        return <ObjectResult key={el.id} onClick={() => router.push(`/assignments/${el.generatedAssignmentId}`)} resultId={el.id}
                              name={el.submittedScript}
-                             avatarUrl={avatarUrl} containerName="submissions" caption="Caption test..."/>
+                             avatar={submissionAvatar} containerName="submissions" caption="Caption test..."/>
     }) ?? []: [];
     const exams = isDocumentTypeToggled('examIndex') ? result.examIndex?.map((el) => {
-        return <ObjectResult key={el.templateId} onClick={() => router.push(`/users/${el.id}`)} resultId={el.templateId} name={el.name}
-                             avatarUrl={avatarUrl} containerName="exams" caption="Caption test..."/>
+        return <ObjectResult key={el.templateId} onClick={() => alert('to be done')} resultId={el.templateId} name={el.name}
+                             avatar={examAvatar} containerName="exams"/>
     }) ?? []: [];
 
     return (
@@ -142,7 +167,7 @@ export default function SearchDrawer() {
 async function handleQuery(searchQuery: string, filterList: []) {
 
     const graphQlQuery = buildGraphQlQuery(filterList);
-    console.log(graphQlQuery)
+    // console.log(graphQlQuery)
     const searchQueryResult = await searchFetcher(graphQlQuery, {'query': searchQuery});
     return searchQueryResult;
 }
@@ -161,10 +186,12 @@ const documentTypeQueryMapping = {
     'assignmentIndex': `assignmentIndex(query: $query){
             id
             name
+            description
         }`,
     'submissionIndex': `submissionIndex(query: $query){
             id
             submittedScript
+            generatedAssignmentId
         }`,
     'examIndex': ` examIndex(query: $query) {
             templateId
