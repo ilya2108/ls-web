@@ -6,7 +6,7 @@ import React from "react";
 import GlobalNavigation from "@atlaskit/global-navigation";
 
 // components
-import SearchDrawer from "../Drawer/SearchDrawer";
+import SearchDrawer from "../Drawer/SmartSearch/SearchDrawer";
 import CreateDrawer from "../Drawer/CreateDrawer";
 
 // ICONS
@@ -91,7 +91,7 @@ class LSGlobalNavigation extends React.Component<Props, ILSGlobalNavigationState
         onSearchDrawerCloseComplete={this.onCloseComplete}
         shouldSearchDrawerUnmountOnExit={unmountOnExit}
         isSearchDrawerFocusLockEnabled={isSearchDrawerFocusLockEnabled}
-        searchDrawerWidth="medium"
+        searchDrawerWidth="wide"
         // Create Drawer
         {...createDrawerProps}
       />
