@@ -26,6 +26,7 @@ export default function TeachersDashboard(props: Props) {
 
     // representative data - todo fetch data without filtering
     const [data, setData] = useState(allStudentsData)
+    const [filterCurrentValue, setFilterCurrentValue] = useState(undefined)
 
     const createDefaultOptions = [
         {
@@ -91,6 +92,7 @@ export default function TeachersDashboard(props: Props) {
         }
 
         options[3].options.push(newOption);
+        setFilterCurrentValue(newOption)
         setOptions(options);
         setValidation("success")
         fetchData("c:--" + value)
@@ -108,12 +110,14 @@ export default function TeachersDashboard(props: Props) {
                 classNamePrefix="react-select"
                 onChange={value => {
                     setValidation("default");
+                    setFilterCurrentValue(value)
                     fetchData(value.value);
                 }}
                 onCreateOption={handleCreate}
                 options={options}
-                placeholder="Filter students"
+                placeholder={"Filter Students"}
                 validationState={validation}
+                value={filterCurrentValue}
                 />
             </span>
             </div>
