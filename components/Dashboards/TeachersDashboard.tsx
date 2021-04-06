@@ -9,9 +9,10 @@ import Tooltip from "./Tooltip";
 import useSWR from "swr";
 import {gql} from "graphql-request";
 import {fetcher} from "../../modules/api";
-import {validateInput} from "../../utils/dashboard-utils";
+import {createParametersToQuery, validateInput} from "../../utils/dashboard-utils";
 import allStudentsData from'./__fixtures__/allStudentsData-TD.json'
 import dataForFiltering from './__fixtures__/dataForFiltering-TD.json'
+import _ from "lodash"  // just for fixtures
 
 type Props = {
     userData: any;
@@ -46,7 +47,7 @@ export default function TeachersDashboard(props: Props) {
         },
         {
             label: 'Score filtering',
-            options: [{label: "SCORE > 5", value: "c:--SCORE > 5"}]
+            options: [{label: "SCORE > 5", value: "c:--" + validateInput("SCORE > 5")}]
         }
     ]
 
@@ -56,31 +57,23 @@ export default function TeachersDashboard(props: Props) {
     const fetchData = (value) => {
         // fetch data if not cached already
         if (!data.hasOwnProperty(value)) {
-            // todo fetch data - filtered parallel with id
-            if(value.substr(0,4) === "p:--") {
-                data[value] = allStudentsData["All students"]
-                data[value]["maxScore"] = "parallel Data"
-                // data[value].parallels = {
-                //     "teacher": "Chuck Norris",
-                //     "percentileAverage": 75
-                // }
+            const filteringParameters = {
+                "assignment": "",
+                "parallel": "",
+                "customCommand": ""
             }
-            // todo fetch data - filtered assignment with id
-            else if (value.substr(0,4) === "a:--") {
-                data[value] = allStudentsData["All students"]
-                data[value]["maxScore"] = "assignment Data"
-                // data[value].assignments = {
-                //     "assignmentMedianPercentage": 65,
-                //     "assignmentMaxScore": 8
-                // }
-            }
-            // custom data - todo fetch data
-            else {
-                // filtering items
-                const [sgt, slt, pgt, plt, wgt, wlt] = value.substr(4).split("|")
-                data[value] = allStudentsData["All students"]
-                data[value]["maxScore"] = value.substr(4)
-            }
+
+            if (value.substr(0,4) === "p:--")
+                filteringParameters.parallel = value.substr(4)
+            else if (value.substr(0,4) === "a:--")
+                filteringParameters.assignment = value.substr(4)
+            else if (value.substr(0,4) === "c:--")
+                filteringParameters.customCommand = value.substr(4).split("|")
+
+            const queryParameters = createParametersToQuery(filteringParameters)
+
+            data[value] = _.clone(allStudentsData["All students"])
+            data[value]["maxScore"] = queryParameters
         }
         setFilter(value);
     }
@@ -113,7 +106,10 @@ export default function TeachersDashboard(props: Props) {
             <CreatableSelect
                 className="single-select"
                 classNamePrefix="react-select"
-                onChange={value => {setValidation("default");fetchData(value.value)}}
+                onChange={value => {
+                    setValidation("default");
+                    fetchData(value.value);
+                }}
                 onCreateOption={handleCreate}
                 options={options}
                 placeholder="Filter students"
