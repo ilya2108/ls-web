@@ -114,10 +114,10 @@
       ]
     },
     "assignments": {
-      "assignmentName": ["awk1", "awk2", "sed DU", "grep", "grep DU"],
-      "assignmentMedianPercentage": [10, 15, 23, 30, 37],
-      "assignmentMedian": [4, 3, 2, 4, 6],
-      "assignmentMaxScore": [5, 4, 4, 6, 8]
+      "assignmentName": ["awk1", "awk2", "sed DU", "grep", "grep DU", "[BI-PS1] [HW] [File Editing 3] [awk]", "[BI-PS1] [Exam] [File Editing 2] [awk]"],
+      "assignmentMedianPercentage": [10, 15, 23, 30, 37, 42, 43],
+      "assignmentMedian": [4, 3, 2, 4, 6, 10, 10],
+      "assignmentMaxScore": [5, 4, 4, 6, 8, 10, 10]
     },
     "numberOfWeeks": 13,
     "parallels": {

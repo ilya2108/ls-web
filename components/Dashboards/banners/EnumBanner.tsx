@@ -51,15 +51,16 @@ export default function EnumBanner(props: Props) {
         return 24;
     }
 
-    const filterAssignment = (rows) => {
+    const filterRows = (rows) => {
         return rows.filter((row) => {
-            return (
+            return ( inputVal.match(/( *\[.*?] *)+/g) ?
+                inputVal.match(/\[(.*?)]/g).every(tag => row[0].toLowerCase().includes(tag.toLowerCase())) :
                 row[0].toLowerCase().includes(inputVal.toLowerCase())
             )
         });
     };
 
-    const tableRows = filterAssignment(props.data.rows).map(
+    const tableRows = filterRows(props.data.rows).map(
         (row, i) => {
             return {
                 cells: row.map((rowItem,index) => (
