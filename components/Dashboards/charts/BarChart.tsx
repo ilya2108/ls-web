@@ -48,6 +48,15 @@ export default function BarChart(props: Props) {
                 },
               },
             ],
+            yAxes: [
+              {
+                display: true,
+                ticks: {
+                  suggestedMin: 0, // minimum will be 0, unless there is a lower value.
+                  suggestedMax: 100,
+                },
+              },
+            ],
           },
         }}
       />

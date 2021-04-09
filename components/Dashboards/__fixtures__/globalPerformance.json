@@ -1,0 +1,86 @@
+{
+  "global": [
+    {
+      "year": "2020",
+      "throughput": 56,
+      "finalGrades": [
+        {
+          "name": "A",
+          "numberOfStudents": 156,
+          "percentage": 22
+        },
+        {
+          "name": "B",
+          "numberOfStudents": 156,
+          "percentage": 22
+        },
+        {
+          "name": "C",
+          "numberOfStudents": 156,
+          "percentage": 22
+        },
+        {
+          "name": "D",
+          "numberOfStudents": 156,
+          "percentage": 22
+        },
+        {
+          "name": "E",
+          "numberOfStudents": 156,
+          "percentage": 22
+        },
+        {
+          "name": "F",
+          "numberOfStudents": 156,
+          "percentage": 22
+        },
+        {
+          "name": "X",
+          "numberOfStudents": 156,
+          "percentage": 22
+        }
+      ]
+    },
+    {
+      "year": "2019",
+      "throughput": 58,
+      "finalGrades": [
+        {
+          "name": "A",
+          "numberOfStudents": 75,
+          "percentage": 22
+        },
+        {
+          "name": "B",
+          "numberOfStudents": 54,
+          "percentage": 22
+        },
+        {
+          "name": "C",
+          "numberOfStudents": 25,
+          "percentage": 41
+        },
+        {
+          "name": "D",
+          "numberOfStudents": 156,
+          "percentage": 22
+        },
+        {
+          "name": "E",
+          "numberOfStudents": 156,
+          "percentage": 22
+        },
+        {
+          "name": "F",
+          "numberOfStudents": 156,
+          "percentage": 22
+        },
+        {
+          "name": "X",
+          "numberOfStudents": 156,
+          "percentage": 22
+        }
+      ]
+    }
+  ]
+}

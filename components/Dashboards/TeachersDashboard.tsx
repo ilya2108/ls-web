@@ -12,7 +12,9 @@ import {fetcher} from "../../modules/api";
 import {createParametersToQuery, validateInput} from "../../utils/dashboard-utils";
 import allStudentsData from'./__fixtures__/allStudentsData-TD.json'
 import dataForFiltering from './__fixtures__/dataForFiltering-TD.json'
-import _ from "lodash"  // just for fixtures
+import dataGlobalPerformance from './__fixtures__/globalPerformance.json'
+import _ from "lodash"
+import PieChart from "./charts/PieChart";  // just for fixtures    TODO after fetching ready remove it
 
 type Props = {
     userData: any;
@@ -23,6 +25,7 @@ export default function TeachersDashboard(props: Props) {
     const [filter, setFilter] = useState('All students');
     const parallels=dataForFiltering.parallels                                     // todo fetch all parallels
     const assignments=dataForFiltering.assignments                                 // todo fetch all assignments
+    const globalPerformance=dataGlobalPerformance                                   // todo fetch
 
     // representative data - todo fetch data without filtering
     const [data, setData] = useState(allStudentsData)
@@ -74,7 +77,7 @@ export default function TeachersDashboard(props: Props) {
             const queryParameters = createParametersToQuery(filteringParameters)
 
             data[value] = _.clone(allStudentsData["All students"])
-            data[value]["maxScore"] = queryParameters
+            data[value]["mode"] = queryParameters
         }
         setFilter(value);
     }
@@ -124,8 +127,8 @@ export default function TeachersDashboard(props: Props) {
         <Dashboard style={{paddingTop: "25px"}}>
             <InfoBannersContainer>
                 <InfoBanner text={"Median:"} value={data[filter].medianHistory[data[filter].medianHistory.length - 1]}/>
-                <InfoBanner text={"Max Score:"} value={data[filter].maxScore} />
-                <InfoBanner text={"Min Score:"} value={data[filter].minScore} />
+                <InfoBanner text={"Mode:"} value={data[filter].mode} />
+                <InfoBanner text={"Deviation:"} value={data[filter].standardDeviation} />
                 <InfoBanner text={"# of students:"} value={data[filter].studentsNumber} />
             </InfoBannersContainer>
             {filter.substr(0, 4) === "a:--" &&
@@ -209,7 +212,20 @@ export default function TeachersDashboard(props: Props) {
         <>
             <h3>Global Performance</h3>
             <Dashboard>
-                {/*TODO Znamky studentu z kosu z minulych let? Pruchodnost z minula?*/}
+                <InfoBannersContainer>
+                    <InfoBanner text={"Throughput:"} value={globalPerformance.global[0].throughput}/>
+                </InfoBannersContainer>
+                <PieChart title={"Students grades"} data={{
+                    datasets: [globalPerformance.global[0].finalGrades.map(grade => grade.percentage)],
+                    label: globalPerformance.global[0].finalGrades.map(grade => grade.name)
+                    }}
+                />
+                <BarChart title={"Grades comparison by year"} data={{
+                    datasets: dataGlobalPerformance.global.map(y => y.finalGrades.map(grade => grade.percentage)),
+                    label: globalPerformance.global[0].finalGrades.map(grade => grade.name),
+                    datasetNames: globalPerformance.global.map(y => (y.year))
+                    }}
+                />
             </Dashboard>
         </>
     </>

@@ -1,8 +1,8 @@
 {
   "All students": {
     "median": "all data",
-    "maxScore": "all data",
-    "minScore": "all data",
+    "mode": "all data",
+    "standardDeviation": "all data",
     "studentsNumber": 105,
     "overallMedianHistory": [
       65,

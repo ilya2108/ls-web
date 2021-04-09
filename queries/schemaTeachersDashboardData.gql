@@ -1,0 +1,77 @@
+type ScoreHistogram {
+  label: [Float] # All Scores of students (asccending order) ...
+  frequency: [Int] # ... and its frequency (on same index)
+}
+
+type Assignment {
+  name: String # name of assignment
+  medianPercentage: Float #
+  median: Float # 'Assignment median'
+  maxScore: Float # max possible score from that assignment
+  id: ID! # id of assignment
+}
+
+type Parallel {
+  name: String # name of parallel
+  teacher: String # teacher (or teachers) teaching that parallel
+  numOfStudents: Int # number of students in that parallel
+  median: Float # median of score of this parallel attending students
+  percentileAverage: Float # Average Percentile of student's in that parallel
+  id: ID! # id of parrallel
+}
+
+type Student {
+  name: String # whole student's name
+  username: String # username
+  parallel: String # parallel he is studying
+  score: String # his current score
+  percentile: String # his current percentile
+  id: ID! # student's ID
+}
+
+type TeachersDashboardData {
+  median: Float # median of score of students
+  mode: Float # Most frequent students' score
+  standardDeviation: Float # standard deviation of students' score
+  studentsNumber: Int! # number of students
+  overallMedianHistory: [Float] # median history of ALL STUDENTS! not just filtered ones; sorted by weeks ascending
+  medianHistory: [Float] # median history of filtered students; sorted by weeks ascending
+  lastYearOverallMedian: [Float] # last year median history of ALL STUDENTS! if no last year data, return []; sorted by weeks ascending
+  scoreHistogram: ScoreHistogram # histogram data
+  assignments: [Assignment] # data about Asignments
+  numberOfWeeks: Int # number of weeks that were computed in median history (or others)
+  parallels: [Parallel] # data about parallels
+  students: [Student] # data about students
+}
+
+type Grade {
+  name: String # grade - 'A', 'B', 'C', 'D', 'E, 'F' or 'X' (for "nezapocet")
+  numberOfStudents: Int # Number of students with that grade
+  percentage: Float # Percentage of that grade type
+}
+
+type GlobalPerformance {
+  year: String # Semester code
+  throughput: Float # Percentage of throughput
+  finalGrades: [Grade] # Stats about grades of that year
+}
+
+type Query {
+  getTeachersDashboard( # FILTER: filter students (or student's week) according to
+    sgt: Float # Student's "Score Greater Then" ...
+    slt: Float # Student's "Score Less Then" ...
+    pgt: Float # Student's "Percentile Greater Then" ...
+    plt: Float # Student's "Percentile Less Then" ...
+    wgt: Int # "Week Greater Then" ...
+    # actualy doesn't filter students' but tells that
+    # everything should be computed according this
+    wlt: Int # "Week Less Then" ...
+    # actualy doesn't filter students' but tells that
+    # everything should be computed according this
+    pe: ID # "Parallel id Equals to" ...
+    # All students in this parallel
+    ae: ID # "Assignent id Equals to" ...
+  ): # All student's assigned to certain assignment
+  TeachersDashboardData
+  getTeachersDashboardGlobal: [GlobalPerformance] # Four latest semester results
+}
