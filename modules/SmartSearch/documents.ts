@@ -23,6 +23,8 @@ interface SubmissionDocument {
     id: number;
     generatedAssignmentId: number;
     submittedScript: string;
+    submitterUsername: string;
+    assignmentName: string;
 }
 
 export type {UserDocument, AssignmentDocument, ExamDocument, SubmissionDocument};

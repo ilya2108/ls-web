@@ -20,6 +20,8 @@ const documentTypeQueryMapping = {
             id
             submittedScript
             generatedAssignmentId
+            submitterUsername
+            assignmentName
         }`,
     'examIndex': `examIndex(query: $query) {
             templateId
@@ -30,7 +32,7 @@ const documentTypeQueryMapping = {
 const allDocumentTypes = [{label: 'Assignment', value: 'assignmentIndex'}, {label: 'Exam', value: 'examIndex'}, {
     label: 'Submission',
     value: 'submissionIndex'
-}, {label: 'User', value: 'userIndex'}];
+}, {label: 'User', value: 'userIndex'}] as const;
 
 async function handleQuery(searchQuery: string, filterList) {
     const graphQlQuery = buildGraphQlQuery(filterList);
@@ -42,11 +44,11 @@ function buildGraphQlQuery(filterList) {
     if (filterList.length === 0) {
         filterList = allDocumentTypes;
     }
-    const innerQueries = filterList.map((docType) => documentTypeQueryMapping[docType.value]).join('')
+    const innerQueries = filterList.map((docType) => documentTypeQueryMapping[docType.value]).join('');
     const query = gql`query searchByGivenQuery($query: String!) {
         ${innerQueries}
     }`
     return query;
 }
 
-export {handleQuery, allDocumentTypes}
+export {handleQuery, allDocumentTypes};

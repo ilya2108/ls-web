@@ -12,6 +12,7 @@
     "@atlaskit/atlassian-navigation": "^0.11.4",
     "@atlaskit/banner": "^11.0.3",
     "@atlaskit/breadcrumbs": "^10.0.5",
+    "@atlaskit/code": "^13.2.1",
     "@atlaskit/css-reset": "^6.0.2",
     "@atlaskit/dynamic-table": "^14.1.2",
     "@atlaskit/flag": "^14.0.6",
