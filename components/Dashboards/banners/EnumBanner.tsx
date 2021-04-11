@@ -13,8 +13,8 @@ type Props = {
   title: string;
   description?: string;
   data: {
-    headers: any;
-    rows: any;
+    headers: string[];
+    rows: any[][];
   };
   defaultSortKey: string;
   defaultSortOrder: any;
@@ -110,7 +110,7 @@ export default function EnumBanner(props: Props) {
             isFixedSize
             defaultSortKey={props.defaultSortKey}
             defaultSortOrder={props.defaultSortOrder}
-            rowsPerPage={numberOfRowsPerPage()}             // numberOfRowsPerPage() TODO?
+            rowsPerPage={numberOfRowsPerPage()}
         />
     </ChartContainer>
   );

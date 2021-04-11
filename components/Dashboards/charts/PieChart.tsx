@@ -10,8 +10,8 @@ type Props = {
   title: string;
   description?: string;
   data: {
-    datasets: any;
-    label: any;
+      datasets: number[][];
+      label: string[] | number[];
   };
 };
 

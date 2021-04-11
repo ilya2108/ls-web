@@ -14,16 +14,34 @@ type Props = {
   userData: any;
 };
 
+type  StudentData = {
+    overallPercentileHistory: number[];
+    overallMedianHistory: number[];
+    scoreHistory: number[];
+    scoreHistogram: {
+        label: string[];
+        frequency: number[];
+    }
+    assignments: {
+        assignmentName: string[];
+        assignmentScore: number[];
+        assignmentPercentile: number[];
+        assignmentMedian: number[];
+        assignmentMaxScore: number[];
+    };
+    numberOfWeeks: number
+}
+
 export default function StudentsDashboard(props: Props) {
-    const score = calculateSemesterScore(props.userData.assignments);
+    const { assignments } = props.userData
 
     // representative data - TODO fetch data here
-    const data = studentData
+    const data: StudentData = studentData
 
   return (
     <Dashboard>
       <InfoBannersContainer>
-        <InfoBanner text={"Score:"} value={score} />
+        <InfoBanner text={"Score:"} value={calculateSemesterScore(assignments)} />
         <InfoBanner text={"Percentile:"} value={data.overallPercentileHistory[data.overallPercentileHistory.length - 1]} />
         <InfoBanner text={"Median:"} value={data.overallMedianHistory[data.overallMedianHistory.length - 1]} />
       </InfoBannersContainer>

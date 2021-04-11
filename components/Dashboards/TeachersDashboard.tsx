@@ -13,14 +13,51 @@ import {createParametersToQuery, validateInput} from "../../utils/dashboard-util
 import allStudentsData from'./__fixtures__/allStudentsData-TD.json'
 import dataForFiltering from './__fixtures__/dataForFiltering-TD.json'
 import dataGlobalPerformance from './__fixtures__/globalPerformance.json'
-import _ from "lodash"
-import PieChart from "./charts/PieChart";  // just for fixtures    TODO after fetching ready remove it
+import _ from "lodash"  // just for fixtures    TODO after fetching ready remove it
+import PieChart from "./charts/PieChart";
 
-type Props = {
-    userData: any;
+type TeachersDashboardData = {
+    median: number;
+    mode: number;
+    standardDeviation: number;
+    studentsNumber: number;
+    overallMedianHistory: number[];
+    medianHistory: number[];
+    lastYearOverallMedian: number[];
+    scoreHistogram: {
+        label: number[];
+        frequency: number[];
+    };
+    assignments: {
+        assignmentName: string[];
+        assignmentMedianPercentage: number[];
+        assignmentMedian: number[];
+        assignmentMaxScore: number[];
+    };
+    numberOfWeeks: number;
+    parallels: {
+        name: string[];
+        teacher: string[];
+        numOfStudents: number[];
+        median: number[];
+        percentileAverage: number[];
+    };
+    students: {
+        name: string[];
+        username: string[];
+        parallel: string[];
+        score: number[];
+        percentile: number[];
+    }
 }
 
-export default function TeachersDashboard(props: Props) {
+enum validationState {
+    default = 'default',
+    success = 'success',
+    error = 'error'
+}
+
+export default function TeachersDashboard() {
 
     const [filter, setFilter] = useState('All students');
     const parallels=dataForFiltering.parallels                                     // todo fetch all parallels
@@ -28,7 +65,9 @@ export default function TeachersDashboard(props: Props) {
     const globalPerformance=dataGlobalPerformance                                   // todo fetch
 
     // representative data - todo fetch data without filtering
-    const [data, setData] = useState(allStudentsData)
+    const load: TeachersDashboardData = allStudentsData
+
+    const [data, setData] = useState({"All students": load})
     const [filterCurrentValue, setFilterCurrentValue] = useState(undefined)
 
     const createDefaultOptions = [
@@ -56,7 +95,7 @@ export default function TeachersDashboard(props: Props) {
     ]
 
     const [options, setOptions] = useState(createDefaultOptions)
-    const [validation, setValidation] = useState("default")
+    const [validation, setValidation] = useState(validationState.default)
 
     const fetchData = (value) => {
         // fetch data if not cached already
@@ -76,8 +115,8 @@ export default function TeachersDashboard(props: Props) {
 
             const queryParameters = createParametersToQuery(filteringParameters)
 
-            data[value] = _.clone(allStudentsData["All students"])
-            data[value]["mode"] = queryParameters
+            // TODO fetch data here - with 'queryParameters'
+            data[value] = _.clone(data["All students"])
         }
         setFilter(value);
     }
@@ -85,7 +124,7 @@ export default function TeachersDashboard(props: Props) {
     const handleCreate = (inputValue: any) => {
         const value = validateInput(inputValue);
         if (value === "") {
-            setValidation("error")
+            setValidation(validationState.error)
             return
         }
 
@@ -97,7 +136,7 @@ export default function TeachersDashboard(props: Props) {
         options[3].options.push(newOption);
         setFilterCurrentValue(newOption)
         setOptions(options);
-        setValidation("success")
+        setValidation(validationState.success)
         fetchData("c:--" + value)
     };
 
@@ -112,7 +151,7 @@ export default function TeachersDashboard(props: Props) {
                 className="single-select"
                 classNamePrefix="react-select"
                 onChange={value => {
-                    setValidation("default");
+                    setValidation(validationState.default);
                     setFilterCurrentValue(value)
                     fetchData(value.value);
                 }}
