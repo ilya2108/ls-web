@@ -25,6 +25,12 @@ interface SubmissionDocument {
     submittedScript: string;
     submitterUsername: string;
     assignmentName: string;
+    correction: Correction | null;
+}
+
+interface Correction {
+    id: number;
+    score: number
 }
 
 export type {UserDocument, AssignmentDocument, ExamDocument, SubmissionDocument};

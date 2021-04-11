@@ -26,11 +26,12 @@ const assignmentAvatar = (
     />
 );
 
-const submissionAvatar = (
+const submissionAvatar = (correctionScore: Number | undefined | null) => (
     <Avatar
         src={submissionIcon}
         appearance="square"
         size="large"
+        status={correctionScore > 0 ? "approved" : "declined"}
     />
 );
 

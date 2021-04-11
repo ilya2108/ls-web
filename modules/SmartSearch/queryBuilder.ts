@@ -22,6 +22,10 @@ const documentTypeQueryMapping = {
             generatedAssignmentId
             submitterUsername
             assignmentName
+            correction {
+                id
+                score
+            }
         }`,
     'examIndex': `examIndex(query: $query) {
             templateId

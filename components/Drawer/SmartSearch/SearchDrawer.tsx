@@ -67,7 +67,7 @@ export default function SearchDrawer() {
                             content={<CodeBlock language="shell" text={el.submittedScript}>el.submittedScript</CodeBlock>}><ObjectResult
                 key={el.id} onClick={() => router.push(`/assignments/${el.generatedAssignmentId}`)} resultId={el.id}
                 name={`${el.assignmentName} (${el.submitterUsername})`}
-                avatar={submissionAvatar} containerName="submission" caption={el.submittedScript}/>
+                avatar={submissionAvatar(el.correction?.score)} containerName="submission" caption={el.submittedScript}/>
             </Tooltip>
         }
     ) ?? [] : [];
