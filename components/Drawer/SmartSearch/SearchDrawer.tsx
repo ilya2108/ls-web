@@ -56,14 +56,14 @@ export default function SearchDrawer() {
     }) ?? [] : [];
 
     const assignments = isDocumentTypeToggled('assignmentIndex') ? result.assignmentIndex?.map((el) => {
-        return <Tooltip component={SearchResultToolTip} content={el.description}>
+        return <Tooltip key={el.id} component={SearchResultToolTip} content={el.description}>
             <ObjectResult key={el.id} onClick={() => router.push(`/assignments/edit/${el.id}`)} resultId={el.id} name={el.name}
                           avatar={assignmentAvatar} containerName="assignment" caption={el.description}/>
         </Tooltip>
     }) ?? [] : [];
 
     const submissions = isDocumentTypeToggled('submissionIndex') ? result.submissionIndex?.map((el) => {
-            return <Tooltip component={SearchResultToolTip}
+            return <Tooltip  key={el.id} component={SearchResultToolTip}
                             content={<CodeBlock language="shell" text={el.submittedScript}>el.submittedScript</CodeBlock>}><ObjectResult
                 key={el.id} onClick={() => router.push(`/assignments/${el.generatedAssignmentId}`)} resultId={el.id}
                 name={`${el.assignmentName} (${el.submitterUsername})`}
