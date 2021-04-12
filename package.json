@@ -69,7 +69,8 @@
     "typescript": "^4.0.2"
   },
   "engines": {
-    "node": "12.x"
+    "node": "12.x",
+    "yarn": "3.x"
   },
   "resolutions": {
     "node-fetch": "2.6.1",
