@@ -29,6 +29,23 @@ type Student {
   id: ID! # student's ID
 }
 
+type AssignmentDetailVersion {
+  assignmentName: String # name of assignment
+  assignmentScore: Float # student's score from that assignment
+  assignmentPercentile: Float # percentile from that assignment
+  assignmentMedian: Float # median of score from this assignment of all students
+  assignmentMaxScore: Float # max. possible score from assignment
+}
+
+type StudentsDashboardData {
+  overallPercentileHistory: [Float] # history of student's percentile
+  overallMedianHistory: [Float] # history of student's median
+  scoreHistory: [Float] # history of student's score
+  scoreHistogram: ScoreHistogram # a histogram of student's score
+  assignments: [AssignmentDetailVersion] # all assignments student attended
+  numberOfWeeks: Int # number of weeks that were computed in median history (or others)
+}
+
 type TeachersDashboardData {
   median: Float # median of score of students
   mode: Float # Most frequent students' score
@@ -70,8 +87,10 @@ type Query {
     # everything should be computed according this
     pe: ID # "Parallel id Equals to" ...
     # All students in this parallel
-    ae: ID # "Assignent id Equals to" ...
-  ): # All student's assigned to certain assignment
-  TeachersDashboardData
+    ae: ID # "Assignent id Equals to" ... # All student's assigned to certain assignment
+  ): TeachersDashboardData
   getTeachersDashboardGlobal: [GlobalPerformance] # Four latest semester results
+  getStudentsDashboardData(
+    id: ID! # student's ID.
+  ): StudentsDashboardData
 }

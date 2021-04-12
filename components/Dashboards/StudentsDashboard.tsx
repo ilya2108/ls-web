@@ -9,6 +9,8 @@ import EnumBanner from "./banners/EnumBanner";
 import {calculateSemesterScore} from "../../utils/score-utils";
 import React from "react";
 import studentData from './__fixtures__/studentData-SD.json'
+import PieChart from "./charts/PieChart";
+import dataGlobalPerformance from "./__fixtures__/globalPerformance.json";
 
 type Props = {
   userData: any;
@@ -37,9 +39,11 @@ export default function StudentsDashboard(props: Props) {
 
     // representative data - TODO fetch data here
     const data: StudentData = studentData
+    const globalPerformance=dataGlobalPerformance                                   // todo fetch
 
   return (
-    <Dashboard>
+      <>
+          <Dashboard>
       <InfoBannersContainer>
         <InfoBanner text={"Score:"} value={calculateSemesterScore(assignments)} />
         <InfoBanner text={"Percentile:"} value={data.overallPercentileHistory[data.overallPercentileHistory.length - 1]} />
@@ -87,5 +91,26 @@ export default function StudentsDashboard(props: Props) {
         defaultSortOrder={"ASC"}
       />
     </Dashboard>
+    <hr style={{ height: "2px", borderWidth: 0, color: "#42526e", backgroundColor: "#42526e", margin: "40px"}} />
+    <>
+        <h3>Global Performance</h3>
+        <Dashboard>
+            <InfoBannersContainer>
+                <InfoBanner text={"Throughput " + globalPerformance.global[0].year + ":"} value={globalPerformance.global[0].throughput}/>
+            </InfoBannersContainer>
+            <PieChart title={"Students grades " + globalPerformance.global[0].year} data={{
+                datasets: [globalPerformance.global[0].finalGrades.map(grade => grade.percentage)],
+                label: globalPerformance.global[0].finalGrades.map(grade => grade.name)
+            }}
+            />
+            <BarChart title={"Grades comparison by year"} data={{
+                datasets: globalPerformance.global.map(y => y.finalGrades.map(grade => grade.percentage)),
+                label: globalPerformance.global[0].finalGrades.map(grade => grade.name),
+                datasetNames: globalPerformance.global.map(y => (y.year))
+            }}
+            />
+        </Dashboard>
+    </>
+    </>
   );
 }

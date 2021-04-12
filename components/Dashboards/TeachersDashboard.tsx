@@ -252,15 +252,15 @@ export default function TeachersDashboard() {
             <h3>Global Performance</h3>
             <Dashboard>
                 <InfoBannersContainer>
-                    <InfoBanner text={"Throughput:"} value={globalPerformance.global[0].throughput}/>
+                    <InfoBanner text={"Throughput " + globalPerformance.global[0].year + ":"} value={globalPerformance.global[0].throughput}/>
                 </InfoBannersContainer>
-                <PieChart title={"Students grades"} data={{
+                <PieChart title={"Students grades " + globalPerformance.global[0].year} data={{
                     datasets: [globalPerformance.global[0].finalGrades.map(grade => grade.percentage)],
                     label: globalPerformance.global[0].finalGrades.map(grade => grade.name)
                     }}
                 />
                 <BarChart title={"Grades comparison by year"} data={{
-                    datasets: dataGlobalPerformance.global.map(y => y.finalGrades.map(grade => grade.percentage)),
+                    datasets: globalPerformance.global.map(y => y.finalGrades.map(grade => grade.percentage)),
                     label: globalPerformance.global[0].finalGrades.map(grade => grade.name),
                     datasetNames: globalPerformance.global.map(y => (y.year))
                     }}
