@@ -33,4 +33,11 @@ interface Correction {
     score: number
 }
 
+const assignmentDocument = {label: 'Assignment', value: 'assignmentIndex'}
+const examDocument = {label: 'Exam', value: 'examIndex'}
+const submissionDocument = {label: 'Submission', value: 'submissionIndex'}
+const userDocument = {label: 'User', value: 'userIndex'}
+const allDocumentTypes = [assignmentDocument, examDocument, submissionDocument, userDocument] as const;
+
 export type {UserDocument, AssignmentDocument, ExamDocument, SubmissionDocument};
+export {allDocumentTypes, userDocument, assignmentDocument, examDocument, submissionDocument}

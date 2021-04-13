@@ -33,20 +33,15 @@ const documentTypeQueryMapping = {
         }`,
 }
 
-const allDocumentTypes = [{label: 'Assignment', value: 'assignmentIndex'}, {label: 'Exam', value: 'examIndex'}, {
-    label: 'Submission',
-    value: 'submissionIndex'
-}, {label: 'User', value: 'userIndex'}] as const;
-
-async function handleQuery(searchQuery: string, filterList) {
-    const graphQlQuery = buildGraphQlQuery(filterList);
+async function handleQuery(searchQuery: string, filterList, allSelectOptions) {
+    const graphQlQuery = buildGraphQlQuery(filterList, allSelectOptions);
     const searchQueryResult = await searchFetcher(graphQlQuery, {'query': searchQuery});
     return searchQueryResult;
 }
 
-function buildGraphQlQuery(filterList) {
+function buildGraphQlQuery(filterList, allSelectOptions) {
     if (filterList.length === 0) {
-        filterList = allDocumentTypes;
+        filterList = allSelectOptions;
     }
     const innerQueries = filterList.map((docType) => documentTypeQueryMapping[docType.value]).join('');
     const query = gql`query searchByGivenQuery($query: String!) {
@@ -55,4 +50,4 @@ function buildGraphQlQuery(filterList) {
     return query;
 }
 
-export {handleQuery, allDocumentTypes};
+export {handleQuery};

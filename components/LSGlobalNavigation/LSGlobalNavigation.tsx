@@ -86,7 +86,7 @@ class LSGlobalNavigation extends React.Component<Props, ILSGlobalNavigationState
         onSearchClick={this.openSearchDrawer}
         searchTooltip="Search"
         isSearchDrawerOpen={isSearchDrawerOpen}
-        searchDrawerContents={SearchDrawer}
+        searchDrawerContents={() => <SearchDrawer admin={this.props.admin}/>}
         onSearchDrawerClose={this.closeSearchDrawer}
         onSearchDrawerCloseComplete={this.onCloseComplete}
         shouldSearchDrawerUnmountOnExit={unmountOnExit}
