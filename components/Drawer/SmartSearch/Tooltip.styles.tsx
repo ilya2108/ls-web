@@ -1,9 +1,8 @@
 import styled from "styled-components";
-import Tooltip, { TooltipPrimitive } from '@atlaskit/tooltip';
-import {CodeBlock} from "@atlaskit/code";
+import Tooltip, {TooltipPrimitive} from '@atlaskit/tooltip';
 
 
-
+// Tooltip styled component
 export const SearchResultToolTip = styled(TooltipPrimitive)`
   background: white;
   border-radius: 4px;

@@ -1,6 +1,10 @@
-import {searchFetcher} from "../api";
-import {gql} from "graphql-request";
 
+import {gql} from "graphql-request";
+import {DocumentSelectOption, SearchResult} from "./documents";
+import {searchFetcher} from "./api";
+
+// Maps document type to its corresponding GraphQL API query.
+// Query variable is string representing search query.
 const documentTypeQueryMapping = {
     'userIndex': `userIndex(query: $query) {
             username
@@ -33,13 +37,26 @@ const documentTypeQueryMapping = {
         }`,
 }
 
-async function handleQuery(searchQuery: string, filterList, allSelectOptions) {
+/**
+ * Asynchronous entrypoint function which coordinates building GraphQL query from and fetching data using GraphQL API.
+ * @param searchQuery - String representing search query.
+ * @param filterList - Array of DocumentSelectOption objects to specify which document types to search.
+ * @param allSelectOptions - If filterList is empty, allSelectOptions is used.
+ * @return searchQueryResult - Promise of SearchResult object.
+ */
+async function handleQuery(searchQuery: string, filterList: Array<DocumentSelectOption>, allSelectOptions: Array<DocumentSelectOption>): Promise<SearchResult> {
     const graphQlQuery = buildGraphQlQuery(filterList, allSelectOptions);
     const searchQueryResult = await searchFetcher(graphQlQuery, {'query': searchQuery});
     return searchQueryResult;
 }
 
-function buildGraphQlQuery(filterList, allSelectOptions) {
+/**
+ * Builds GraphQL API query based on filterList.
+ * @param filterList - Array of DocumentSelectOption objects. Each member of the array will be mapped to its corresponding GraphQL query.
+ * @param allSelectOptions - If filterList is empty, allSelectOptions is used.
+ * @return query - String representing document types to be searched in GraphQL query language.
+ */
+function buildGraphQlQuery(filterList: Array<DocumentSelectOption>, allSelectOptions: Array<DocumentSelectOption>): string {
     if (filterList.length === 0) {
         filterList = allSelectOptions;
     }

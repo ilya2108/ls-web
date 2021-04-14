@@ -2,6 +2,9 @@ import Avatar from "@atlaskit/avatar";
 import {assignmentIcon, examIcon, submissionIcon, userIcon} from "../../../modules/SmartSearch/icons";
 import React from "react";
 
+
+// Avatar components used for search result rows.
+
 const examAvatar = (
     <Avatar
         src={examIcon}
