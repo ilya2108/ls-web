@@ -9,7 +9,6 @@ import {
 import router from "next/router"
 import {CheckboxSelect} from "@atlaskit/select";
 import {assignmentAvatar, examAvatar, submissionAvatar, userAvatar} from "./avatars";
-import {handleQuery} from "../../../modules/SmartSearch/queryBuilder";
 import {
     allDocumentTypes,
     DocumentSelectOption,
@@ -19,6 +18,7 @@ import {
 import Tooltip from "@atlaskit/tooltip";
 import {SearchResultToolTip} from "./Tooltip.styles";
 import {CodeBlock} from "@atlaskit/code";
+import {handleQuery} from "../../../modules/SmartSearch/searchQuery";
 
 
 /**

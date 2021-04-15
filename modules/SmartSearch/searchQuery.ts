@@ -1,7 +1,7 @@
 
 import {gql} from "graphql-request";
+import { searchFetcher } from "./api";
 import {DocumentSelectOption, SearchResult} from "./documents";
-import {searchFetcher} from "./api";
 
 // Maps document type to its corresponding GraphQL API query.
 // Query variable is string representing search query.
@@ -67,4 +67,4 @@ function buildGraphQlQuery(filterList: Array<DocumentSelectOption>, allSelectOpt
     return query;
 }
 
-export {handleQuery};
+export {handleQuery, buildGraphQlQuery};

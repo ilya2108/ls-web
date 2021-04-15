@@ -7,7 +7,7 @@ import {GraphQLClient} from "graphql-request";
  * @param variables - Object whose fields will be passed as variables to the GraphQL query.
  * @return data - Promise of SearchResult object.
  */
-export async function searchFetcher(query: string, variables: Object = {}): Promise<SearchResult> {
+async function searchFetcher(query: string, variables: Object = {}): Promise<SearchResult> {
     try {
         const endpoint = 'http://localhost:8000/graphql_search/';
         const client = new GraphQLClient(endpoint, {
@@ -24,3 +24,6 @@ export async function searchFetcher(query: string, variables: Object = {}): Prom
         throw e
     }
 }
+
+
+export {searchFetcher};
