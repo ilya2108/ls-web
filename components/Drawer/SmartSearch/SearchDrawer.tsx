@@ -49,10 +49,9 @@ export default function SearchDrawer(props: { admin: boolean }) {
         setIsLoading(false);
     }
 
-    const handleCheckBoxSelect = (event: []) => {
+    const handleCheckBoxSelect = (event: Array<DocumentSelectOption>) => {
         event ??= []
-        const filterList = event.map((el: { label: string, value: string }) => el);
-        setFilterList(filterList);
+        setFilterList(event);
         search(query);
     }
 

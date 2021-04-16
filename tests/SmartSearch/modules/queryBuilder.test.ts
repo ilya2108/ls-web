@@ -1,5 +1,5 @@
-import {assignmentDocument, examDocument, submissionDocument, userDocument} from "../../modules/SmartSearch/documents";
-import {buildGraphQlQuery} from "../../modules/SmartSearch/searchQuery";
+import {assignmentDocument, examDocument, submissionDocument, userDocument} from "../../../modules/SmartSearch/documents";
+import {buildGraphQlQuery} from "../../../modules/SmartSearch/searchQuery";
 
 
 describe('Test buildGraphQlQuery function', () => {

@@ -1,4 +1,4 @@
-import {searchFetcher} from "../../modules/SmartSearch/api";
+import {searchFetcher} from "../../../modules/SmartSearch/api";
 import * as graphql from 'graphql-request';
 
 jest.mock('graphql-request')
