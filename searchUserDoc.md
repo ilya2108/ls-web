@@ -51,8 +51,11 @@ Examples:
 
 **Bool operators**:
 Bool operators can be used to join or negate the meaning of several queries. Nesting operators using parantheses is not supported, but might be added in the future if found necessary.
+
 Precedence: *not > and > or* 
+
 Left association - and, or
+
 Right association - not
 
 - ***And operator*** - All queries must be matched by the document to be returned. Format: `<query1> <and, &> <query2> [<and|&> <query3>, ...]`
