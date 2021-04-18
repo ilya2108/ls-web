@@ -43,7 +43,7 @@ Examples:
 Examples: 
     - `"files and directories in \"$PATH\""` - Looks for documents with following phrase: *files and directories in "$PATH"*. 
 
-- ***Specific field query*** - It's used when we want the field to have exact value. The query must have the following format: `<field_name>: <zero_or_more_whitespaces> "<value>"`. Any field mentioned above which it makes sense for can be used. Sub-fields can be accessed using dot notation as explained in following examples.
+- ***Specific field query*** - It's used when we want the field to have exact value. The query must have the following format: `<field_name>: <zero_or_more_whitespaces> "<value>"`. Any field mentioned in the Searchable documents section which it makes sense for can be used. Sub-fields can be accessed using dot notation as shown in following examples.
 Examples: 
     - `is_admin:"true"` - Returns all users with admin privilegs.
     - `correction.score: "1"` - Returns submissions which have been corrected and received 1 point.
