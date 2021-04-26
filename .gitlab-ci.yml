@@ -31,7 +31,7 @@ deploy:
     - chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl
     # passing cluster kubeconfig to the gitlab-runner pod
     - mkdir -p $HOME/.kube
-    - echo -n $KUBE_CONFIG | base64 -d > $HOME/.kube/config
+    - echo $KUBE_CONFIG | base64 -d > $HOME/.kube/config
     # redeploying pod in order to pull newly built image
     - kubectl rollout restart deployment web
   ## only merge in case of commit made in the master branch
