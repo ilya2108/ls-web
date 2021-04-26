@@ -34,12 +34,25 @@ type  StudentData = {
     numberOfWeeks: number
 }
 
+type GlobalPerformance = {
+    global:
+        {
+            year: string;
+            throughput: number;
+            finalGrades: {
+               name: string;
+               numberOfStudents: number;
+               percentage: number;
+            }[]
+        }[]
+}
+
 export default function StudentsDashboard(props: Props) {
     const { assignments } = props.userData
 
     // representative data - TODO fetch data here
     const data: StudentData = studentData
-    const globalPerformance=dataGlobalPerformance                                   // todo fetch
+    const globalPerformance: GlobalPerformance =dataGlobalPerformance
 
   return (
       <>
@@ -75,6 +88,11 @@ export default function StudentsDashboard(props: Props) {
           label: Array(data.numberOfWeeks).fill(null).map((_, i) => ("week " + (i + 1))),
           datasetNames: ["Percentile history"]
         }}
+      />
+      <PieChart title={"Performance prediction"} data={{        // TODO
+          datasets: [globalPerformance.global[0].finalGrades.map(grade => grade.percentage)],
+          label: globalPerformance.global[0].finalGrades.map(grade => grade.name)
+      }}
       />
       <EnumBanner title={"Assignments"}
         data={{
