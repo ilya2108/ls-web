@@ -14,6 +14,7 @@ import dataGlobalPerformance from "./__fixtures__/globalPerformance.json";
 
 type Props = {
   userData: any;
+  settings: boolean;
 };
 
 type  StudentData = {
@@ -70,6 +71,7 @@ export default function StudentsDashboard(props: Props) {
           label: data.scoreHistogram.label,
           datasetNames: [""]
         }}
+        id={"bar-1"}
       />
       <LineChart
         title={"History of Median"}
@@ -126,6 +128,7 @@ export default function StudentsDashboard(props: Props) {
                 label: globalPerformance.global[0].finalGrades.map(grade => grade.name),
                 datasetNames: globalPerformance.global.map(y => (y.year))
             }}
+                      id={"bar-2"}
             />
         </Dashboard>
     </>
