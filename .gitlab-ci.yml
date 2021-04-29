@@ -16,7 +16,7 @@ build:
     # building our image
     - docker build -t $CI_REGISTRY/learnshell-2.0/ls-web .
     # run container derived from the image
-    - docker run --name ls-web -d $CI_REGISTRY/learnshell-2.0/ls-
+    - docker run --name ls-web -d $CI_REGISTRY/learnshell-2.0/ls-web
     # run tests
     - docker exec ls-web npm run test
     # push image into our private registry
