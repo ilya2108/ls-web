@@ -3,22 +3,24 @@ image: docker:latest
 services:
   - docker:dind
 
+
 stages:
   - build
   - deploy
   
-before_script:
-  - docker login -u "$CI_REGISTRY_USER" -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-
-# build Docker container, run tests if possible, and finally push into
+# build Docker image, run tests if possible, and finally push into
 # our private registry
 build:
   stage: build
   script:
-    # building our container
+    # building our image
     - docker build -t $CI_REGISTRY/learnshell-2.0/ls-web .
-    - docker run --name ls-web -d $CI_REGISTRY/learnshell-2.0/ls-web
+    # run container derived from the image
+    - docker run --name ls-web -d $CI_REGISTRY/learnshell-2.0/ls-
+    # run tests
     - docker exec ls-web npm run test
+    # push image into our private registry
+    - docker login -u "$CI_REGISTRY_USER" -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker push $CI_REGISTRY/learnshell-2.0/ls-web
   ## only build in case of commit made in the master branch
   #only:
@@ -33,7 +35,7 @@ deploy:
     # installing curl in order to send patch request to k8s api
     - apk update  && apk add --no-cache curl
     # by updating a timestamp in the deployment spec of the deployment,
-    # we force a redeployment. Extremely hacky, but best we can do right now.
+    # we force a redeployment. Very hacky, but best we can do right now.
     - 'curl --data {\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"kubectl.kubernetes.io/restartedAt\":\"2006-01-02T15:04:05Z07:00\"}}}}} -X PATCH -H "Accept: application/json, */*" -H "Content-Type: application/strategic-merge-patch+json" -H "Authorization: Bearer $KUBE_SERVICEACCOUNT_TOKEN" https://35.187.2.233/apis/apps/v1/namespaces/learnshell/deployments/web/ --insecure'
   ## only deploy in case of commit made in the master branch
   #only:
