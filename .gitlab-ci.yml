@@ -16,7 +16,7 @@ build:
     - docker login -u "$CI_REGISTRY_USER" -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -t $CI_REGISTRY/learnshell-2.0/ls-web .
     - docker push $CI_REGISTRY/learnshell-2.0/ls-web
-  ## only merge in case of commit made in the master branch
+  ## only build in case of commit made in the master branch
   #only:
   #  - master 
     
@@ -27,13 +27,7 @@ deploy:
   script:
     # installing kubectl using curl (as recommended in Google's docs)
     - apk update  && apk add --no-cache curl
-    - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-    - chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl
-    # passing cluster kubeconfig to the gitlab-runner pod
-    - mkdir -p $HOME/.kube
-    - echo $KUBE_CONFIG | base64 -d > $HOME/.kube/config
-    # redeploying pod in order to pull newly built image
-    - kubectl rollout restart deployment web
-  ## only merge in case of commit made in the master branch
+    - curl --data {\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"kubectl.kubernetes.io/restartedAt\":\"2006-01-02T15:04:05Z07:00\"}}}}} -X PATCH -H "Accept: application/json, */*" -H "Content-Type: application/strategic-merge-patch+json" -H "Authorization: Bearer $KUBE_SERVICEACCOUNT_TOKEN" https://35.187.2.233/apis/apps/v1/namespaces/learnshell/deployments/web/ --insecure
+  ## only deploy in case of commit made in the master branch
   #only:
   #  - master
