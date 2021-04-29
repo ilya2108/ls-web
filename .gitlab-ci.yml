@@ -17,7 +17,8 @@ build:
   script:
     # building our container
     - docker build -t $CI_REGISTRY/learnshell-2.0/ls-web .
-    - docker exec $CI_REGISTRY/learnshell-2.0/ls-web npm run test
+    - docker run --name ls-web -d $CI_REGISTRY/learnshell-2.0/ls-web
+    - docker exec ls-web npm run test
     - docker push $CI_REGISTRY/learnshell-2.0/ls-web
   ## only build in case of commit made in the master branch
   #only:
