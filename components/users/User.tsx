@@ -303,7 +303,7 @@ export default function UserPage(props: Props) {
           {active == "Assignments" && !profile && (
             <UserSubmissionsSection userData={userData} />
           )}
-          {active == "Dashboard" && !isStaff && <StudentsDashboard userData={userData} settings={!isStaff} />}
+          {active == "Dashboard" && !isStaff && <StudentsDashboard userData={userData} userId={userId} settings={!isStaff} />}
           {active == "Dashboard" && profile && isStaff && <TeachersDashboard />}
         </TabContent>
       )}
