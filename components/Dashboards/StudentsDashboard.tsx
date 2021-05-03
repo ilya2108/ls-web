@@ -19,6 +19,7 @@ type Props = {
   userData: any;
   settings: boolean;
   userId: string;
+  profile: boolean;
 };
 
 type GlobalPerformance = {
@@ -34,10 +35,25 @@ type GlobalPerformance = {
 };
 
 export default function StudentsDashboard(props: Props) {
+    const {
+        firstName,
+        lastName,
+        email,
+        assignments,
+        dateJoined,
+        isActive,
+        isStaff,
+        isSuperuser,
+        username,
+        courses,
+        parallels,
+        id,
+    } = props.userData || [];
+
   const { data: studentDashboardData, error: errorStudentData } = useSWR(
     gql`
             query getStudentDashboardData{
-                UserList(id: ${props.userId}) {
+                UserList(id: ${props.profile ? id : props.userId}) {
                     results {
                         username                # self explanatory
                         userstat {
@@ -47,6 +63,7 @@ export default function StudentsDashboard(props: Props) {
                             userAssignmentStat {
                                 results {
                                     assignment {          # assignment data, all self explanatory
+                                        id
                                         name
                                         median
                                         maxScore            # max possible score of assignment
@@ -63,6 +80,9 @@ export default function StudentsDashboard(props: Props) {
         `,
     fetcher
   );
+  // console.log("STUDENTDASHBOARDDATA:")
+  // console.log(studentDashboardData);
+  // console.log(`props.profile ? id : props.userId ===> id=${id}, props.userId=${props.userId} ===> ${props.profile ? id : props.userId}`)
 
   const roundUp = (num, precision) => {
     precision = Math.pow(10, precision);
@@ -148,8 +168,6 @@ export default function StudentsDashboard(props: Props) {
     medianData.CourseStatList.results[0].medianHistory = medianData.CourseStatList.results[0].medianHistory.map(
       (val) => {
         if (val !== 0) prev = val;
-        // console.log("I'm doing it")
-        // console.log(prev)
         return prev;
       }
     );
@@ -267,6 +285,7 @@ export default function StudentsDashboard(props: Props) {
                 "Percentile",
                 "Median",
                 "Max Score",
+                "Assigned in week",
               ],
               rows: studentDashboardData.UserList.results[0].userstat.userAssignmentStat.results.map(
                 (item) => [
@@ -275,11 +294,19 @@ export default function StudentsDashboard(props: Props) {
                   item.percentile,
                   item.assignment.median,
                   item.assignment.maxScore,
+                  item.assignment.weekOfSemester
                 ]
               ),
             }}
             defaultSortKey={"Percentile"}
             defaultSortOrder={"ASC"}
+            links={ isStaff ? null :
+                {
+                urlPrefix: "/assignments/edit/",
+                nameId: studentDashboardData.UserList.results[0].userstat.userAssignmentStat.results.map(item => (
+                    item.assignment.id
+                ))
+            }}
           />
         </Dashboard>
       )}

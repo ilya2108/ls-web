@@ -8,6 +8,7 @@ import {SearchWrapper} from "../../../pages-styles/UsersPage/UsersPage.styles";
 import debounce from "lodash/debounce";
 import DownloadIcon from '@atlaskit/icon/glyph/download';
 import {CSVLink} from "react-csv";
+import Link from "next/link";
 
 type Props = {
   title: string;
@@ -18,6 +19,10 @@ type Props = {
   };
   defaultSortKey: string;
   defaultSortOrder: any;
+  links?: {
+      nameId: any[];
+      urlPrefix: string;
+  }
 };
 
 export default function EnumBanner(props: Props) {
@@ -66,7 +71,14 @@ export default function EnumBanner(props: Props) {
                 cells: row.map((rowItem,index) => (
                     {
                         key: rowItem + "-" + i + "-" + index,
-                        content: (
+                        content: index === 0 && props.links ?
+                            (
+                                <Link href={props.links.urlPrefix + `${encodeURIComponent(props.links.nameId[i])}`}>
+                                    <a>
+                                        {rowItem}
+                                    </a>
+                                </Link>
+                            ) : (
                             <span>{rowItem}</span>
                         ),
                     }
