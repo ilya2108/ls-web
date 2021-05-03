@@ -5,6 +5,7 @@ import getColours, {
   Title,
 } from "../../../pages-styles/UserPage/UserPage.styles";
 import Tooltip from "../Tooltip";
+import Lozenge from "@atlaskit/lozenge";
 
 type Props = {
   title: string;
@@ -14,6 +15,7 @@ type Props = {
     label: string[] | number[];
     datasetNames: string[];
   };
+  disabled?: boolean;
 };
 
 export default function LineChart(props: Props) {
@@ -21,6 +23,7 @@ export default function LineChart(props: Props) {
     <ChartContainer>
       <Title>{props.title}</Title>
       {props.description && <Tooltip description={props.description} />}
+      {props.disabled  && <span style={{marginLeft: "10px"}}><Lozenge isBold>Is disabled</Lozenge></span>}
       <Line
         data={{
           labels: props.data.label,

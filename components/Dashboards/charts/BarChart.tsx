@@ -4,6 +4,7 @@ import getColours, {
   ChartContainer, Title,
 } from "../../../pages-styles/UserPage/UserPage.styles";
 import Tooltip from "../Tooltip";
+import Lozenge from "@atlaskit/lozenge";
 
 type Props = {
   title: string;
@@ -14,6 +15,7 @@ type Props = {
     datasetNames: string[];
   };
   id?: string;
+  disabled?: boolean;
 };
 
 export default function BarChart(props: Props) {
@@ -21,6 +23,7 @@ export default function BarChart(props: Props) {
     <ChartContainer>
       <Title>{props.title}</Title>
       {props.description && <Tooltip description={props.description} />}
+      {props.disabled  && <span style={{marginLeft: "10px"}}><Lozenge isBold>Is disabled</Lozenge></span>}
       <Bar
         data={{
           labels: props.data.label,

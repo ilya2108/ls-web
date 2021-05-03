@@ -9,6 +9,7 @@ import debounce from "lodash/debounce";
 import DownloadIcon from '@atlaskit/icon/glyph/download';
 import {CSVLink} from "react-csv";
 import Link from "next/link";
+import Lozenge from "@atlaskit/lozenge";
 
 type Props = {
   title: string;
@@ -23,6 +24,7 @@ type Props = {
       nameId: any[];
       urlPrefix: string;
   }
+  disabled?: boolean;
 };
 
 export default function EnumBanner(props: Props) {
@@ -104,6 +106,7 @@ export default function EnumBanner(props: Props) {
             <DownloadIcon size={"medium"} label={"download"} />
         </CSVLink>
       </span>
+        {props.disabled  && <span style={{marginLeft: "10px"}}><Lozenge isBold>Is disabled</Lozenge></span>}
 
         <SearchWrapper style={{paddingTop: "10px"}}>
             <Textfield

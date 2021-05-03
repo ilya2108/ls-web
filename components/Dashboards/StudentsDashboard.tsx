@@ -14,6 +14,7 @@ import { gql } from "graphql-request";
 import { fetcher } from "../../modules/api";
 import Error from "../Error";
 import HugeSpinner from "../HugeSpinner/HugeSpinner";
+import settings from "./__settings__/settings.json";
 
 type Props = {
   userData: any;
@@ -35,20 +36,20 @@ type GlobalPerformance = {
 };
 
 export default function StudentsDashboard(props: Props) {
-    const {
-        firstName,
-        lastName,
-        email,
-        assignments,
-        dateJoined,
-        isActive,
-        isStaff,
-        isSuperuser,
-        username,
-        courses,
-        parallels,
-        id,
-    } = props.userData || [];
+  const {
+    firstName,
+    lastName,
+    email,
+    assignments,
+    dateJoined,
+    isActive,
+    isStaff,
+    isSuperuser,
+    username,
+    courses,
+    parallels,
+    id,
+  } = props.userData || [];
 
   const { data: studentDashboardData, error: errorStudentData } = useSWR(
     gql`
@@ -87,7 +88,7 @@ export default function StudentsDashboard(props: Props) {
   const roundUp = (num, precision) => {
     precision = Math.pow(10, precision);
     return Math.ceil(num * precision) / precision;
-  }
+  };
 
   if (studentDashboardData) {
     studentDashboardData.UserList.results[0].userstat.percentileHistory = studentDashboardData.UserList.results[0].userstat.percentileHistory.map(
@@ -185,6 +186,10 @@ export default function StudentsDashboard(props: Props) {
     return <Error />;
   }
 
+  const checkVisibility = (item) =>
+    !props.profile || settings.studentDashboardComponents[item];
+  const checkDisabled = (item) => !settings.studentDashboardComponents[item];
+
   return (
     <>
       {renderSpinner ? (
@@ -192,122 +197,150 @@ export default function StudentsDashboard(props: Props) {
       ) : error ? null : (
         <Dashboard>
           <InfoBannersContainer>
-            <InfoBanner
-              text={"Score:"}
-              value={studentDashboardData.UserList.results[0].userstat.score}
-            />
-            <InfoBanner
-              text={"Percentile:"}
-              value={
-                studentDashboardData.UserList.results[0].userstat
-                  .percentileHistory[
+            {checkVisibility("score") && (
+              <InfoBanner
+                text={"Score:"}
+                value={studentDashboardData.UserList.results[0].userstat.score}
+                disabled={checkDisabled("score")}
+              />
+            )}
+            {checkVisibility("percentile") && (
+              <InfoBanner
+                text={"Percentile:"}
+                value={
                   studentDashboardData.UserList.results[0].userstat
-                    .percentileHistory.length - 1
-                ]
-              }
-            />
-            <InfoBanner
-              text={"Median:"}
-              value={medianData.CourseStatList.results[0].median}
-            />
+                    .percentileHistory[
+                    studentDashboardData.UserList.results[0].userstat
+                      .percentileHistory.length - 1
+                  ]
+                }
+                disabled={checkDisabled("percentile")}
+              />
+            )}
+            {checkVisibility("median") && (
+              <InfoBanner
+                text={"Median:"}
+                value={medianData.CourseStatList.results[0].median}
+                disabled={checkDisabled("median")}
+              />
+            )}
           </InfoBannersContainer>
-          <BarChart
-            title={"Students' Score Histogram"}
-            description={"Graph shows the distribution of the student score"}
-            data={{
-              datasets: [
-                histogramData.CourseStatList.results[0].scoreHistogram.results.map(
-                  (item) => item.frequency
+          {checkVisibility("scoreHistogram") && (
+            <BarChart
+              title={"Students' Score Histogram"}
+              description={"Graph shows the distribution of the student score"}
+              data={{
+                datasets: [
+                  histogramData.CourseStatList.results[0].scoreHistogram.results.map(
+                    (item) => item.frequency
+                  ),
+                ],
+                label: histogramData.CourseStatList.results[0].scoreHistogram.results.map(
+                  (item) => [item.score]
                 ),
-              ],
-              label: histogramData.CourseStatList.results[0].scoreHistogram.results.map(
-                (item) => [item.score]
-              ),
-              datasetNames: [""],
-            }}
-            id={"bar-1"}
-          />
-          <LineChart
-            title={"History of Median"}
-            description={
-              "Graph shows history of overall median of score and compares it to my score"
-            }
-            data={{
-              datasets: [
-                studentDashboardData.UserList.results[0].userstat.scoreHistory,
-                medianData.CourseStatList.results[0].medianHistory,
-              ],
-              label: Array(
-                studentDashboardData.UserList.results[0].userstat.scoreHistory
-                  .length
-              )
-                .fill(null)
-                .map((_, i) => "week " + (i + 1)),
-              datasetNames: ["My score", "Students overall median"],
-            }}
-          />
-          <LineChart
-            title={"History of Percentile"}
-            description={"Chart shows history of my percentile"}
-            data={{
-              datasets: [
-                studentDashboardData.UserList.results[0].userstat
-                  .percentileHistory,
-              ],
-              label: Array(
-                studentDashboardData.UserList.results[0].userstat
-                  .percentileHistory.length
-              )
-                .fill(null)
-                .map((_, i) => "week " + (i + 1)),
-              datasetNames: ["Percentile history"],
-            }}
-          />
-          <PieChart
-            title={"Performance prediction"}
-            data={{
-              datasets: [
-                globalPerformance.global[0].finalGrades.map(
-                  (grade) => grade.percentage
+                datasetNames: [""],
+              }}
+              id={"scoreHistogram"}
+              disabled={checkDisabled("scoreHistogram")}
+            />
+          )}
+          {checkVisibility("medianHistory") && (
+            <LineChart
+              title={"History of Median"}
+              description={
+                "Graph shows history of overall median of score and compares it to my score"
+              }
+              data={{
+                datasets: [
+                  studentDashboardData.UserList.results[0].userstat
+                    .scoreHistory,
+                  medianData.CourseStatList.results[0].medianHistory,
+                ],
+                label: Array(
+                  studentDashboardData.UserList.results[0].userstat.scoreHistory
+                    .length
+                )
+                  .fill(null)
+                  .map((_, i) => "week " + (i + 1)),
+                datasetNames: ["My score", "Students overall median"],
+              }}
+              disabled={checkDisabled("medianHistory")}
+            />
+          )}
+          {checkVisibility("percentileHistory") && (
+            <LineChart
+              title={"History of Percentile"}
+              description={"Chart shows history of my percentile"}
+              data={{
+                datasets: [
+                  studentDashboardData.UserList.results[0].userstat
+                    .percentileHistory,
+                ],
+                label: Array(
+                  studentDashboardData.UserList.results[0].userstat
+                    .percentileHistory.length
+                )
+                  .fill(null)
+                  .map((_, i) => "week " + (i + 1)),
+                datasetNames: ["Percentile history"],
+              }}
+              disabled={checkDisabled("percentileHistory")}
+            />
+          )}
+          {checkVisibility("performancePrediction") && (
+            <PieChart
+              title={"Performance prediction"}
+              data={{
+                datasets: [
+                  globalPerformance.global[0].finalGrades.map(
+                    (grade) => grade.percentage
+                  ),
+                ],
+                label: globalPerformance.global[0].finalGrades.map(
+                  (grade) => grade.name
                 ),
-              ],
-              label: globalPerformance.global[0].finalGrades.map(
-                (grade) => grade.name
-              ),
-            }}
-          />
-          <EnumBanner
-            title={"Assignments"}
-            data={{
-              headers: [
-                "Assignment name",
-                "My Score",
-                "Percentile",
-                "Median",
-                "Max Score",
-                "Assigned in week",
-              ],
-              rows: studentDashboardData.UserList.results[0].userstat.userAssignmentStat.results.map(
-                (item) => [
-                  item.assignment.name,
-                  item.score,
-                  item.percentile,
-                  item.assignment.median,
-                  item.assignment.maxScore,
-                  item.assignment.weekOfSemester
-                ]
-              ),
-            }}
-            defaultSortKey={"Percentile"}
-            defaultSortOrder={"ASC"}
-            links={ isStaff ? null :
-                {
-                urlPrefix: "/assignments/edit/",
-                nameId: studentDashboardData.UserList.results[0].userstat.userAssignmentStat.results.map(item => (
-                    item.assignment.id
-                ))
-            }}
-          />
+              }}
+              disabled={checkDisabled("performancePrediction")}
+            />
+          )}
+          {checkVisibility("assignments") && (
+            <EnumBanner
+              title={"Assignments"}
+              data={{
+                headers: [
+                  "Assignment name",
+                  "My Score",
+                  "Percentile",
+                  "Median",
+                  "Max Score",
+                  "Assigned in week",
+                ],
+                rows: studentDashboardData.UserList.results[0].userstat.userAssignmentStat.results.map(
+                  (item) => [
+                    item.assignment.name,
+                    item.score,
+                    item.percentile,
+                    item.assignment.median,
+                    item.assignment.maxScore,
+                    item.assignment.weekOfSemester,
+                  ]
+                ),
+              }}
+              defaultSortKey={"Percentile"}
+              defaultSortOrder={"ASC"}
+              links={
+                isStaff
+                  ? null
+                  : {
+                      urlPrefix: "/assignments/edit/",
+                      nameId: studentDashboardData.UserList.results[0].userstat.userAssignmentStat.results.map(
+                        (item) => item.assignment.id
+                      ),
+                    }
+              }
+              disabled={checkDisabled("assignments")}
+            />
+          )}
         </Dashboard>
       )}
       <hr
@@ -320,40 +353,49 @@ export default function StudentsDashboard(props: Props) {
         }}
       />
       <>
-        <h3>Global Performance</h3>
+        <h3>Course Performance</h3>
         <Dashboard>
           <InfoBannersContainer>
-            <InfoBanner
-              text={"Throughput " + globalPerformance.global[0].year + ":"}
-              value={globalPerformance.global[0].throughput}
-            />
+            {checkVisibility("throughput") && (
+              <InfoBanner
+                text={"Throughput " + globalPerformance.global[0].year + ":"}
+                value={globalPerformance.global[0].throughput}
+                disabled={checkDisabled("throughput")}
+              />
+            )}
           </InfoBannersContainer>
-          <PieChart
-            title={"Students grades " + globalPerformance.global[0].year}
-            data={{
-              datasets: [
-                globalPerformance.global[0].finalGrades.map(
-                  (grade) => grade.percentage
+          {checkVisibility("grades") && (
+            <PieChart
+              title={"Students grades " + globalPerformance.global[0].year}
+              data={{
+                datasets: [
+                  globalPerformance.global[0].finalGrades.map(
+                    (grade) => grade.percentage
+                  ),
+                ],
+                label: globalPerformance.global[0].finalGrades.map(
+                  (grade) => grade.name
                 ),
-              ],
-              label: globalPerformance.global[0].finalGrades.map(
-                (grade) => grade.name
-              ),
-            }}
-          />
-          <BarChart
-            title={"Grades comparison by year"}
-            data={{
-              datasets: globalPerformance.global.map((y) =>
-                y.finalGrades.map((grade) => grade.percentage)
-              ),
-              label: globalPerformance.global[0].finalGrades.map(
-                (grade) => grade.name
-              ),
-              datasetNames: globalPerformance.global.map((y) => y.year),
-            }}
-            id={"bar-2"}
-          />
+              }}
+              disabled={checkDisabled("grades")}
+            />
+          )}
+          {checkVisibility("gradesByYear") && (
+            <BarChart
+              title={"Grades comparison by year"}
+              data={{
+                datasets: globalPerformance.global.map((y) =>
+                  y.finalGrades.map((grade) => grade.percentage)
+                ),
+                label: globalPerformance.global[0].finalGrades.map(
+                  (grade) => grade.name
+                ),
+                datasetNames: globalPerformance.global.map((y) => y.year),
+              }}
+              id={"gradesByYear"}
+              disabled={checkDisabled("gradesByYear")}
+            />
+          )}
         </Dashboard>
       </>
     </>

@@ -5,6 +5,7 @@ import getColours, {
     Title
 } from "../../../pages-styles/UserPage/UserPage.styles";
 import Tooltip from "../Tooltip";
+import Lozenge from "@atlaskit/lozenge";
 
 type Props = {
   title: string;
@@ -13,6 +14,7 @@ type Props = {
       datasets: number[][];
       label: string[] | number[];
   };
+  disabled?: boolean;
 };
 
 export default function PieChart(props: Props) {
@@ -20,6 +22,7 @@ export default function PieChart(props: Props) {
     <ChartContainer>
       <Title>{props.title}</Title>
         {props.description && <Tooltip description={props.description} />}
+        {props.disabled  && <span style={{marginLeft: "10px"}}><Lozenge isBold>Is disabled</Lozenge></span>}
       <Pie
         data={{
           labels: props.data.label,

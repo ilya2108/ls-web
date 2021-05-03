@@ -1,5 +1,15 @@
 {
-  "components": {
-
+  "studentDashboardComponents": {
+      "score": true,
+      "percentile": true,
+      "median": true,
+      "scoreHistogram": true,
+      "medianHistory": true,
+      "percentileHistory": true,
+      "performancePrediction": false,
+      "assignments": true,
+      "throughput": false,
+      "grades": false,
+      "gradesByYear": false
   }
 }

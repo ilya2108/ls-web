@@ -1,9 +1,11 @@
 import React from "react";
-import { InfoBannerContent } from "../../../pages-styles/UserPage/UserPage.styles";
+import {ChartContainer, InfoBannerContent} from "../../../pages-styles/UserPage/UserPage.styles";
+import Lozenge from "@atlaskit/lozenge";
 
 type Props = {
   text: string;
   value: any;
+  disabled?: boolean;
 };
 
 export default function InfoBanner(props: Props) {
@@ -11,6 +13,7 @@ export default function InfoBanner(props: Props) {
     <InfoBannerContent>
       <span>{props.text}</span>
       <span>{props.value}</span>
+      {props.disabled  && <span style={{marginLeft: "10px"}}><Lozenge isBold>Is disabled</Lozenge></span>}
     </InfoBannerContent>
   );
 }
