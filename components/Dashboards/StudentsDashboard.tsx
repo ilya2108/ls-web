@@ -15,6 +15,8 @@ import { fetcher } from "../../modules/api";
 import Error from "../Error";
 import HugeSpinner from "../HugeSpinner/HugeSpinner";
 import settings from "./__settings__/settings.json";
+import Toggle from "@atlaskit/toggle";
+import Tooltip from "./Tooltip";
 
 type Props = {
   userData: any;
@@ -81,9 +83,6 @@ export default function StudentsDashboard(props: Props) {
         `,
     fetcher
   );
-  // console.log("STUDENTDASHBOARDDATA:")
-  // console.log(studentDashboardData);
-  // console.log(`props.profile ? id : props.userId ===> id=${id}, props.userId=${props.userId} ===> ${props.profile ? id : props.userId}`)
 
   const roundUp = (num, precision) => {
     precision = Math.pow(10, precision);
@@ -178,7 +177,6 @@ export default function StudentsDashboard(props: Props) {
   const globalPerformance: GlobalPerformance = dataGlobalPerformance;
 
   const error = errorStudentData || errorHistogram || errorMedian;
-  // render spinner
   const renderSpinner =
     !error && (!studentDashboardData || !histogramData || !medianData);
 
@@ -195,163 +193,203 @@ export default function StudentsDashboard(props: Props) {
       {renderSpinner ? (
         <HugeSpinner />
       ) : error ? null : (
-        <Dashboard>
-          <InfoBannersContainer>
-            {checkVisibility("score") && (
-              <InfoBanner
-                text={"Score:"}
-                value={studentDashboardData.UserList.results[0].userstat.score}
-                disabled={checkDisabled("score")}
-              />
-            )}
-            {checkVisibility("percentile") && (
-              <InfoBanner
-                text={"Percentile:"}
-                value={
-                  studentDashboardData.UserList.results[0].userstat
-                    .percentileHistory[
-                    studentDashboardData.UserList.results[0].userstat
-                      .percentileHistory.length - 1
-                  ]
+        <>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "250px",
+              paddingBottom: "20px",
+            }}
+          >
+            <span>
+              <strong
+                style={{
+                  textAlign: "center",
+                  display: "inline-block",
+                  marginTop: "4px",
+                  textSizeAdjust: "16px",
+                }}
+              >
+                Enable idle students:
+              </strong>
+              <Tooltip
+                description={
+                  "Shows stats of non idle students (students with higher score than particular value)"
                 }
-                disabled={checkDisabled("percentile")}
+              />
+            </span>
+            <Toggle
+              id="toggle-large"
+              size="large"
+              defaultChecked={
+                settings.studentDashboardIdleToggle.enabledByDefaultFromWeek
+                  ? settings.studentDashboardIdleToggle
+                      .enabledByDefaultFromWeek <=
+                    studentDashboardData.UserList.results[0].userstat
+                      .percentileHistory.length
+                  : false
+              }
+              onChange={() => {}}
+            />
+          </div>
+          <Dashboard>
+            <InfoBannersContainer>
+              {checkVisibility("score") && (
+                <InfoBanner
+                  text={"My Score:"}
+                  value={
+                    studentDashboardData.UserList.results[0].userstat.score
+                  }
+                  disabled={checkDisabled("score")}
+                />
+              )}
+              {checkVisibility("percentile") && (
+                <InfoBanner
+                  text={"Percentile:"}
+                  value={
+                    studentDashboardData.UserList.results[0].userstat
+                      .percentileHistory[
+                      studentDashboardData.UserList.results[0].userstat
+                        .percentileHistory.length - 1
+                    ]
+                  }
+                  disabled={checkDisabled("percentile")}
+                />
+              )}
+              {checkVisibility("median") && (
+                <InfoBanner
+                  text={"Median:"}
+                  value={medianData.CourseStatList.results[0].median}
+                  disabled={checkDisabled("median")}
+                />
+              )}
+            </InfoBannersContainer>
+            {checkVisibility("scoreHistogram") && (
+              <BarChart
+                title={"Students' Score Histogram"}
+                description={
+                  "Graph shows the distribution of the student score"
+                }
+                data={{
+                  datasets: [
+                    histogramData.CourseStatList.results[0].scoreHistogram.results.map(
+                      (item) => item.frequency
+                    ),
+                  ],
+                  label: histogramData.CourseStatList.results[0].scoreHistogram.results.map(
+                    (item) => [item.score]
+                  ),
+                  datasetNames: [""],
+                }}
+                id={"scoreHistogram"}
+                disabled={checkDisabled("scoreHistogram")}
               />
             )}
-            {checkVisibility("median") && (
-              <InfoBanner
-                text={"Median:"}
-                value={medianData.CourseStatList.results[0].median}
-                disabled={checkDisabled("median")}
+            {checkVisibility("medianHistory") && (
+              <LineChart
+                title={"History of Median"}
+                description={
+                  "Graph shows history of overall median of score and compares it to my score"
+                }
+                data={{
+                  datasets: [
+                    studentDashboardData.UserList.results[0].userstat
+                      .scoreHistory,
+                    medianData.CourseStatList.results[0].medianHistory,
+                  ],
+                  label: Array(
+                    studentDashboardData.UserList.results[0].userstat
+                      .scoreHistory.length
+                  )
+                    .fill(null)
+                    .map((_, i) => "week " + (i + 1)),
+                  datasetNames: ["My score", "Students overall median"],
+                }}
+                disabled={checkDisabled("medianHistory")}
               />
             )}
-          </InfoBannersContainer>
-          {checkVisibility("scoreHistogram") && (
-            <BarChart
-              title={"Students' Score Histogram"}
-              description={"Graph shows the distribution of the student score"}
-              data={{
-                datasets: [
-                  histogramData.CourseStatList.results[0].scoreHistogram.results.map(
-                    (item) => item.frequency
+            {checkVisibility("percentileHistory") && (
+              <LineChart
+                title={"History of Percentile"}
+                description={"Graph shows history of my percentile"}
+                data={{
+                  datasets: [
+                    studentDashboardData.UserList.results[0].userstat
+                      .percentileHistory,
+                  ],
+                  label: Array(
+                    studentDashboardData.UserList.results[0].userstat
+                      .percentileHistory.length
+                  )
+                    .fill(null)
+                    .map((_, i) => "week " + (i + 1)),
+                  datasetNames: ["Percentile history"],
+                }}
+                disabled={checkDisabled("percentileHistory")}
+              />
+            )}
+            {checkVisibility("performancePrediction") && (
+              <PieChart
+                title={"Performance prediction"}
+                description={
+                  "Graph shows final grades ratio of last year students matched with my score and week"
+                }
+                data={{
+                  datasets: [
+                    globalPerformance.global[0].finalGrades.map(
+                      (grade) => grade.percentage
+                    ),
+                  ],
+                  label: globalPerformance.global[0].finalGrades.map(
+                    (grade) => grade.name
                   ),
-                ],
-                label: histogramData.CourseStatList.results[0].scoreHistogram.results.map(
-                  (item) => [item.score]
-                ),
-                datasetNames: [""],
-              }}
-              id={"scoreHistogram"}
-              disabled={checkDisabled("scoreHistogram")}
-            />
-          )}
-          {checkVisibility("medianHistory") && (
-            <LineChart
-              title={"History of Median"}
-              description={
-                "Graph shows history of overall median of score and compares it to my score"
-              }
-              data={{
-                datasets: [
-                  studentDashboardData.UserList.results[0].userstat
-                    .scoreHistory,
-                  medianData.CourseStatList.results[0].medianHistory,
-                ],
-                label: Array(
-                  studentDashboardData.UserList.results[0].userstat.scoreHistory
-                    .length
-                )
-                  .fill(null)
-                  .map((_, i) => "week " + (i + 1)),
-                datasetNames: ["My score", "Students overall median"],
-              }}
-              disabled={checkDisabled("medianHistory")}
-            />
-          )}
-          {checkVisibility("percentileHistory") && (
-            <LineChart
-              title={"History of Percentile"}
-              description={"Chart shows history of my percentile"}
-              data={{
-                datasets: [
-                  studentDashboardData.UserList.results[0].userstat
-                    .percentileHistory,
-                ],
-                label: Array(
-                  studentDashboardData.UserList.results[0].userstat
-                    .percentileHistory.length
-                )
-                  .fill(null)
-                  .map((_, i) => "week " + (i + 1)),
-                datasetNames: ["Percentile history"],
-              }}
-              disabled={checkDisabled("percentileHistory")}
-            />
-          )}
-          {checkVisibility("performancePrediction") && (
-            <PieChart
-              title={"Performance prediction"}
-              data={{
-                datasets: [
-                  globalPerformance.global[0].finalGrades.map(
-                    (grade) => grade.percentage
+                }}
+                disabled={checkDisabled("performancePrediction")}
+              />
+            )}
+            {checkVisibility("assignments") && (
+              <EnumBanner
+                title={"Assignments"}
+                data={{
+                  headers: [
+                    "Assignment name",
+                    "My Score",
+                    "Percentile",
+                    "Median",
+                    "Max Score",
+                    "Assigned in week",
+                  ],
+                  rows: studentDashboardData.UserList.results[0].userstat.userAssignmentStat.results.map(
+                    (item) => [
+                      item.assignment.name,
+                      item.score,
+                      item.percentile,
+                      item.assignment.median,
+                      item.assignment.maxScore,
+                      item.assignment.weekOfSemester,
+                    ]
                   ),
-                ],
-                label: globalPerformance.global[0].finalGrades.map(
-                  (grade) => grade.name
-                ),
-              }}
-              disabled={checkDisabled("performancePrediction")}
-            />
-          )}
-          {checkVisibility("assignments") && (
-            <EnumBanner
-              title={"Assignments"}
-              data={{
-                headers: [
-                  "Assignment name",
-                  "My Score",
-                  "Percentile",
-                  "Median",
-                  "Max Score",
-                  "Assigned in week",
-                ],
-                rows: studentDashboardData.UserList.results[0].userstat.userAssignmentStat.results.map(
-                  (item) => [
-                    item.assignment.name,
-                    item.score,
-                    item.percentile,
-                    item.assignment.median,
-                    item.assignment.maxScore,
-                    item.assignment.weekOfSemester,
-                  ]
-                ),
-              }}
-              defaultSortKey={"Percentile"}
-              defaultSortOrder={"ASC"}
-              links={
-                isStaff
-                  ? null
-                  : {
-                      urlPrefix: "/assignments/edit/",
-                      nameId: studentDashboardData.UserList.results[0].userstat.userAssignmentStat.results.map(
-                        (item) => item.assignment.id
-                      ),
-                    }
-              }
-              disabled={checkDisabled("assignments")}
-            />
-          )}
-        </Dashboard>
+                }}
+                defaultSortKey={"Percentile"}
+                defaultSortOrder={"ASC"}
+                links={
+                  isStaff
+                    ? null
+                    : {
+                        urlPrefix: "/assignments/edit/",
+                        nameId: studentDashboardData.UserList.results[0].userstat.userAssignmentStat.results.map(
+                          (item) => item.assignment.id
+                        ),
+                      }
+                }
+                disabled={checkDisabled("assignments")}
+              />
+            )}
+          </Dashboard>
+        </>
       )}
-      <hr
-        style={{
-          height: "2px",
-          borderWidth: 0,
-          color: "#42526e",
-          backgroundColor: "#42526e",
-          margin: "40px",
-        }}
-      />
+
       <>
         <h3>Course Performance</h3>
         <Dashboard>

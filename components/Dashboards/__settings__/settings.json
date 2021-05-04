@@ -11,5 +11,8 @@
       "throughput": false,
       "grades": false,
       "gradesByYear": false
+  },
+  "studentDashboardIdleToggle": {
+      "enabledByDefaultFromWeek": 3
   }
 }
