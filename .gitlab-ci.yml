@@ -22,9 +22,9 @@ build:
     # push image into our private registry
     - docker login -u "$CI_REGISTRY_USER" -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker push $CI_REGISTRY/learnshell-2.0/ls-web
-    # only build in case of commit made in the master branch
-  only:
-    - master
+  # only build in case of commit made in the master branch 
+#   only:
+#     - master
    
 # trigger deployment in our cluster, enabling Kubernetes pod to pull the newly
 # built Docker image from our registry
@@ -38,6 +38,6 @@ deploy:
     # a redeployment. The new deployment will be updated with a correct timestamp
     - 'curl --data {\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"kubectl.kubernetes.io/restartedAt\":\"2006-01-02T15:04:05Z07:00\"}}}}} -X PATCH -H "Accept: application/json, */*" -H "Content-Type: application/strategic-merge-patch+json" -H "Authorization: Bearer $KUBE_SERVICEACCOUNT_TOKEN" https://35.187.2.233/apis/apps/v1/namespaces/learnshell/deployments/web/ --insecure'
   # only deploy in case of commit made in the master branch
-  only:
-    - master
+#   only:
+#     - master
 
