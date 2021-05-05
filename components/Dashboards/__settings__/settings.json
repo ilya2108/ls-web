@@ -13,6 +13,6 @@
       "gradesByYear": false
   },
   "studentDashboardIdleToggle": {
-      "enabledByDefaultFromWeek": 3
+      "enabledByDefaultFromWeek": 14
   }
 }

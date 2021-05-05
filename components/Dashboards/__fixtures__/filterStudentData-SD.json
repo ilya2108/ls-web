@@ -1,0 +1,460 @@
+{
+      "username": "guy - fixture",
+      "userStats": {
+        "results": [
+          {
+            "score": 26,
+            "scoreHistory": [
+              1,
+              3,
+              7,
+              7,
+              7,
+              10,
+              10,
+              10,
+              14,
+              16,
+              20,
+              20,
+              26
+            ],
+            "percentileHistory": [
+              98.101,
+              75.12,
+              85.3053435114504,
+              65.894538606403,
+              69.894538606403,
+              43.8148148148148,
+              55.8148148148148,
+              68.8148148148148,
+              65.7641196013289,
+              70.8813838550247,
+              72.0591133004926,
+              68.8128078817734,
+              75.1815286624204
+            ],
+            "userAssignmentStat": {
+              "results": [
+                {
+                  "assignment": {
+                    "id": 1,
+                    "name": "001 - Hello, PS1!",
+                    "median": 1,
+                    "maxScore": 1,
+                    "weekOfSemester": 1
+                  },
+                  "score": 1,
+                  "percentile": 59.38356164383562
+                },
+                {
+                  "assignment": {
+                    "id": 4,
+                    "name": "002 - Použití proměnné",
+                    "median": 2,
+                    "maxScore": 2,
+                    "weekOfSemester": 2
+                  },
+                  "score": 2,
+                  "percentile": 51.02739726027397
+                },
+                {
+                  "assignment": {
+                    "id": 20,
+                    "name": "003 - Adresář s testem",
+                    "median": 2,
+                    "maxScore": 2,
+                    "weekOfSemester": 3
+                  },
+                  "score": 2,
+                  "percentile": 69.1923076923077
+                },
+                {
+                  "assignment": {
+                    "id": 32,
+                    "name": "003 - Výpis souborů III",
+                    "median": 0,
+                    "maxScore": 2,
+                    "weekOfSemester": 4
+                  },
+                  "score": 0,
+                  "percentile": 26.767123287671232
+                },
+                {
+                  "assignment": {
+                    "id": 54,
+                    "name": "DU3 - Součet položek v adresáři",
+                    "median": 2,
+                    "maxScore": 2,
+                    "weekOfSemester": 3
+                  },
+                  "score": 2,
+                  "percentile": 60.19021739130435
+                },
+                {
+                  "assignment": {
+                    "id": 750,
+                    "name": "[OLD] 005 - Pevny link I.",
+                    "median": 2,
+                    "maxScore": 2,
+                    "weekOfSemester": 4
+                  },
+                  "score": 0,
+                  "percentile": 17.2
+                },
+                {
+                  "assignment": {
+                    "id": 684,
+                    "name": "2020-06 - Výřez a řazení 1",
+                    "median": 0,
+                    "maxScore": 3,
+                    "weekOfSemester": 13
+                  },
+                  "score": 0,
+                  "percentile": 31.25
+                },
+                {
+                  "assignment": {
+                    "id": 112,
+                    "name": "2020-vt-rb (var 3)",
+                    "median": 3,
+                    "maxScore": 3,
+                    "weekOfSemester": 13
+                  },
+                  "score": 1,
+                  "percentile": 26.595744680851062
+                },
+                {
+                  "assignment": {
+                    "id": 114,
+                    "name": "2020-vt-pe (var 3)",
+                    "median": 4,
+                    "maxScore": 4,
+                    "weekOfSemester": 3
+                  },
+                  "score": 0,
+                  "percentile": 15.957446808510639
+                },
+                {
+                  "assignment": {
+                    "id": 116,
+                    "name": "2020-vt-xb (var 3)",
+                    "median": 7,
+                    "maxScore": 7,
+                    "weekOfSemester": 13
+                  },
+                  "score": 0,
+                  "percentile": 15.957446808510639
+                },
+                {
+                  "assignment": {
+                    "id": 118,
+                    "name": "2020-vt-sa (var 3)",
+                    "median": 3,
+                    "maxScore": 6,
+                    "weekOfSemester": 13
+                  },
+                  "score": 3,
+                  "percentile": 54.255319148936174
+                },
+                {
+                  "assignment": {
+                    "id": 737,
+                    "name": "2020-06 - Uživatel s nejvyšším UID",
+                    "median": 0.5,
+                    "maxScore": 3,
+                    "weekOfSemester": 6
+                  },
+                  "score": 3,
+                  "percentile": 75.9090909090909
+                },
+                {
+                  "assignment": {
+                    "id": 60,
+                    "name": "2020-xx Úprava a spojení do sloupců",
+                    "median": 1,
+                    "maxScore": 1,
+                    "weekOfSemester": 13
+                  },
+                  "score": 1,
+                  "percentile": 62.85909712722298
+                },
+                {
+                  "assignment": {
+                    "id": 76,
+                    "name": "2020-09 DU Změna formátu souboru na csv",
+                    "median": 2,
+                    "maxScore": 2,
+                    "weekOfSemester": 9
+                  },
+                  "score": 2,
+                  "percentile": 65.32147742818057
+                },
+                {
+                  "assignment": {
+                    "id": 77,
+                    "name": "2020-09 DU Nejčetnější sedmiznakové slovo",
+                    "median": 2,
+                    "maxScore": 2,
+                    "weekOfSemester": 9
+                  },
+                  "score": 2,
+                  "percentile": 66.41586867305061
+                },
+                {
+                  "assignment": {
+                    "id": 80,
+                    "name": "2020-10 DU Cenzura",
+                    "median": 2,
+                    "maxScore": 2,
+                    "weekOfSemester": 10
+                  },
+                  "score": 2,
+                  "percentile": 67.71545827633379
+                },
+                {
+                  "assignment": {
+                    "id": 83,
+                    "name": "2020-11 DU Ceny akcií",
+                    "median": 1,
+                    "maxScore": 4,
+                    "weekOfSemester": 11
+                  },
+                  "score": 4,
+                  "percentile": 75.5813953488372
+                },
+                {
+                  "assignment": {
+                    "id": 92,
+                    "name": "2020-LS-TEST-HW SED",
+                    "median": 1,
+                    "maxScore": 1,
+                    "weekOfSemester": 13
+                  },
+                  "score": 1,
+                  "percentile": 67.0998632010944
+                },
+                {
+                  "assignment": {
+                    "id": 97,
+                    "name": "2020-12 - if1 (var 2)",
+                    "median": 0,
+                    "maxScore": 2,
+                    "weekOfSemester": 12
+                  },
+                  "score": 0,
+                  "percentile": 37.5
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "coursesAsStudent": {
+        "totalCount": 1,
+        "results": [
+          {
+            "name": "Programování v shellu 1",
+            "kosTag": "BI-PS1",
+            "coursestat": {
+              "median": 27,
+              "medianHistory": [
+                1,
+                3,
+                6,
+                6,
+                6,
+                6,
+                7,
+                7,
+                9,
+                11,
+                13,
+                15,
+                29
+              ],
+              "scoreHistogram": {
+                "results": [
+                  {
+                    "score": 44,
+                    "frequency": 168
+                  },
+                  {
+                    "score": 33,
+                    "frequency": 136
+                  },
+                  {
+                    "score": 13,
+                    "frequency": 64
+                  },
+                  {
+                    "score": 20,
+                    "frequency": 104
+                  },
+                  {
+                    "score": 9,
+                    "frequency": 48
+                  },
+                  {
+                    "score": 10,
+                    "frequency": 72
+                  },
+                  {
+                    "score": 48,
+                    "frequency": 16
+                  },
+                  {
+                    "score": 15,
+                    "frequency": 24
+                  },
+                  {
+                    "score": 22,
+                    "frequency": 136
+                  },
+                  {
+                    "score": 24,
+                    "frequency": 136
+                  },
+                  {
+                    "score": 35,
+                    "frequency": 184
+                  },
+                  {
+                    "score": 47,
+                    "frequency": 8
+                  },
+                  {
+                    "score": 17,
+                    "frequency": 40
+                  },
+                  {
+                    "score": 38,
+                    "frequency": 152
+                  },
+                  {
+                    "score": 42,
+                    "frequency": 120
+                  },
+                  {
+                    "score": 23,
+                    "frequency": 128
+                  },
+                  {
+                    "score": 11,
+                    "frequency": 56
+                  },
+                  {
+                    "score": 28,
+                    "frequency": 120
+                  },
+                  {
+                    "score": 18,
+                    "frequency": 128
+                  },
+                  {
+                    "score": 7,
+                    "frequency": 88
+                  },
+                  {
+                    "score": 37,
+                    "frequency": 192
+                  },
+                  {
+                    "score": 40,
+                    "frequency": 200
+                  },
+                  {
+                    "score": 30,
+                    "frequency": 224
+                  },
+                  {
+                    "score": 21,
+                    "frequency": 152
+                  },
+                  {
+                    "score": 6,
+                    "frequency": 48
+                  },
+                  {
+                    "score": 45,
+                    "frequency": 64
+                  },
+                  {
+                    "score": 46,
+                    "frequency": 72
+                  },
+                  {
+                    "score": 19,
+                    "frequency": 112
+                  },
+                  {
+                    "score": 29,
+                    "frequency": 96
+                  },
+                  {
+                    "score": 34,
+                    "frequency": 160
+                  },
+                  {
+                    "score": 8,
+                    "frequency": 56
+                  },
+                  {
+                    "score": 41,
+                    "frequency": 248
+                  },
+                  {
+                    "score": 36,
+                    "frequency": 120
+                  },
+                  {
+                    "score": 39,
+                    "frequency": 192
+                  },
+                  {
+                    "score": 43,
+                    "frequency": 128
+                  },
+                  {
+                    "score": 31,
+                    "frequency": 128
+                  },
+                  {
+                    "score": 26,
+                    "frequency": 144
+                  },
+                  {
+                    "score": 5,
+                    "frequency": 96
+                  },
+                  {
+                    "score": 32,
+                    "frequency": 192
+                  },
+                  {
+                    "score": 16,
+                    "frequency": 160
+                  },
+                  {
+                    "score": 25,
+                    "frequency": 88
+                  },
+                  {
+                    "score": 27,
+                    "frequency": 168
+                  },
+                  {
+                    "score": 12,
+                    "frequency": 32
+                  },
+                  {
+                    "score": 14,
+                    "frequency": 24
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }

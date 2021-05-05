@@ -28,6 +28,9 @@ export default function UserPage() {
           username
           courses {
             totalCount
+            results {
+              id
+            }
           }
           parallels {
             totalCount
