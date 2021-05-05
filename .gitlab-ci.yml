@@ -36,7 +36,7 @@ deploy:
     - apk update  && apk add --no-cache curl
     # by updating a timestamp in the deployment spec of the deployment, we force 
     # a redeployment. The new deployment will be updated with a correct timestamp
-    - 'curl --data {\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"kubectl.kubernetes.io/restartedAt\":\"2006-01-02T15:04:05Z07:00\"}}}}} -X PATCH -H "Accept: application/json, */*" -H "Content-Type: application/strategic-merge-patch+json" -H "Authorization: Bearer $KUBE_SERVICEACCOUNT_TOKEN" https://35.187.2.233/apis/apps/v1/namespaces/learnshell/deployments/web/ --insecure'
+    - 'curl --data {\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"kubectl.kubernetes.io/restartedAt\":\"2006-01-02T15:04:05Z07:00\"}}}}} -X PATCH -H "Accept: application/json, */*" -H "Content-Type: application/strategic-merge-patch+json" -H "Authorization: Bearer $KUBE_SERVICEACCOUNT_TOKEN" "$KUBE_APISERVER/apis/apps/v1/namespaces/learnshell/deployments/web/" --insecure'
   # only deploy in case of commit made in the master branch
 #   only:
 #     - master
