@@ -15,12 +15,12 @@ export const validateInput = (inputValue: string) => {
     "", // week greater than
     "", // week less than
   ];
-  let valid = true
+  let valid = true;
 
   predicates.map((predicate) => {
-    const pred = predicate.trim().replace(/ +/g,' ').split(" ");
+    const pred = predicate.trim().replace(/ +/g, " ").split(" ");
     if (pred.length !== 3) {
-      valid = false
+      valid = false;
       return;
     }
 
@@ -94,4 +94,22 @@ export const getPercentageRatio = (arr: number[]) => {
 export const roundUp = (num, precision) => {
   precision = Math.pow(10, precision);
   return Math.ceil(num * precision) / precision;
+};
+
+/**
+ * Returns Standard CTU Grading according to score
+ * @param score
+ */
+export const getGrade = (score: number) => {
+  return score >= 90
+    ? "A"
+    : score >= 80
+    ? "B"
+    : score >= 70
+    ? "C"
+    : score >= 60
+    ? "D"
+    : score >= 50
+    ? "E"
+    : "F";
 };

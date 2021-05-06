@@ -16,6 +16,7 @@ type Props = {
     datasetNames: string[];
   };
   disabled?: boolean;
+  maxValue?: number;
 };
 
 export default function LineChart(props: Props) {
@@ -48,7 +49,7 @@ export default function LineChart(props: Props) {
                 display: true,
                 ticks: {
                   suggestedMin: 0, // minimum will be 0, unless there is a lower value.
-                  suggestedMax: 100,
+                  suggestedMax: props.maxValue ? props.maxValue : null,
                 },
               },
             ],

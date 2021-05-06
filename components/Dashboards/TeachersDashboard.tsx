@@ -15,6 +15,7 @@ import dataForFiltering from './__fixtures__/dataForFiltering-TD.json'
 import dataGlobalPerformance from './__fixtures__/globalPerformance.json'
 import _ from "lodash"  // just for fixtures    TODO after fetching ready remove it
 import PieChart from "./charts/PieChart";
+import settings from "./__settings__/settings.json";
 
 type TeachersDashboardData = {
     median: number;

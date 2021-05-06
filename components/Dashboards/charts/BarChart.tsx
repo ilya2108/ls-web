@@ -15,8 +15,8 @@ type Props = {
     label: string[] | number[];
     datasetNames: string[];
   };
-  id?: string;
   disabled?: boolean;
+  maxValue?: number;
 };
 
 export default function BarChart(props: Props) {
@@ -69,7 +69,7 @@ export default function BarChart(props: Props) {
                 display: true,
                 ticks: {
                   suggestedMin: 0, // minimum will be 0, unless there is a lower value.
-                  suggestedMax: 100,
+                  suggestedMax: props.maxValue ? props.maxValue : null,
                 },
               },
             ],

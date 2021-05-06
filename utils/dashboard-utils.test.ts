@@ -1,4 +1,4 @@
-import {getPercentageRatio, roundUp, validateInput} from "./dashboard-utils";
+import {getGrade, getPercentageRatio, roundUp, validateInput} from "./dashboard-utils";
 
 describe("getPercentageRatio function", () => {
   test("values are equivalent to its ratio", () => {
@@ -66,7 +66,7 @@ describe("validateInput function", () => {
 });
 
 describe("roundUp function", () => {
-  test("", () => {
+  test("test", () => {
     expect(roundUp(2.456764, 2)).toStrictEqual(2.46)
     expect(roundUp(2.456764, 10)).toStrictEqual(2.456764)
     expect(roundUp(2.456764, 0)).toStrictEqual(3)
@@ -74,5 +74,16 @@ describe("roundUp function", () => {
     expect(roundUp(12.456764, -1)).toStrictEqual(20)
     expect(roundUp(12.456764, -2)).toStrictEqual(100)
     expect(roundUp(-102.456764, -2)).toEqual(-100)
+  })
+})
+
+describe("getGrade function", () => {
+  test("test", () => {
+    expect(getGrade(105)).toStrictEqual(("A"))
+    expect(getGrade(89.5)).toStrictEqual(("B"))
+    expect(getGrade(79)).toStrictEqual(("C"))
+    expect(getGrade(60)).toStrictEqual(("D"))
+    expect(getGrade(55)).toStrictEqual(("E"))
+    expect(getGrade(-89.5)).toStrictEqual(("F"))
   })
 })

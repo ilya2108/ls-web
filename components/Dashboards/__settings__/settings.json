@@ -3,6 +3,7 @@
       "score": true,
       "percentile": true,
       "median": true,
+      "grade": true,
       "scoreHistogram": true,
       "medianHistory": true,
       "percentileHistory": true,
@@ -14,5 +15,10 @@
   },
   "studentDashboardIdleToggle": {
       "enabledByDefaultFromWeek": 14
+  },
+  "courseSettings": {
+    "numberOfWeeks": 13,
+    "standardCTUGrading": true,
+    "maxPossibleScore": 100
   }
 }

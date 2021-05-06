@@ -18,7 +18,7 @@ import HugeSpinner from "../HugeSpinner/HugeSpinner";
 import settings from "./__settings__/settings.json";
 import Toggle from "@atlaskit/toggle";
 import Tooltip from "./Tooltip";
-import {roundUp} from "../../utils/dashboard-utils"
+import {getGrade, roundUp} from "../../utils/dashboard-utils"
 
 type Props = {
   userData: any;
@@ -304,6 +304,15 @@ export default function StudentsDashboard(props: Props) {
                   disabled={checkDisabled("median")}
                 />
               )}
+                {checkVisibility("grade") && settings.courseSettings.standardCTUGrading && (
+                    <InfoBanner
+                        text={"My Grade:"}
+                        value={
+                            getGrade(data[filter].studentData.userStats.results[0].score)
+                        }
+                        disabled={checkDisabled("grade")}
+                    />
+                )}
             </InfoBannersContainer>
             {checkVisibility("scoreHistogram") && (
               <BarChart
@@ -322,7 +331,6 @@ export default function StudentsDashboard(props: Props) {
                   ),
                   datasetNames: [""],
                 }}
-                id={"scoreHistogram"}
                 disabled={checkDisabled("scoreHistogram")}
               />
             )}
@@ -347,6 +355,7 @@ export default function StudentsDashboard(props: Props) {
                   datasetNames: ["My score", "Students overall median"],
                 }}
                 disabled={checkDisabled("medianHistory")}
+
               />
             )}
             {checkVisibility("percentileHistory") && (
@@ -367,6 +376,7 @@ export default function StudentsDashboard(props: Props) {
                   datasetNames: ["Percentile history"],
                 }}
                 disabled={checkDisabled("percentileHistory")}
+                maxValue={0}
               />
             )}
             {checkVisibility("performancePrediction") && (
@@ -466,7 +476,6 @@ export default function StudentsDashboard(props: Props) {
                 ),
                 datasetNames: data[filter].globalPerformanceData.global.map((y) => y.year),
               }}
-              id={"gradesByYear"}
               disabled={checkDisabled("gradesByYear")}
             />
           )}
