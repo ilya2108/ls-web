@@ -201,9 +201,10 @@ export default function TeachersDashboard() {
                         data[filter].overallMedianHistory,
                         data[filter].lastYearOverallMedian,
                     ],
-                    label: Array(data[filter].numberOfWeeks).fill(null).map((_, i) => ("week " + (i + 1))),
+                    label: Array(settings.courseSettings.numberOfWeeks).fill(null).map((_, i) => ("week " + (i + 1))),
                     datasetNames: ["Median", "Students overall median", "Last year overall median"]
                 }}
+                regression={[true]}
                 />
             {filter.substr(0, 4) !== "a:--" &&
             <EnumBanner title={"Assignments"}

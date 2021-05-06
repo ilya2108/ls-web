@@ -18,7 +18,7 @@ import HugeSpinner from "../HugeSpinner/HugeSpinner";
 import settings from "./__settings__/settings.json";
 import Toggle from "@atlaskit/toggle";
 import Tooltip from "./Tooltip";
-import {getGrade, roundUp} from "../../utils/dashboard-utils"
+import {getGrade, getRegression, roundUp} from "../../utils/dashboard-utils"
 
 type Props = {
   userData: any;
@@ -346,16 +346,13 @@ export default function StudentsDashboard(props: Props) {
                       .scoreHistory,
                       data[filter].studentData.coursesAsStudent.results[0].coursestat.medianHistory,
                   ],
-                  label: Array(
-                      data[filter].studentData.userStats.results[0]
-                      .scoreHistory.length
-                  )
+                  label: Array(settings.courseSettings.numberOfWeeks)
                     .fill(null)
                     .map((_, i) => "week " + (i + 1)),
                   datasetNames: ["My score", "Students overall median"],
                 }}
                 disabled={checkDisabled("medianHistory")}
-
+                regression={[true, false]}
               />
             )}
             {checkVisibility("percentileHistory") && (
@@ -367,10 +364,7 @@ export default function StudentsDashboard(props: Props) {
                       data[filter].studentData.userStats.results[0]
                       .percentileHistory,
                   ],
-                  label: Array(
-                      data[filter].studentData.userStats.results[0]
-                      .percentileHistory.length
-                  )
+                  label: Array(settings.courseSettings.numberOfWeeks)
                     .fill(null)
                     .map((_, i) => "week " + (i + 1)),
                   datasetNames: ["Percentile history"],

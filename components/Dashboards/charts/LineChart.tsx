@@ -6,20 +6,37 @@ import getColours, {
 } from "../../../pages-styles/UserPage/UserPage.styles";
 import Tooltip from "../Tooltip";
 import Lozenge from "@atlaskit/lozenge";
+import {getRegression} from "../../../utils/dashboard-utils";
 
 type Props = {
   title: string;
   description?: string;
   data: {
     datasets: number[][];
-    label: string[] | number[];
+    label: string[];
     datasetNames: string[];
   };
   disabled?: boolean;
   maxValue?: number;
+  regression?: boolean[]
 };
 
 export default function LineChart(props: Props) {
+
+  const lines = props.data.datasets.length;
+
+  const addRegression = () => {
+    props.regression.map((e, i) => {
+      if (e) {
+        props.data.datasets.push(getRegression(props.data.datasets[i]))
+        props.data.datasetNames.push("Regression of " + props.data.datasetNames[i])
+      }
+    })
+  }
+
+  if (props.regression)
+    addRegression()
+
   return (
     <ChartContainer>
       <Title>{props.title}</Title>
@@ -31,19 +48,22 @@ export default function LineChart(props: Props) {
           datasets: props.data.datasets.map((set, index) => ({
             label: props.data.datasetNames[index],
             fill: false,
-            borderColor: getColours(
+            borderColor: index < lines ?
+                getColours(
               "#004da3",
               props.data.datasets[0].length,
               index
-            ),
+            ) :
+            "#a8aabc",
             data: set,
-          })),
+          }))
         }}
         options={{
-          legend: {
-            display: false,
-          },
+          // legend: {
+          //   display: false,
+          // },
           scales: {
+
             yAxes: [
               {
                 display: true,

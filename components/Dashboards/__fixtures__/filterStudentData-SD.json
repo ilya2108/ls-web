@@ -12,27 +12,17 @@
               7,
               10,
               10,
-              10,
-              14,
-              16,
-              20,
-              20,
-              26
+              10
             ],
             "percentileHistory": [
               98.101,
               75.12,
-              85.3053435114504,
-              65.894538606403,
-              69.894538606403,
-              43.8148148148148,
-              55.8148148148148,
-              68.8148148148148,
-              65.7641196013289,
-              70.8813838550247,
-              72.0591133004926,
-              68.8128078817734,
-              75.1815286624204
+              85.30,
+              65.89,
+              69.89,
+              43.81,
+              55.81,
+              68.81
             ],
             "userAssignmentStat": {
               "results": [
@@ -45,7 +35,7 @@
                     "weekOfSemester": 1
                   },
                   "score": 1,
-                  "percentile": 59.38356164383562
+                  "percentile": 59.38
                 },
                 {
                   "assignment": {
@@ -56,7 +46,7 @@
                     "weekOfSemester": 2
                   },
                   "score": 2,
-                  "percentile": 51.02739726027397
+                  "percentile": 51.02
                 },
                 {
                   "assignment": {
@@ -67,7 +57,7 @@
                     "weekOfSemester": 3
                   },
                   "score": 2,
-                  "percentile": 69.1923076923077
+                  "percentile": 69.19
                 },
                 {
                   "assignment": {
@@ -78,7 +68,7 @@
                     "weekOfSemester": 4
                   },
                   "score": 0,
-                  "percentile": 26.767123287671232
+                  "percentile": 26.76
                 },
                 {
                   "assignment": {
@@ -89,7 +79,7 @@
                     "weekOfSemester": 3
                   },
                   "score": 2,
-                  "percentile": 60.19021739130435
+                  "percentile": 60.19
                 },
                 {
                   "assignment": {
@@ -122,7 +112,7 @@
                     "weekOfSemester": 13
                   },
                   "score": 1,
-                  "percentile": 26.595744680851062
+                  "percentile": 26.59
                 },
                 {
                   "assignment": {
@@ -133,7 +123,7 @@
                     "weekOfSemester": 3
                   },
                   "score": 0,
-                  "percentile": 15.957446808510639
+                  "percentile": 15.95
                 },
                 {
                   "assignment": {
@@ -144,7 +134,7 @@
                     "weekOfSemester": 13
                   },
                   "score": 0,
-                  "percentile": 15.957446808510639
+                  "percentile": 15.95
                 },
                 {
                   "assignment": {
@@ -155,7 +145,7 @@
                     "weekOfSemester": 13
                   },
                   "score": 3,
-                  "percentile": 54.255319148936174
+                  "percentile": 54.25
                 },
                 {
                   "assignment": {
@@ -166,7 +156,7 @@
                     "weekOfSemester": 6
                   },
                   "score": 3,
-                  "percentile": 75.9090909090909
+                  "percentile": 75.90
                 },
                 {
                   "assignment": {
@@ -177,7 +167,7 @@
                     "weekOfSemester": 13
                   },
                   "score": 1,
-                  "percentile": 62.85909712722298
+                  "percentile": 62.85
                 },
                 {
                   "assignment": {
@@ -188,7 +178,7 @@
                     "weekOfSemester": 9
                   },
                   "score": 2,
-                  "percentile": 65.32147742818057
+                  "percentile": 65.32
                 },
                 {
                   "assignment": {
@@ -199,7 +189,7 @@
                     "weekOfSemester": 9
                   },
                   "score": 2,
-                  "percentile": 66.41586867305061
+                  "percentile": 66.41
                 },
                 {
                   "assignment": {
@@ -210,7 +200,7 @@
                     "weekOfSemester": 10
                   },
                   "score": 2,
-                  "percentile": 67.71545827633379
+                  "percentile": 67.71
                 },
                 {
                   "assignment": {
@@ -221,7 +211,7 @@
                     "weekOfSemester": 11
                   },
                   "score": 4,
-                  "percentile": 75.5813953488372
+                  "percentile": 75.58
                 },
                 {
                   "assignment": {
@@ -232,7 +222,7 @@
                     "weekOfSemester": 13
                   },
                   "score": 1,
-                  "percentile": 67.0998632010944
+                  "percentile": 67.09
                 },
                 {
                   "assignment": {
@@ -257,7 +247,7 @@
             "name": "Programování v shellu 1",
             "kosTag": "BI-PS1",
             "coursestat": {
-              "median": 27,
+              "median": 29,
               "medianHistory": [
                 1,
                 3,
@@ -266,12 +256,7 @@
                 6,
                 6,
                 7,
-                7,
-                9,
-                11,
-                13,
-                15,
-                29
+                7
               ],
               "scoreHistogram": {
                 "results": [

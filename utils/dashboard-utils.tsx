@@ -1,3 +1,6 @@
+import regression from 'regression'
+import settings from '../components/Dashboards/__settings__/settings.json'
+
 /**
  * Validates command that user typed and parse code it into string.
  * When command is invalid, return "". Else return encoded string.
@@ -113,3 +116,20 @@ export const getGrade = (score: number) => {
     ? "E"
     : "F";
 };
+
+/**
+ * Calculates regression according to arr and predicts values for weeks of semester. Those values are returned
+ * @param arr is sample data
+ * @param polynomial is indicates, whether polynomial or linear regression should be used
+ */
+export const getRegression = (arr: number[], polynomial?: boolean) => {
+  const xVal = Array(arr.length).fill(0).map((_, x) => x)
+  const zipped = xVal.map((a, i) => [a, arr[i]])
+
+  const result = polynomial ? regression.polynomial(zipped) : regression.linear(zipped)
+  const prediction = Array(settings.courseSettings.numberOfWeeks).fill(0).map((_, i) =>
+      result.predict(i)[1]    // y value
+  )
+
+  return prediction
+}
