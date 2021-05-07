@@ -22,8 +22,10 @@ type Props = {
 };
 
 export default function LineChart(props: Props) {
-
   const lines = props.data.datasets.length;
+  // console.log("FIRST")
+  // console.log(props)
+  // console.log(lines)
 
   const addRegression = () => {
     props.regression.map((e, i) => {
@@ -36,6 +38,9 @@ export default function LineChart(props: Props) {
 
   if (props.regression)
     addRegression()
+  // console.log("SECOND")
+  // console.log(props)
+  // console.log(lines)
 
   return (
     <ChartContainer>
@@ -51,7 +56,7 @@ export default function LineChart(props: Props) {
             borderColor: index < lines ?
                 getColours(
               "#004da3",
-              props.data.datasets[0].length,
+              props.data.datasets[0]?.length || 0,
               index
             ) :
             "#a8aabc",

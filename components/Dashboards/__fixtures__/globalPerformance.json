@@ -81,6 +81,47 @@
           "percentage": 22
         }
       ]
+    },
+    {
+      "year": "2018",
+      "throughput": 67,
+      "finalGrades": [
+        {
+          "name": "A",
+          "numberOfStudents": 75,
+          "percentage": 22
+        },
+        {
+          "name": "B",
+          "numberOfStudents": 68,
+          "percentage": 22
+        },
+        {
+          "name": "C",
+          "numberOfStudents": 193,
+          "percentage": 41
+        },
+        {
+          "name": "D",
+          "numberOfStudents": 210,
+          "percentage": 22
+        },
+        {
+          "name": "E",
+          "numberOfStudents": 80,
+          "percentage": 22
+        },
+        {
+          "name": "F",
+          "numberOfStudents": 170,
+          "percentage": 22
+        },
+        {
+          "name": "X",
+          "numberOfStudents": 144,
+          "percentage": 22
+        }
+      ]
     }
   ]
 }

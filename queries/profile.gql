@@ -18,6 +18,11 @@
     username
     courses {
       totalCount
+      results (ordering: "id"){
+        id
+        kosTag
+        kosSemester
+      }
     }
     parallels {
       totalCount

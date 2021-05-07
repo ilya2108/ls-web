@@ -28,8 +28,10 @@ export default function UserPage() {
           username
           courses {
             totalCount
-            results {
+            results (ordering: "id"){
               id
+              kosTag
+              kosSemester
             }
           }
           parallels {

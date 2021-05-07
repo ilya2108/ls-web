@@ -19,6 +19,8 @@ import settings from "./__settings__/settings.json";
 import Toggle from "@atlaskit/toggle";
 import Tooltip from "./Tooltip";
 import {getGrade, getRegression, roundUp} from "../../utils/dashboard-utils"
+import Select from "@atlaskit/select";
+import Layout from "../../layout/Layout";
 
 type Props = {
   userData: any;
@@ -55,6 +57,12 @@ export default function StudentsDashboard(props: Props) {
     id,
   } = props.userData || [];
 
+  const createCourseValue = (value) => `${value.kosTag} (${value.kosSemester})`
+  const getFromCourseIdLabel = (courseId) => createCourseValue(courses.results.filter(i => i.id === courseId)[0])
+
+  const [courseId, setCourseId] = useState(courses.results[0].id)
+  console.log(courses)
+
     const [data, setData] = useState({
         "all": null,
         "filter": null,
@@ -80,109 +88,184 @@ export default function StudentsDashboard(props: Props) {
           renderSpinner =
               !error && (!studentData)
       }
-      {
-          const {data: studentDashboardData, error: errorStudentData} = props.profile ? useSWR(
-              gql`
-                  {
-                      UserMyself {
-                          username
-                          userStats {
-                              results {
-                                  score
-                                  scoreHistory
-                                  percentileHistory
-                                  userAssignmentStat {
-                                      results {
-                                          assignment {
-                                              id
-                                              name
-                                              median
-                                              maxScore
-                                              weekOfSemester
-                                          }
-                                          score
-                                          percentile
-                                      }
-                                  }
-                              }
-                          }
-                          coursesAsStudent {
-                              totalCount
-                              results {
-                                  name
-                                  kosTag
-                                  coursestat {
-                                      median
-                                      medianHistory
-                                      scoreHistogram {
-                                          results {
-                                              score
-                                              frequency
-                                          }
-                                      }
-                                  }
-                              }
-                          }
-                      }
-                  }
-              `,
-              fetcher
-          ) : useSWR(
-              gql`
-                  {
-                      UserList(id: ${props.profile ? id : props.userId}) {
-                          results {
-                              username                # self explanatory
-                              userStats {
-                                  results {
-                                      score                # users overall score
-                                      scoreHistory            # history of weekly score
-                                      percentileHistory          # percentile based on other users score histories
-                                      userAssignmentStat {
-                                          results {
-                                              assignment {          # assignment data, all self explanatory
-                                                  id
-                                                  name
-                                                  median
-                                                  maxScore            # max possible score of assignment
-                                                  weekOfSemester          # the week of semester the assignment was assigned
-                                              }
-                                              score              # users score from this assignment
-                                              percentile            # users percentile from this assignment
-                                          }
-                                      }
-                                  }
-                              }
-                              coursesAsStudent {
-                                  totalCount
-                                  results {
-                                      name
-                                      kosTag
-                                      coursestat {
-                                          median
-                                          medianHistory
-                                          scoreHistogram {
-                                              results {
-                                                  score
-                                                  frequency
-                                              }
-                                          }
-                                      }
-                                  }
-                              }
-                          }
-                      }
-                  }
-              `,
-              fetcher
-          );
 
+      const startPart = props.profile ?
+                      `{
+                          UserMyself
+                      ` :
+                      `{
+                          UserList(id: ${props.profile ? id : props.userId}) {
+                            results `;
+
+      const endPart = props.profile ?
+                    `}` :
+                    `} }`
+
+      {
+          const {data: studentDashboardData, error: errorStudentData} =
+          useSWR(
+                  gql`
+                      ${startPart}
+                            {
+                                  username                # self explanatory
+                                  userStats {
+                                      results (ordering: "course_id") {
+                                          course {
+                                              id
+                                          }
+                                          score                # users overall score
+                                          scoreHistory            # history of weekly score
+                                          percentileHistory          # percentile based on other users score histories
+                                          userAssignmentStat {
+                                              results {
+                                                  assignment {          # assignment data, all self explanatory
+                                                      id
+                                                      name
+                                                      median
+                                                      maxScore            # max possible score of assignment
+                                                      weekOfSemester          # the week of semester the assignment was assigned
+                                                  }
+                                                  score              # users score from this assignment
+                                                  percentile            # users percentile from this assignment
+                                              }
+                                          }
+                                      }
+                                  }
+                                  coursesAsStudent {
+                                      totalCount
+                                      results (ordering: "id") {
+                                          name
+                                          id
+                                          kosTag
+                                          coursestat {
+                                              median
+                                              medianHistory
+                                              scoreHistogram {
+                                                  results (ordering: "score"){
+                                                      score
+                                                      frequency
+                                                  }
+                                              }
+                                          }
+                                      }
+                                  }
+                              }
+                      ${endPart}
+                  `,
+                  fetcher
+              );
+
+          // props.profile ? useSWR(
+          //     gql`
+          //         {
+          //             UserMyself {
+          //                 username
+          //                 userStats {
+          //                     results {
+          //                         course {
+          //                             id
+          //                         }
+          //                         score
+          //                         scoreHistory
+          //                         percentileHistory
+          //                         userAssignmentStat {
+          //                             results {
+          //                                 assignment {
+          //                                     id
+          //                                     name
+          //                                     median
+          //                                     maxScore
+          //                                     weekOfSemester
+          //                                 }
+          //                                 score
+          //                                 percentile
+          //                             }
+          //                         }
+          //                     }
+          //                 }
+          //                 coursesAsStudent {
+          //                     totalCount
+          //                     results {
+          //                         name
+          //                         id
+          //                         kosTag
+          //                         coursestat {
+          //                             median
+          //                             medianHistory
+          //                             scoreHistogram {
+          //                                 results {
+          //                                     score
+          //                                     frequency
+          //                                 }
+          //                             }
+          //                         }
+          //                     }
+          //                 }
+          //             }
+          //         }
+          //     `,
+          //     fetcher
+          // ) : useSWR(
+          //     gql`
+          //         {
+          //             UserList(id: ${props.profile ? id : props.userId}) {
+          //                 results {
+          //                     username                # self explanatory
+          //                     userStats {
+          //                         results (ordering: "course_id") {
+          //                             course {
+          //                                 id
+          //                             }
+          //                             score                # users overall score
+          //                             scoreHistory            # history of weekly score
+          //                             percentileHistory          # percentile based on other users score histories
+          //                             userAssignmentStat {
+          //                                 results {
+          //                                     assignment {          # assignment data, all self explanatory
+          //                                         id
+          //                                         name
+          //                                         median
+          //                                         maxScore            # max possible score of assignment
+          //                                         weekOfSemester          # the week of semester the assignment was assigned
+          //                                     }
+          //                                     score              # users score from this assignment
+          //                                     percentile            # users percentile from this assignment
+          //                                 }
+          //                             }
+          //                         }
+          //                     }
+          //                     coursesAsStudent {
+          //                         totalCount
+          //                         results (ordering: "id") {
+          //                             name
+          //                             id
+          //                             kosTag
+          //                             coursestat {
+          //                                 median
+          //                                 medianHistory
+          //                                 scoreHistogram {
+          //                                     results (ordering: "score"){
+          //                                         score
+          //                                         frequency
+          //                                     }
+          //                                 }
+          //                             }
+          //                         }
+          //                     }
+          //                 }
+          //             }
+          //         }
+          //     `,
+          //     fetcher
+          // );
+          // data in one format
           const studentData = (studentDashboardData ?
               (props.profile ? studentDashboardData.UserMyself : studentDashboardData.UserList.results[0]) :
               null);
 
           // adjusting loaded data
           if (studentData) {
+              console.log(studentData)
               studentData.userStats.results[0].percentileHistory = studentData.userStats.results[0].percentileHistory.map(
                   (item) => roundUp(item, 2)
               );
@@ -190,16 +273,6 @@ export default function StudentsDashboard(props: Props) {
                   (item) => {
                       item.percentile = roundUp(item.percentile, 2);
                       return item;
-                  }
-              );
-
-              studentData.coursesAsStudent.results[0].coursestat.scoreHistogram.results = studentData.coursesAsStudent.results[0].coursestat.scoreHistogram.results.sort(
-                  (a, b) => {
-                      if (a.score < b.score)
-                          return -1;
-                      if (a.score > b.score)
-                          return 1;
-                      return 0;
                   }
               );
           }
@@ -227,6 +300,7 @@ export default function StudentsDashboard(props: Props) {
         : false) :
         null
     const [filter, setFilter] = useState(defaultToggle ? "filter" : "all")
+
   if (error) {
     return <Error />;
   }
@@ -235,12 +309,31 @@ export default function StudentsDashboard(props: Props) {
     !props.profile || settings.studentDashboardComponents[item];
   const checkDisabled = (item) => !settings.studentDashboardComponents[item];
 
+  const courseIndex = courses.results.map(i => i.id).indexOf(courseId)
+
   return (
     <>
       {renderSpinner ? (
         <HugeSpinner />
       ) : error ? null : (
         <>
+            <div style={{width: "400px", display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: "20px"}}>
+                <strong>Choose course:</strong>
+                <div style={{width: "200px"}}>
+                    <Select
+                        className="semester-select-SD"
+                        options={courses.results.map((item) => ({
+                            label: createCourseValue(item),
+                            value: item.id,
+                        }))}
+                        onChange={val => {setCourseId(val.value);console.log(courseId)}}
+                        value={{
+                            label: getFromCourseIdLabel(courseId),
+                            value: courseId,
+                        }}
+                    />
+                </div>
+            </div>
           <div
             style={{
               display: "flex",
@@ -279,7 +372,7 @@ export default function StudentsDashboard(props: Props) {
                 <InfoBanner
                   text={"My Score:"}
                   value={
-                      data[filter].studentData.userStats.results[0].score
+                      data[filter].studentData.userStats.results[courseIndex].score
                   }
                   disabled={checkDisabled("score")}
                 />
@@ -288,9 +381,9 @@ export default function StudentsDashboard(props: Props) {
                 <InfoBanner
                   text={"Percentile:"}
                   value={
-                      data[filter].studentData.userStats.results[0]
+                      data[filter].studentData.userStats.results[courseIndex]
                       .percentileHistory[
-                      data[filter].studentData.userStats.results[0]
+                      data[filter].studentData.userStats.results[courseIndex]
                         .percentileHistory.length - 1
                     ]
                   }
@@ -300,7 +393,7 @@ export default function StudentsDashboard(props: Props) {
               {checkVisibility("median") && (
                 <InfoBanner
                   text={"Median:"}
-                  value={data[filter].studentData.coursesAsStudent.results[0].coursestat.median}
+                  value={data[filter].studentData.coursesAsStudent.results[courseIndex]?.coursestat?.median}
                   disabled={checkDisabled("median")}
                 />
               )}
@@ -308,7 +401,7 @@ export default function StudentsDashboard(props: Props) {
                     <InfoBanner
                         text={"My Grade:"}
                         value={
-                            getGrade(data[filter].studentData.userStats.results[0].score)
+                            getGrade(data[filter].studentData.userStats.results[courseIndex]?.score)
                         }
                         disabled={checkDisabled("grade")}
                     />
@@ -322,11 +415,11 @@ export default function StudentsDashboard(props: Props) {
                 }
                 data={{
                   datasets: [
-                      data[filter].studentData.coursesAsStudent.results[0].coursestat.scoreHistogram.results.map(
+                      data[filter].studentData.coursesAsStudent.results[courseIndex].coursestat?.scoreHistogram.results.map(
                       (item) => item.frequency
                     ),
                   ],
-                  label: data[filter].studentData.coursesAsStudent.results[0].coursestat.scoreHistogram.results.map(
+                  label: data[filter].studentData.coursesAsStudent.results[courseIndex].coursestat?.scoreHistogram.results.map(
                     (item) => [item.score]
                   ),
                   datasetNames: [""],
@@ -342,9 +435,9 @@ export default function StudentsDashboard(props: Props) {
                 }
                 data={{
                   datasets: [
-                      data[filter].studentData.userStats.results[0]
+                      data[filter].studentData.userStats.results[courseIndex]
                       .scoreHistory,
-                      data[filter].studentData.coursesAsStudent.results[0].coursestat.medianHistory,
+                      data[filter].studentData.coursesAsStudent.results[courseIndex].coursestat?.medianHistory,
                   ],
                   label: Array(settings.courseSettings.numberOfWeeks)
                     .fill(null)
@@ -361,7 +454,7 @@ export default function StudentsDashboard(props: Props) {
                 description={"Graph shows history of my percentile"}
                 data={{
                   datasets: [
-                      data[filter].studentData.userStats.results[0]
+                      data[filter].studentData.userStats.results[courseIndex]
                       .percentileHistory,
                   ],
                   label: Array(settings.courseSettings.numberOfWeeks)
@@ -404,7 +497,7 @@ export default function StudentsDashboard(props: Props) {
                     "Max Score",
                     "Assigned in week",
                   ],
-                  rows: data[filter].studentData.userStats.results[0].userAssignmentStat.results.map(
+                  rows: data[filter].studentData.userStats.results[courseIndex].userAssignmentStat?.results.map(
                     (item) => [
                       item.assignment.name,
                       item.score,
@@ -436,22 +529,22 @@ export default function StudentsDashboard(props: Props) {
           <InfoBannersContainer>
             {checkVisibility("throughput") && (
               <InfoBanner
-                text={"Throughput " + data[filter].globalPerformanceData.global[0].year + ":"}
-                value={data[filter].globalPerformanceData.global[0].throughput}
+                text={"Throughput " + data[filter].globalPerformanceData.global[courseIndex].year + ":"}
+                value={data[filter].globalPerformanceData.global[courseIndex].throughput}
                 disabled={checkDisabled("throughput")}
               />
             )}
           </InfoBannersContainer>
           {checkVisibility("grades") && (
             <PieChart
-              title={"Students grades " + data[filter].globalPerformanceData.global[0].year}
+              title={"Students grades " + data[filter].globalPerformanceData.global[courseIndex].year}
               data={{
                 datasets: [
-                    data[filter].globalPerformanceData.global[0].finalGrades.map(
-                    (grade) => grade.percentage
+                    data[filter].globalPerformanceData.global[courseIndex].finalGrades.map(
+                    (grade) => grade.numberOfStudents
                   ),
                 ],
-                label: data[filter].globalPerformanceData.global[0].finalGrades.map(
+                label: data[filter].globalPerformanceData.global[courseIndex].finalGrades.map(
                   (grade) => grade.name
                 ),
               }}
@@ -465,7 +558,7 @@ export default function StudentsDashboard(props: Props) {
                 datasets: data[filter].globalPerformanceData.global.map((y) =>
                   y.finalGrades.map((grade) => grade.percentage)
                 ),
-                label: data[filter].globalPerformanceData.global[0].finalGrades.map(
+                label: data[filter].globalPerformanceData.global[courseIndex].finalGrades.map(
                   (grade) => grade.name
                 ),
                 datasetNames: data[filter].globalPerformanceData.global.map((y) => y.year),

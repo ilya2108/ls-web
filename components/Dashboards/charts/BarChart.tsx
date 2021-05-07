@@ -33,7 +33,7 @@ export default function BarChart(props: Props) {
             data: set,
             backgroundColor: getColours(
               "#004da3",
-              props.data.datasets[0].length,
+              props.data.datasets[0]?.length || 0 ,
               index
             ),
           })),
