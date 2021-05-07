@@ -19,6 +19,7 @@
   "courseSettings": {
     "numberOfWeeks": 13,
     "standardCTUGrading": true,
-    "maxPossibleScore": 100
+    "maxPossibleScore": 100,
+    "semesterStart": "2021-05-01"
   }
 }

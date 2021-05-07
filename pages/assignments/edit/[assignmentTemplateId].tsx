@@ -30,6 +30,7 @@ export default function EditAssignment() {
         owner {
           username
         }
+        weekOfSemester
       }
     }`,
     fetcher

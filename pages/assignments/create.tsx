@@ -7,6 +7,9 @@ import Layout from '../../layout/Layout'
 import { fetcher } from '../../modules/api'
 import { assignmentCreatedFlag } from "../../modules/core/redux/flag/flag.actions";
 import AssignmentPreview from '../../components/AssignmentPreview';
+import Select from "@atlaskit/select";
+import settings from "../../components/Dashboards/__settings__/settings.json"
+import {getSemesterWeek} from "../../utils/dashboard-utils";
 
 type Props = {
   assignment?: any
@@ -22,7 +25,8 @@ export default function CreateAssignment({ assignment, owner, userId }: Props = 
   const [name, updateName] = useState(assignment?.name || '')
   const [previewActive, togglePreview] = useState(false)
   const [testCases, updateTestCases] = useState(assignment?.testcases || [])
-
+  const [week, setWeek] = useState(assignment?.weekOfSemester ||
+      getSemesterWeek(settings.courseSettings.semesterStart))
 
   const handleSolutionChange = (e) => {
     updateSolution(e.target.value)
@@ -229,7 +233,8 @@ export default function CreateAssignment({ assignment, owner, userId }: Props = 
         name: "${name}",
         description: "${newlineEscapedDescription}"
         generatorData: "{\\"lidl\\": \\"bmFtZT0ne3sgZW52LnVzZXJuYW1lIH19Jwo=\\"}"
-        correctionData: "{\\"solution\\": \\"${encodedSolution}\\", \\"testcases\\": ${testCasesJson}}"
+        correctionData: "{\\"solution\\": \\"${encodedSolution}\\", \\"testcases\\": ${testCasesJson}}",
+        weekOfSemester: ${week}
       }) {
         object {
           id
@@ -271,6 +276,22 @@ export default function CreateAssignment({ assignment, owner, userId }: Props = 
       <h1>{assignment ? 'Edit' : 'Create'} an assignment</h1>
       <br />
       <input className="assignment-name-input" placeholder="Assignment name" name="name" onChange={handleNameChange} defaultValue={name} />
+      <br />
+      <br />
+      <div style={{width: "250px", display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+        <span>Semester week:</span>
+        <div style={{width: "100px"}}>
+          <Select
+              className="week-select"
+              options={Array(settings.courseSettings.numberOfWeeks).fill(0).map((_,i) => ({
+                label: i + 1,
+                value: i + 1
+              }))}
+              onChange={val => setWeek(val.label)}
+              value={{label: week,value:week}}
+          />
+        </div>
+      </div>
 
       <div className="textarea-wrapper">
         <textarea

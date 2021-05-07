@@ -1,5 +1,5 @@
-import regression from 'regression'
-import settings from '../components/Dashboards/__settings__/settings.json'
+import regression from "regression";
+import settings from "../components/Dashboards/__settings__/settings.json";
 
 /**
  * Validates command that user typed and parse code it into string.
@@ -123,13 +123,38 @@ export const getGrade = (score: number) => {
  * @param polynomial is indicates, whether polynomial or linear regression should be used
  */
 export const getRegression = (arr: number[], polynomial?: boolean) => {
-  const xVal = Array(arr.length).fill(0).map((_, x) => x)
-  const zipped = xVal.map((a, i) => [a, arr[i]])
+  const xVal = Array(arr.length)
+    .fill(0)
+    .map((_, x) => x);
+  const zipped = xVal.map((a, i) => [a, arr[i]]);
 
-  const result = polynomial ? regression.polynomial(zipped) : regression.linear(zipped)
-  const prediction = Array(settings.courseSettings.numberOfWeeks).fill(0).map((_, i) =>
-      result.predict(i)[1]    // y value
-  )
+  const result = polynomial
+    ? regression.polynomial(zipped)
+    : regression.linear(zipped);
+  const prediction = Array(settings.courseSettings.numberOfWeeks)
+    .fill(0)
+    .map(
+      (_, i) => result.predict(i)[1] // y value
+    );
 
-  return prediction
-}
+  return prediction;
+};
+
+/**
+ * Calculates current semester week number
+ * @param date is in format "2021-04-26" <==> "YYYY-MM-DD"
+ */
+export const getSemesterWeek = (date: string) => {
+  const now = new Date();
+  const start = new Date(date);
+  const diff = now - start;
+  const oneDay = 1000 * 60 * 60 * 24;
+  const day = Math.floor(diff / oneDay);
+  const week = Math.floor(day / 7 + 1);
+
+  return week > settings.courseSettings.numberOfWeeks
+    ? settings.courseSettings.numberOfWeeks
+    : week < 0
+    ? 1
+    : week;
+};
