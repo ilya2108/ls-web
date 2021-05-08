@@ -1,11 +1,12 @@
 import React from "react";
 import { Bar } from "react-chartjs-2";
 import getColours, {
-  ChartContainer, Title,
+  ChartContainer,
+  Title,
 } from "../../../pages-styles/UserPage/UserPage.styles";
 import Tooltip from "../Tooltip";
 import Lozenge from "@atlaskit/lozenge";
-import {getPercentageRatio} from "../../../utils/dashboard-utils";
+import { getPercentageRatio } from "../../../utils/dashboard-utils";
 
 type Props = {
   title: string;
@@ -24,7 +25,11 @@ export default function BarChart(props: Props) {
     <ChartContainer>
       <Title>{props.title}</Title>
       {props.description && <Tooltip description={props.description} />}
-      {props.disabled  && <span style={{marginLeft: "10px"}}><Lozenge isBold>Is disabled</Lozenge></span>}
+      {props.disabled && (
+        <span style={{ marginLeft: "10px" }}>
+          <Lozenge isBold>Is disabled</Lozenge>
+        </span>
+      )}
       <Bar
         data={{
           labels: props.data.label,
@@ -33,7 +38,7 @@ export default function BarChart(props: Props) {
             data: set,
             backgroundColor: getColours(
               "#004da3",
-              props.data.datasets[0]?.length || 0 ,
+              props.data.datasets[0]?.length || 0,
               index
             ),
           })),
@@ -45,16 +50,21 @@ export default function BarChart(props: Props) {
           tooltips: {
             enabled: true,
             callbacks: {
-              label: function(tooltipItem, data) {
+              label: function (tooltipItem, data) {
                 const dataset = data.datasets[tooltipItem.datasetIndex].data;
                 const ratios = getPercentageRatio(dataset);
 
-                return dataset[tooltipItem.index] + ' (' + ratios[tooltipItem.index] + '%)';
+                return (
+                  dataset[tooltipItem.index] +
+                  " (" +
+                  ratios[tooltipItem.index] +
+                  "%)"
+                );
               },
-              title: function(tooltipItem, data) {
+              title: function (tooltipItem, data) {
                 return data.labels[tooltipItem[0].index];
-              }
-            }
+              },
+            },
           },
           scales: {
             xAxes: [

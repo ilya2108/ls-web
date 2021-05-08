@@ -6,7 +6,7 @@ import getColours, {
 } from "../../../pages-styles/UserPage/UserPage.styles";
 import Tooltip from "../Tooltip";
 import Lozenge from "@atlaskit/lozenge";
-import {getRegression} from "../../../utils/dashboard-utils";
+import { getRegression } from "../../../utils/dashboard-utils";
 
 type Props = {
   title: string;
@@ -18,57 +18,53 @@ type Props = {
   };
   disabled?: boolean;
   maxValue?: number;
-  regression?: boolean[]
+  regression?: boolean[];
 };
 
 export default function LineChart(props: Props) {
   const lines = props.data.datasets.length;
-  // console.log("FIRST")
-  // console.log(props)
-  // console.log(lines)
 
   const addRegression = () => {
     props.regression.map((e, i) => {
       if (e) {
-        props.data.datasets.push(getRegression(props.data.datasets[i]))
-        props.data.datasetNames.push("Regression of " + props.data.datasetNames[i])
+        props.data.datasets.push(getRegression(props.data.datasets[i]));
+        props.data.datasetNames.push(
+          "Regression of " + props.data.datasetNames[i]
+        );
       }
-    })
-  }
+    });
+  };
 
-  if (props.regression)
-    addRegression()
-  // console.log("SECOND")
-  // console.log(props)
-  // console.log(lines)
+  if (props.regression) addRegression();
 
   return (
     <ChartContainer>
       <Title>{props.title}</Title>
       {props.description && <Tooltip description={props.description} />}
-      {props.disabled  && <span style={{marginLeft: "10px"}}><Lozenge isBold>Is disabled</Lozenge></span>}
+      {props.disabled && (
+        <span style={{ marginLeft: "10px" }}>
+          <Lozenge isBold>Is disabled</Lozenge>
+        </span>
+      )}
       <Line
         data={{
           labels: props.data.label,
           datasets: props.data.datasets.map((set, index) => ({
             label: props.data.datasetNames[index],
             fill: false,
-            borderColor: index < lines ?
-                getColours(
-              "#004da3",
-              props.data.datasets[0]?.length || 0,
-              index
-            ) :
-            "#a8aabc",
+            borderColor:
+              index < lines
+                ? getColours(
+                    "#004da3",
+                    props.data.datasets[0]?.length || 0,
+                    index
+                  )
+                : "#a8aabc",
             data: set,
-          }))
+          })),
         }}
         options={{
-          // legend: {
-          //   display: false,
-          // },
           scales: {
-
             yAxes: [
               {
                 display: true,
