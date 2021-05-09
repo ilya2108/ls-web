@@ -73,10 +73,10 @@ type Props = {
       id: number;
       kosTag: string;
       kosSemester: string;
-    }[]
-    totalCount: number
+    }[];
+    totalCount: number;
   };
-}
+};
 
 export default function TeachersDashboard(props: Props) {
   const [filter, setFilter] = useState("All students");
@@ -90,13 +90,15 @@ export default function TeachersDashboard(props: Props) {
   const [data, setData] = useState({ "All students": load });
   const [filterCurrentValue, setFilterCurrentValue] = useState(undefined);
 
-    const courses = props.courses
+  const courses = props.courses;
 
   const createCourseValue = (value) => `${value.kosTag} (${value.kosSemester})`;
   const getFromCourseIdLabel = (courseId) => {
-    return createCourseValue(courses.results.filter((i) => i.id === courseId)[0]);
-  }
-  const [courseId, setCourseId] = useState(courses? courses.results[0].id : 0);
+    return createCourseValue(
+      courses.results.filter((i) => i.id === courseId)[0]
+    );
+  };
+  const [courseId, setCourseId] = useState(courses ? courses.results[0].id : 0);
 
   const createDefaultOptions = [
     {
@@ -174,248 +176,258 @@ export default function TeachersDashboard(props: Props) {
   const dataAvailable = courses?.results;
   const renderSpinner = !error && !dataAvailable;
 
-    if (error) {
-        return <Error />;
-    }
+  if (error) {
+    return <Error />;
+  }
 
   return (
     <>
-        {renderSpinner ? (
-            <HugeSpinner />
-        ) : error ? null : (
-            <>
-      <div
-          style={{
-            width: "400px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingBottom: "20px",
-          }}
-      >
-        <strong>Choose course:</strong>
-        <div style={{ width: "200px" }}>
-          <Select
-              className="semester-select-SD"
-              options={courses.results.map((item) => ({
-                label: createCourseValue(item),
-                value: item.id,
-              }))}
-              onChange={(val) => {
-                setCourseId(val.value);
-              }}
-              value={{
-                label: getFromCourseIdLabel(courseId),
-                value: courseId,
-              }}
-          />
-        </div>
-      </div>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <span style={{ width: "50%" }}>
-          <span style={{ fontWeight: 500, fontSize: "18px" }}>Filter</span>
-          <Tooltip
-            description={
-              "Filter students by parallels, assignments and score\n\n" +
-              "Create score filtering with commands: 'SCORE > 5', 'SCORE > 5 AND SCORE < 20'"
-            }
-          />
-          <CreatableSelect
-            className="single-select"
-            classNamePrefix="react-select"
-            onChange={(value) => {
-              setValidation(validationState.default);
-              setFilterCurrentValue(value);
-              fetchData(value.value);
+      {renderSpinner ? (
+        <HugeSpinner />
+      ) : error ? null : (
+        <>
+          <div
+            style={{
+              width: "400px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingBottom: "20px",
             }}
-            onCreateOption={handleCreate}
-            options={options}
-            placeholder={"Filter Students"}
-            validationState={validation}
-            value={filterCurrentValue}
-          />
-        </span>
-      </div>
-      <Dashboard style={{ paddingTop: "25px" }}>
-        <InfoBannersContainer>
-          <InfoBanner
-            text={"Median:"}
-            value={
-              data[filter].medianHistory[data[filter].medianHistory.length - 1]
-            }
-          />
-          <InfoBanner text={"Mode:"} value={data[filter].mode} />
-          <InfoBanner
-            text={"Deviation:"}
-            value={data[filter].standardDeviation}
-          />
-          <InfoBanner
-            text={"# of students:"}
-            value={data[filter].studentsNumber}
-          />
-        </InfoBannersContainer>
-        {filter.substr(0, 4) === "a:--" && (
-          <InfoBannersContainer>
-            <InfoBanner
-              text={"Median Percentage:"}
-              value={data[filter].assignments.assignmentMedianPercentage[0]}
-            />
-            <InfoBanner
-              text={"Max possible Score:"}
-              value={data[filter].assignments.assignmentMaxScore[0]}
-            />
-          </InfoBannersContainer>
-        )}
-        {filter.substr(0, 4) === "p:--" && (
-          <InfoBannersContainer>
-            <InfoBanner
-              text={"Teacher:"}
-              value={data[filter].parallels.teacher[0]}
-            />
-            <InfoBanner
-              text={"Percentile Average:"}
-              value={data[filter].parallels.percentileAverage[0]}
-            />
-          </InfoBannersContainer>
-        )}
-        <BarChart
-          title={"Students' Score Histogram"}
-          description={"Histogram of students score"}
-          data={{
-            datasets: [data[filter].scoreHistogram.frequency],
-            label: data[filter].scoreHistogram.label,
-            datasetNames: [""],
-          }}
-        />
-        <LineChart
-          title={"History of Median"}
-          description={
-            "Chart shows history of median of students score and compares it to last year's data"
-          }
-          data={{
-            datasets: [
-              data[filter].medianHistory,
-              data[filter].overallMedianHistory,
-              data[filter].lastYearOverallMedian,
-            ],
-            label: Array(settings.courseSettings.numberOfWeeks)
-              .fill(null)
-              .map((_, i) => "week " + (i + 1)),
-            datasetNames: [
-              "Median",
-              "Students overall median",
-              "Last year overall median",
-            ],
-          }}
-          regression={[true]}
-        />
-        {filter.substr(0, 4) !== "a:--" && (
-          <EnumBanner
-            title={"Assignments"}
-            data={{
-              headers: [
-                "Assignment name",
-                "Median",
-                "Median percentage",
-                "Max possible Score",
-              ],
-              rows: data[filter].assignments.assignmentName.map((item, i) => [
-                data[filter].assignments.assignmentName[i],
-                data[filter].assignments.assignmentMedian[i],
-                data[filter].assignments.assignmentMedianPercentage[i],
-                data[filter].assignments.assignmentMaxScore[i],
-              ]),
-            }}
-            defaultSortKey={"Median percentage"}
-            defaultSortOrder={"ASC"}
-          />
-        )}
-        {filter.substr(0, 4) !== "p:--" && (
-          <EnumBanner
-            title={"Parallels"}
-            data={{
-              headers: [
-                "Parallel",
-                "Teacher",
-                "# of students",
-                "Median",
-                "Percentile average",
-              ],
-              rows: data[filter].parallels.teacher.map((_, i) => [
-                data[filter].parallels.name[i],
-                data[filter].parallels.teacher[i],
-                data[filter].parallels["numOfStudents"][i],
-                data[filter].parallels.median[i],
-                data[filter].parallels.percentileAverage[i],
-              ]),
-            }}
-            defaultSortKey={"Median"}
-            defaultSortOrder={"ASC"}
-          />
-        )}
-        <EnumBanner
-          title={"Students"}
-          data={{
-            headers: ["Name", "Username", "Parallel", "Score", "Percentile"],
-            rows: data[filter].students.name.map((_, i) => [
-              data[filter].students.name[i],
-              data[filter].students.username[i],
-              data[filter].students.parallel[i],
-              data[filter].students.score[i],
-              data[filter].students.percentile[i],
-            ]),
-          }}
-          defaultSortKey={"Percentile"}
-          defaultSortOrder={"ASC"}
-        />
-      </Dashboard>
-      <hr
-        style={{
-          height: "2px",
-          borderWidth: 0,
-          color: "#42526e",
-          backgroundColor: "#42526e",
-          margin: "40px",
-        }}
-      />
-      <>
-        <h3>Global Performance</h3>
-        <Dashboard>
-          <InfoBannersContainer>
-            <InfoBanner
-              text={"Throughput " + globalPerformance.global[0].year + ":"}
-              value={globalPerformance.global[0].throughput}
-            />
-          </InfoBannersContainer>
-          <PieChart
-            title={"Students grades " + globalPerformance.global[0].year}
-            data={{
-              datasets: [
-                globalPerformance.global[0].finalGrades.map(
-                  (grade) => grade.percentage
-                ),
-              ],
-              label: globalPerformance.global[0].finalGrades.map(
-                (grade) => grade.name
-              ),
-            }}
-          />
-          <BarChart
-            title={"Grades comparison by year"}
-            data={{
-              datasets: globalPerformance.global.map((y) =>
-                y.finalGrades.map((grade) => grade.percentage)
-              ),
-              label: globalPerformance.global[0].finalGrades.map(
-                (grade) => grade.name
-              ),
-              datasetNames: globalPerformance.global.map((y) => y.year),
-            }}
-          />
-        </Dashboard>
-      </>
-            </>
+          >
+            <strong>Choose course:</strong>
+            <div style={{ width: "200px" }}>
+              <Select
+                className="semester-select-SD"
+                options={courses.results.map((item) => ({
+                  label: createCourseValue(item),
+                  value: item.id,
+                }))}
+                onChange={(val) => {
+                  setCourseId(val.value);
+                }}
+                value={{
+                  label: getFromCourseIdLabel(courseId),
+                  value: courseId,
+                }}
+              />
+            </div>
+          </div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <span style={{ width: "50%" }}>
+              <span style={{ fontWeight: 500, fontSize: "18px" }}>Filter</span>
+              <Tooltip
+                description={
+                  "Filter students by parallels, assignments and score\n\n" +
+                  "Create score filtering with commands: 'SCORE > 5', 'SCORE > 5 AND SCORE < 20'"
+                }
+              />
+              <CreatableSelect
+                className="single-select"
+                classNamePrefix="react-select"
+                onChange={(value) => {
+                  setValidation(validationState.default);
+                  setFilterCurrentValue(value);
+                  fetchData(value.value);
+                }}
+                onCreateOption={handleCreate}
+                options={options}
+                placeholder={"Filter Students"}
+                validationState={validation}
+                value={filterCurrentValue}
+              />
+            </span>
+          </div>
+          <Dashboard style={{ paddingTop: "25px" }}>
+            <InfoBannersContainer>
+              <InfoBanner
+                text={"Median:"}
+                value={
+                  data[filter].medianHistory[
+                    data[filter].medianHistory.length - 1
+                  ]
+                }
+              />
+              <InfoBanner text={"Mode:"} value={data[filter].mode} />
+              <InfoBanner
+                text={"Deviation:"}
+                value={data[filter].standardDeviation}
+              />
+              <InfoBanner
+                text={"# of students:"}
+                value={data[filter].studentsNumber}
+              />
+            </InfoBannersContainer>
+            {filter.substr(0, 4) === "a:--" && (
+              <InfoBannersContainer>
+                <InfoBanner
+                  text={"Median Percentage:"}
+                  value={data[filter].assignments.assignmentMedianPercentage[0]}
+                />
+                <InfoBanner
+                  text={"Max possible Score:"}
+                  value={data[filter].assignments.assignmentMaxScore[0]}
+                />
+              </InfoBannersContainer>
             )}
+            {filter.substr(0, 4) === "p:--" && (
+              <InfoBannersContainer>
+                <InfoBanner
+                  text={"Teacher:"}
+                  value={data[filter].parallels.teacher[0]}
+                />
+                <InfoBanner
+                  text={"Percentile Average:"}
+                  value={data[filter].parallels.percentileAverage[0]}
+                />
+              </InfoBannersContainer>
+            )}
+            <BarChart
+              title={"Students' Score Histogram"}
+              description={"Histogram of students score"}
+              data={{
+                datasets: [data[filter].scoreHistogram.frequency],
+                label: data[filter].scoreHistogram.label,
+                datasetNames: [""],
+              }}
+            />
+            <LineChart
+              title={"History of Median"}
+              description={
+                "Chart shows history of median of students score and compares it to last year's data"
+              }
+              data={{
+                datasets: [
+                  data[filter].medianHistory,
+                  data[filter].overallMedianHistory,
+                  data[filter].lastYearOverallMedian,
+                ],
+                label: Array(settings.courseSettings.numberOfWeeks)
+                  .fill(null)
+                  .map((_, i) => "week " + (i + 1)),
+                datasetNames: [
+                  "Median",
+                  "Students overall median",
+                  "Last year overall median",
+                ],
+              }}
+              regression={[true]}
+            />
+            {filter.substr(0, 4) !== "a:--" && (
+              <EnumBanner
+                title={"Assignments"}
+                data={{
+                  headers: [
+                    "Assignment name",
+                    "Median",
+                    "Median percentage",
+                    "Max possible Score",
+                  ],
+                  rows: data[
+                    filter
+                  ].assignments.assignmentName.map((item, i) => [
+                    data[filter].assignments.assignmentName[i],
+                    data[filter].assignments.assignmentMedian[i],
+                    data[filter].assignments.assignmentMedianPercentage[i],
+                    data[filter].assignments.assignmentMaxScore[i],
+                  ]),
+                }}
+                defaultSortKey={"Median percentage"}
+                defaultSortOrder={"ASC"}
+              />
+            )}
+            {filter.substr(0, 4) !== "p:--" && (
+              <EnumBanner
+                title={"Parallels"}
+                data={{
+                  headers: [
+                    "Parallel",
+                    "Teacher",
+                    "# of students",
+                    "Median",
+                    "Percentile average",
+                  ],
+                  rows: data[filter].parallels.teacher.map((_, i) => [
+                    data[filter].parallels.name[i],
+                    data[filter].parallels.teacher[i],
+                    data[filter].parallels["numOfStudents"][i],
+                    data[filter].parallels.median[i],
+                    data[filter].parallels.percentileAverage[i],
+                  ]),
+                }}
+                defaultSortKey={"Median"}
+                defaultSortOrder={"ASC"}
+              />
+            )}
+            <EnumBanner
+              title={"Students"}
+              data={{
+                headers: [
+                  "Name",
+                  "Username",
+                  "Parallel",
+                  "Score",
+                  "Percentile",
+                ],
+                rows: data[filter].students.name.map((_, i) => [
+                  data[filter].students.name[i],
+                  data[filter].students.username[i],
+                  data[filter].students.parallel[i],
+                  data[filter].students.score[i],
+                  data[filter].students.percentile[i],
+                ]),
+              }}
+              defaultSortKey={"Percentile"}
+              defaultSortOrder={"ASC"}
+            />
+          </Dashboard>
+          <hr
+            style={{
+              height: "2px",
+              borderWidth: 0,
+              color: "#42526e",
+              backgroundColor: "#42526e",
+              margin: "40px",
+            }}
+          />
+          <>
+            <h3>Global Performance</h3>
+            <Dashboard>
+              <InfoBannersContainer>
+                <InfoBanner
+                  text={"Throughput " + globalPerformance.global[0].year + ":"}
+                  value={globalPerformance.global[0].throughput}
+                />
+              </InfoBannersContainer>
+              <PieChart
+                title={"Students grades " + globalPerformance.global[0].year}
+                data={{
+                  datasets: [
+                    globalPerformance.global[0].finalGrades.map(
+                      (grade) => grade.percentage
+                    ),
+                  ],
+                  label: globalPerformance.global[0].finalGrades.map(
+                    (grade) => grade.name
+                  ),
+                }}
+              />
+              <BarChart
+                title={"Grades comparison by year"}
+                data={{
+                  datasets: globalPerformance.global.map((y) =>
+                    y.finalGrades.map((grade) => grade.percentage)
+                  ),
+                  label: globalPerformance.global[0].finalGrades.map(
+                    (grade) => grade.name
+                  ),
+                  datasetNames: globalPerformance.global.map((y) => y.year),
+                }}
+              />
+            </Dashboard>
+          </>
+        </>
+      )}
     </>
   );
 }

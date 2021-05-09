@@ -25,14 +25,15 @@ type Props = {
   userData: any; // id of user that will be page about
   userId: string; // id of user logged in
   profile: boolean; // will it be rendered on profile page
-    courses: {  // courses that student attend
-        results: {
-            id: number;
-            kosTag: string;
-            kosSemester: string;
-        }[]
-        totalCount: number
-    };
+  courses: {
+    // courses that student attend
+    results: {
+      id: number;
+      kosTag: string;
+      kosSemester: string;
+    }[];
+    totalCount: number;
+  };
 };
 
 type GlobalPerformance = {
@@ -65,7 +66,9 @@ export default function StudentsDashboard(props: Props) {
 
   const createCourseValue = (value) => `${value.kosTag} (${value.kosSemester})`;
   const getFromCourseIdLabel = (courseId) =>
-    createCourseValue(props.courses.results.filter((i) => i.id === courseId)[0]);
+    createCourseValue(
+      props.courses.results.filter((i) => i.id === courseId)[0]
+    );
 
   const [courseId, setCourseId] = useState(props.courses.results[0].id);
 
