@@ -34,6 +34,22 @@ export default function UserPage() {
               kosSemester
             }
           }
+          coursesAsTeacher {
+            results (ordering: "id") {
+              id
+              kosTag
+              kosSemester
+            }
+            totalCount
+          }
+          coursesAsStudent {
+            results (ordering: "id") {
+              id
+              kosTag
+              kosSemester
+            }
+            totalCount
+          }
           parallels {
             totalCount
           }
@@ -84,6 +100,14 @@ export default function UserPage() {
             }
           }
         }
+        CourseList{
+          results {
+            kosTag
+            kosSemester
+            id
+          }
+          totalCount
+        }
       }
     `,
     fetcher
@@ -93,6 +117,7 @@ export default function UserPage() {
     <User
       userId={userId}
       userData={data?.UserDetail}
+      courseData={data?.CourseList}
       error={error}
       profile={false}
     />

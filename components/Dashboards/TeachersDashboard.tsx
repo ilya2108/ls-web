@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import BarChart from "./charts/BarChart";
 import LineChart from "./charts/LineChart";
 import EnumBanner from "./banners/EnumBanner";
-import { CreatableSelect } from "@atlaskit/select";
+import Select, { CreatableSelect } from "@atlaskit/select";
 import Tooltip from "./Tooltip";
 import useSWR from "swr";
 import { gql } from "graphql-request";
@@ -22,6 +22,8 @@ import dataGlobalPerformance from "./__fixtures__/globalPerformance.json";
 import _ from "lodash"; // just for fixtures    TODO after fetching ready remove it
 import PieChart from "./charts/PieChart";
 import settings from "./__settings__/settings.json";
+import Error from "../Error";
+import HugeSpinner from "../HugeSpinner/HugeSpinner";
 
 type TeachersDashboardData = {
   median: number;
@@ -64,7 +66,19 @@ enum validationState {
   error = "error",
 }
 
-export default function TeachersDashboard() {
+type Props = {
+  allCourses?: boolean;
+  courses: {
+    results: {
+      id: number;
+      kosTag: string;
+      kosSemester: string;
+    }[]
+    totalCount: number
+  };
+}
+
+export default function TeachersDashboard(props: Props) {
   const [filter, setFilter] = useState("All students");
   const parallels = dataForFiltering.parallels; // todo fetch all parallels
   const assignments = dataForFiltering.assignments; // todo fetch all assignments
@@ -75,6 +89,14 @@ export default function TeachersDashboard() {
 
   const [data, setData] = useState({ "All students": load });
   const [filterCurrentValue, setFilterCurrentValue] = useState(undefined);
+
+    const courses = props.courses
+
+  const createCourseValue = (value) => `${value.kosTag} (${value.kosSemester})`;
+  const getFromCourseIdLabel = (courseId) => {
+    return createCourseValue(courses.results.filter((i) => i.id === courseId)[0]);
+  }
+  const [courseId, setCourseId] = useState(courses? courses.results[0].id : 0);
 
   const createDefaultOptions = [
     {
@@ -148,8 +170,47 @@ export default function TeachersDashboard() {
     fetchData("c:--" + value);
   };
 
+  const error = false;
+  const dataAvailable = courses?.results;
+  const renderSpinner = !error && !dataAvailable;
+
+    if (error) {
+        return <Error />;
+    }
+
   return (
     <>
+        {renderSpinner ? (
+            <HugeSpinner />
+        ) : error ? null : (
+            <>
+      <div
+          style={{
+            width: "400px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingBottom: "20px",
+          }}
+      >
+        <strong>Choose course:</strong>
+        <div style={{ width: "200px" }}>
+          <Select
+              className="semester-select-SD"
+              options={courses.results.map((item) => ({
+                label: createCourseValue(item),
+                value: item.id,
+              }))}
+              onChange={(val) => {
+                setCourseId(val.value);
+              }}
+              value={{
+                label: getFromCourseIdLabel(courseId),
+                value: courseId,
+              }}
+          />
+        </div>
+      </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <span style={{ width: "50%" }}>
           <span style={{ fontWeight: 500, fontSize: "18px" }}>Filter</span>
@@ -353,6 +414,8 @@ export default function TeachersDashboard() {
           />
         </Dashboard>
       </>
+            </>
+            )}
     </>
   );
 }

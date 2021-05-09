@@ -22,6 +22,7 @@ export default function ProfilePage() {
     <User
       userId={data?.UserMyself?.id}
       userData={data?.UserMyself}
+      courseData={data?.CourseList}
       error={error}
       profile
     />

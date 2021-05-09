@@ -24,6 +24,22 @@
         kosSemester
       }
     }
+    coursesAsTeacher {
+      results (ordering: "id") {
+        id
+        kosTag
+        kosSemester
+      }
+      totalCount
+    }
+    coursesAsStudent {
+      results (ordering: "id") {
+        id
+        kosTag
+        kosSemester
+      }
+      totalCount
+    }
     parallels {
       totalCount
     }
@@ -49,5 +65,13 @@
         }
       }
     }
+  }
+  CourseList{
+    results {
+      kosTag
+      kosSemester
+      id
+    }
+    totalCount
   }
 }

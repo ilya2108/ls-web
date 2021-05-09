@@ -18,15 +18,21 @@ import HugeSpinner from "../HugeSpinner/HugeSpinner";
 import settings from "./__settings__/settings.json";
 import Toggle from "@atlaskit/toggle";
 import Tooltip from "./Tooltip";
-import { getGrade, getRegression, roundUp } from "../../utils/dashboard-utils";
+import { getGrade, roundUp } from "../../utils/dashboard-utils";
 import Select from "@atlaskit/select";
-import Layout from "../../layout/Layout";
 
 type Props = {
-  userData: any;
-  settings: boolean;
-  userId: string;
-  profile: boolean;
+  userData: any; // id of user that will be page about
+  userId: string; // id of user logged in
+  profile: boolean; // will it be rendered on profile page
+    courses: {  // courses that student attend
+        results: {
+            id: number;
+            kosTag: string;
+            kosSemester: string;
+        }[]
+        totalCount: number
+    };
 };
 
 type GlobalPerformance = {
@@ -59,10 +65,9 @@ export default function StudentsDashboard(props: Props) {
 
   const createCourseValue = (value) => `${value.kosTag} (${value.kosSemester})`;
   const getFromCourseIdLabel = (courseId) =>
-    createCourseValue(courses.results.filter((i) => i.id === courseId)[0]);
+    createCourseValue(props.courses.results.filter((i) => i.id === courseId)[0]);
 
-  const [courseId, setCourseId] = useState(courses.results[0].id);
-  console.log(courses);
+  const [courseId, setCourseId] = useState(props.courses.results[0].id);
 
   const [data, setData] = useState({
     all: null,
@@ -165,7 +170,6 @@ export default function StudentsDashboard(props: Props) {
 
       // adjusting loaded data
       if (studentData) {
-        console.log(studentData);
         studentData.userStats.results[0].percentileHistory = studentData.userStats.results[0].percentileHistory.map(
           (item) => roundUp(item, 2)
         );
@@ -210,7 +214,7 @@ export default function StudentsDashboard(props: Props) {
     !props.profile || settings.studentDashboardComponents[item];
   const checkDisabled = (item) => !settings.studentDashboardComponents[item];
 
-  const courseIndex = courses.results.map((i) => i.id).indexOf(courseId);
+  const courseIndex = props.courses.results.map((i) => i.id).indexOf(courseId);
 
   return (
     <>
@@ -231,13 +235,12 @@ export default function StudentsDashboard(props: Props) {
             <div style={{ width: "200px" }}>
               <Select
                 className="semester-select-SD"
-                options={courses.results.map((item) => ({
+                options={props.courses.results.map((item) => ({
                   label: createCourseValue(item),
                   value: item.id,
                 }))}
                 onChange={(val) => {
                   setCourseId(val.value);
-                  console.log(courseId);
                 }}
                 value={{
                   label: getFromCourseIdLabel(courseId),

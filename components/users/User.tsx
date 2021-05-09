@@ -1,39 +1,36 @@
-import { gql } from "graphql-request";
-import React, { useState, Fragment } from "react";
+import {gql} from "graphql-request";
+import React, {Fragment, useState} from "react";
 import pluralize from "pluralize";
-import { useDispatch } from "react-redux";
+import {useDispatch} from "react-redux";
 
 import Lozenge from "@atlaskit/lozenge";
-import Button, { ButtonGroup } from "@atlaskit/button";
-import Form, { Field, FormFooter, ErrorMessage } from "@atlaskit/form";
+import Button, {ButtonGroup} from "@atlaskit/button";
+import Form, {ErrorMessage, Field, FormFooter} from "@atlaskit/form";
 import PageHeader from "@atlaskit/page-header";
 import TextField from "@atlaskit/textfield";
-import { BreadcrumbsItem, BreadcrumbsStateless } from "@atlaskit/breadcrumbs";
+import {BreadcrumbsItem, BreadcrumbsStateless} from "@atlaskit/breadcrumbs";
 
 import Layout from "../../layout/Layout";
 import Error from "../Error";
 import HugeSpinner from "../HugeSpinner/HugeSpinner";
 import {
-  Table,
-  Row,
-  LeftCell,
-  RightCell,
+  ButtonCell,
   Header,
   HRow,
   HTag,
-  ButtonCell,
+  LeftCell,
+  RightCell,
+  Row,
   Tab,
-  TabGroup,
   TabContent,
+  TabGroup,
+  Table,
 } from "../../pages-styles/UserPage/UserPage.styles";
 import UserCoursesInfoSection from "./UserCoursesInfoSection";
 import UserPointsInfoSection from "./UserPointsInfoSection";
-import { fetcher } from "../../modules/api";
-import { formatDate } from "../../utils/date-utils";
-import {
-  passwordChangeErrorFlag,
-  passwordChangeSuccessFlag,
-} from "../../modules/core/redux/flag/flag.actions";
+import {fetcher} from "../../modules/api";
+import {formatDate} from "../../utils/date-utils";
+import {passwordChangeErrorFlag, passwordChangeSuccessFlag,} from "../../modules/core/redux/flag/flag.actions";
 import UserSubmissionsSection from "./UserSubmissionsSection";
 import StudentsDashboard from "../Dashboards/StudentsDashboard";
 import TeachersDashboard from "../Dashboards/TeachersDashboard";
@@ -43,10 +40,11 @@ type Props = {
   error: Error;
   userData: any;
   profile: boolean;
+  courseData: any;
 };
 
 export default function UserPage(props: Props) {
-  const { userId, error, userData, profile } = props;
+  const { userId, error, userData, profile, courseData } = props;
 
   const {
     firstName,
@@ -60,6 +58,8 @@ export default function UserPage(props: Props) {
     username,
     courses,
     parallels,
+    coursesAsStudent,
+    coursesAsTeacher,
     id,
   } = userData || [];
 
@@ -107,9 +107,26 @@ export default function UserPage(props: Props) {
     return <Error />;
   }
 
-  const tabNames = profile
-    ? ["Home", "Dashboard"]
-    : ["Home", "Assignments", "Dashboard"];
+  const homeTabName = "Home";
+  const assignmentTabName = "Assignments";
+  const studentsDashboardTabName = "Student's Dashboard"
+  const teachersDashboardTabName = "Teacher's Dashboard"
+
+  const getTabs = () => {
+    const home = true;
+    const assignment = !profile;
+    const studentsDashboard = coursesAsStudent.totalCount !== 0;
+    const teachersDashboard = coursesAsTeacher.totalCount !== 0 || isSuperuser;
+
+    return [
+      home ? homeTabName : null,
+      assignment ? assignmentTabName : null,
+      studentsDashboard ? studentsDashboardTabName : null,
+      teachersDashboard ? teachersDashboardTabName : null
+    ].filter(e => e !== null)
+  }
+
+  const tabNames = coursesAsTeacher && coursesAsStudent ? getTabs() : [homeTabName]
   const [active, setActive] = useState(tabNames[0]);
   const [hovered, setHovered] = useState(null);
   return (
@@ -128,6 +145,10 @@ export default function UserPage(props: Props) {
         {renderSpinner ? null : `${firstName} ${lastName}`}
       </PageHeader>
 
+      {renderSpinner ? (
+          <HugeSpinner />
+      ) : error ? null : (
+          <>
       <TabGroup>
         {tabNames.map((tabName) => (
           <Tab
@@ -142,12 +163,8 @@ export default function UserPage(props: Props) {
           </Tab>
         ))}
       </TabGroup>
-
-      {renderSpinner ? (
-        <HugeSpinner />
-      ) : error ? null : (
         <TabContent>
-          {active == "Home" && (
+          {active == homeTabName && (
             <Table>
               <Header>
                 <HRow>
@@ -300,12 +317,13 @@ export default function UserPage(props: Props) {
               )}
             </Table>
           )}
-          {active == "Assignments" && !profile && (
+          {active == assignmentTabName && !profile && (
             <UserSubmissionsSection userData={userData} />
           )}
-          {active == "Dashboard" && !isStaff && <StudentsDashboard userData={userData} userId={userId} settings={!isStaff} profile={profile} />}
-          {active == "Dashboard" && profile && isStaff && <TeachersDashboard />}
+          {active == studentsDashboardTabName && <StudentsDashboard courses={coursesAsStudent} userData={userData} userId={userId} profile={profile} />}
+          {active == teachersDashboardTabName && profile && (isStaff || isSuperuser) && <TeachersDashboard courses={isSuperuser ? courseData : coursesAsTeacher}/>}
         </TabContent>
+          </>
       )}
     </Layout>
   );
