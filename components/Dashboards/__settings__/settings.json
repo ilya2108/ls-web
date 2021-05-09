@@ -4,6 +4,8 @@
       "percentile": true,
       "median": true,
       "grade": true,
+      "finalScorePrediction": false,
+      "semesterWeek": true,
       "scoreHistogram": true,
       "medianHistory": true,
       "percentileHistory": true,

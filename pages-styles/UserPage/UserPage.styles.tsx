@@ -124,8 +124,7 @@ export const InfoBannerContent = styled.div`
   margin: 10px;
   display: flex;
   justify-content: space-around;
-  font-weight: 500;
-  font-size: 18px;
+  align-items: center;
 `;
 
 export const Title = styled.span`

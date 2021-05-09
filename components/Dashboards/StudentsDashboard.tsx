@@ -18,8 +18,9 @@ import HugeSpinner from "../HugeSpinner/HugeSpinner";
 import settings from "./__settings__/settings.json";
 import Toggle from "@atlaskit/toggle";
 import Tooltip from "./Tooltip";
-import { getGrade, roundUp } from "../../utils/dashboard-utils";
+import {getGrade, getSemesterWeek, roundUp} from "../../utils/dashboard-utils";
 import Select from "@atlaskit/select";
+import { StudentData } from "./Dashboard.types";
 
 type Props = {
   userData: any; // id of user that will be page about
@@ -49,20 +50,7 @@ type GlobalPerformance = {
 };
 
 export default function StudentsDashboard(props: Props) {
-  const {
-    firstName,
-    lastName,
-    email,
-    assignments,
-    dateJoined,
-    isActive,
-    isStaff,
-    isSuperuser,
-    username,
-    courses,
-    parallels,
-    id,
-  } = props.userData || [];
+  const { id } = props.userData || [];
 
   const createCourseValue = (value) => `${value.kosTag} (${value.kosSemester})`;
   const getFromCourseIdLabel = (courseId) =>
@@ -73,151 +61,137 @@ export default function StudentsDashboard(props: Props) {
   const [courseId, setCourseId] = useState(props.courses.results[0].id);
 
   const [data, setData] = useState({
-    all: null,
-    filter: null,
+    studentData: null,
+    globalPerformanceData: null,
   });
 
   let error = false;
   let renderSpinner = true;
 
   const fetchStudentDashboardData = () => {
-    {
-      // fixtures -- TODO load real data when available
-      const studentData = filterStudentData;
-      const errorStudentData = false;
-      const globalPerformanceData: GlobalPerformance = dataGlobalPerformance;
-
-      data["filter"] =
-        studentData && globalPerformanceData
-          ? {
-              studentData: studentData,
-              globalPerformanceData: globalPerformanceData,
-            }
-          : null;
-
-      error = errorStudentData;
-
-      renderSpinner = !error && !studentData;
-    }
-
     const startPart = props.profile
-      ? `{
-                          UserMyself
-                      `
-      : `{
-                          UserList(id: ${props.profile ? id : props.userId}) {
-                            results `;
-
+      ? `{ UserMyself `
+      : `{ UserList(id: ${props.profile ? id : props.userId}) { results `;
     const endPart = props.profile ? `}` : `} }`;
 
-    {
-      const { data: studentDashboardData, error: errorStudentData } = useSWR(
-        gql`
-          ${startPart}
-          {
-            username # self explanatory
-            userStats {
-              results(ordering: "course_id") {
-                course {
-                  id
-                }
-                score # users overall score
-                scoreHistory # history of weekly score
-                percentileHistory # percentile based on other users score histories
-                userAssignmentStat {
-                  results {
-                    assignment {
-                      # assignment data, all self explanatory
-                      id
-                      name
-                      median
-                      maxScore # max possible score of assignment
-                      weekOfSemester # the week of semester the assignment was assigned
-                    }
-                    score # users score from this assignment
-                    percentile # users percentile from this assignment
-                  }
-                }
-              }
-            }
-            coursesAsStudent {
-              totalCount
-              results(ordering: "id") {
-                name
+    const { data: studentDashboardData, error: errorStudentData } = useSWR(
+      gql`
+        ${startPart}
+        {
+          username # self explanatory
+          userStats {
+            results(ordering: "course_id") {
+              course {
                 id
-                kosTag
-                coursestat {
-                  median
-                  medianHistory
-                  scoreHistogram {
-                    results(ordering: "score") {
-                      score
-                      frequency
-                    }
+              }
+              finalScorePrediction
+              score # users overall score
+              scoreHistory # history of weekly score
+              percentileHistory # percentile based on other users score histories
+              percentileHistoryIdle
+              userAssignmentStat {
+                results {
+                  assignment {
+                    # assignment data, all self explanatory
+                    id
+                    name
+                    median # median of score
+                    maxScore # max possible score of assignment
+                    weekOfSemester # the week of semester the assignment was assigned
+                  }
+                  score # users score from this assignment
+                  percentile # users percentile from this assignment
+                }
+              }
+            }
+          }
+          coursesAsStudent {
+            totalCount
+            results(ordering: "id") {
+              name
+              id
+              kosTag
+              coursestat {
+                median
+                medianHistory # history of median of score calculated with students that have score > 5
+                medianHistoryIdle # ... calculated with students that have score
+                scoreHistogram {
+                  results(ordering: "score") {
+                    score
+                    frequency
                   }
                 }
               }
             }
           }
-          ${endPart}
-        `,
-        fetcher
+        }
+        ${endPart}
+      `,
+      fetcher
+    );
+
+    // data in unified format
+    const studentData: StudentData = studentDashboardData
+      ? props.profile
+        ? studentDashboardData.UserMyself
+        : studentDashboardData.UserList.results[0]
+      : null;
+
+    // adjusting loaded data
+    if (studentData) {
+      // rounding up floats
+      studentData.userStats.results[0].percentileHistory = studentData.userStats.results[0].percentileHistory.map(
+        (item) => roundUp(item, 2)
       );
-
-      // data in one format
-      const studentData = studentDashboardData
-        ? props.profile
-          ? studentDashboardData.UserMyself
-          : studentDashboardData.UserList.results[0]
-        : null;
-
-      // adjusting loaded data
-      if (studentData) {
-        studentData.userStats.results[0].percentileHistory = studentData.userStats.results[0].percentileHistory.map(
-          (item) => roundUp(item, 2)
-        );
-        studentData.userStats.results[0].userAssignmentStat.results = studentData.userStats.results[0].userAssignmentStat.results.map(
-          (item) => {
-            item.percentile = roundUp(item.percentile, 2);
-            return item;
-          }
-        );
-      }
-
-      // fixtures -- TODO load real data when available
-      const globalPerformanceData: GlobalPerformance = dataGlobalPerformance;
-
-      data["all"] =
-        studentData && globalPerformanceData
-          ? {
-              studentData: studentData,
-              globalPerformanceData: globalPerformanceData,
-            }
-          : null;
-      error = errorStudentData;
-      renderSpinner = !error && !studentData;
+      studentData.userStats.results[0].percentileHistoryIdle = studentData.userStats.results[0].percentileHistoryIdle.map(
+        (item) => roundUp(item, 2)
+      );
+      studentData.userStats.results[0].userAssignmentStat.results = studentData.userStats.results[0].userAssignmentStat.results.map(
+        (item) => {
+          item.percentile = roundUp(item.percentile, 2);
+          return item;
+        }
+      );
     }
+
+    // fixtures -- TODO load real data when available
+    const globalPerformanceData: GlobalPerformance = dataGlobalPerformance;
+
+    data.studentData = studentData ? studentData : null;
+    data.globalPerformanceData = globalPerformanceData
+      ? globalPerformanceData
+      : null;
+
+    error = errorStudentData;
+    renderSpinner = !error && !studentData;
   };
 
   fetchStudentDashboardData();
 
-  const defaultToggle = data["all"]
-    ? settings.studentDashboardIdleToggle.enabledByDefaultFromWeek
-      ? settings.studentDashboardIdleToggle.enabledByDefaultFromWeek <=
-        data["all"].studentData.userStats.results[0].percentileHistory.length
-      : false
-    : null;
-  const [filter, setFilter] = useState(defaultToggle ? "filter" : "all");
+  const defaultToggle =
+    data.studentData && data.globalPerformanceData
+      ? settings.studentDashboardIdleToggle.enabledByDefaultFromWeek
+        ? settings.studentDashboardIdleToggle.enabledByDefaultFromWeek <=
+          data.studentData.userStats.results[0].percentileHistory.length
+        : false
+      : null;
+  const [filter, setFilter] = useState(defaultToggle);
 
   if (error) {
     return <Error />;
   }
 
-  const checkVisibility = (item) =>
+  const checkComponentVisibility = (item) =>
     !props.profile || settings.studentDashboardComponents[item];
-  const checkDisabled = (item) => !settings.studentDashboardComponents[item];
+  const checkComponentDisability = (item) =>
+    !settings.studentDashboardComponents[item];
 
   const courseIndex = props.courses.results.map((i) => i.id).indexOf(courseId);
+
+  // filtering histogram - Should be done in BE! TODO
+  const filterHistogram = (histogram) => {
+    return filter ? histogram?.filter((val) => val.score >= 5) : histogram;
+  }
 
   return (
     <>
@@ -269,11 +243,11 @@ export default function StudentsDashboard(props: Props) {
                   textSizeAdjust: "16px",
                 }}
               >
-                Enable idle students:
+                Idle students filtering:
               </strong>
               <Tooltip
                 description={
-                  "Shows stats of non idle students (students with higher score than particular value)"
+                  "When enabled, shows stats of non idle students (students with higher score than particular value)"
                 }
               />
             </span>
@@ -282,61 +256,90 @@ export default function StudentsDashboard(props: Props) {
               size="large"
               defaultChecked={defaultToggle}
               onChange={() => {
-                setFilter((prevState) =>
-                  prevState === "all" ? "filter" : "all"
-                );
+                setFilter((prevState) => !prevState);
               }}
             />
           </div>
           <Dashboard>
             <InfoBannersContainer>
-              {checkVisibility("score") && (
+              {checkComponentVisibility("score") && (
                 <InfoBanner
                   text={"My Score:"}
-                  value={
-                    data[filter].studentData.userStats.results[courseIndex]
-                      .score
-                  }
-                  disabled={checkDisabled("score")}
+                  value={data.studentData.userStats.results[courseIndex].score}
+                  disabled={checkComponentDisability("score")}
                 />
               )}
-              {checkVisibility("percentile") && (
+              {checkComponentVisibility("percentile") && (
                 <InfoBanner
                   text={"Percentile:"}
                   value={
-                    data[filter].studentData.userStats.results[courseIndex]
-                      .percentileHistory[
-                      data[filter].studentData.userStats.results[courseIndex]
-                        .percentileHistory.length - 1
-                    ]
+                    filter
+                      ? data.studentData.userStats.results[courseIndex]
+                          .percentileHistory[
+                          data.studentData.userStats.results[courseIndex]
+                            .percentileHistory.length - 1
+                        ]
+                      : data.studentData.userStats.results[courseIndex]
+                          .percentileHistoryIdle[
+                          data.studentData.userStats.results[courseIndex]
+                            .percentileHistoryIdle.length - 1
+                        ]
                   }
-                  disabled={checkDisabled("percentile")}
+                  disabled={checkComponentDisability("percentile")}
                 />
               )}
-              {checkVisibility("median") && (
+              {checkComponentVisibility("median") && (
                 <InfoBanner
                   text={"Median:"}
                   value={
-                    data[filter].studentData.coursesAsStudent.results[
-                      courseIndex
-                    ]?.coursestat?.median
+                    filter
+                      ? data.studentData.coursesAsStudent.results[courseIndex]
+                          ?.coursestat?.medianHistory[
+                          data.studentData.coursesAsStudent.results[courseIndex]
+                            ?.coursestat?.medianHistory.length - 1
+                        ]
+                      : data.studentData.coursesAsStudent.results[courseIndex]
+                          ?.coursestat?.medianHistoryIdle[
+                          data.studentData.coursesAsStudent.results[courseIndex]
+                            ?.coursestat?.medianHistoryIdle.length - 1
+                        ]
                   }
-                  disabled={checkDisabled("median")}
+                  disabled={checkComponentDisability("median")}
                 />
               )}
-              {checkVisibility("grade") &&
-                settings.courseSettings.standardCTUGrading && (
-                  <InfoBanner
-                    text={"My Grade:"}
-                    value={getGrade(
-                      data[filter].studentData.userStats.results[courseIndex]
-                        ?.score
-                    )}
-                    disabled={checkDisabled("grade")}
-                  />
-                )}
             </InfoBannersContainer>
-            {checkVisibility("scoreHistogram") && (
+            <InfoBannersContainer>
+              {checkComponentVisibility("finalScorePrediction") && (
+                  <InfoBanner
+                      text={"Final Score Prediction:"}
+                      description={"Averages score of last semester students that had same score in same week"}
+                      value={
+                          data.studentData.userStats.results[courseIndex]?.finalScorePrediction
+                      }
+                      disabled={checkComponentDisability("finalScorePrediction")}
+                  />
+              )}
+              {checkComponentVisibility("semesterWeek") && (
+                  <InfoBanner
+                      text={"Semester week:"}
+                      value={
+                        getSemesterWeek(settings.courseSettings.semesterStart)
+                      }
+                      disabled={checkComponentDisability("semesterWeek")}
+                  />
+              )}
+              {checkComponentVisibility("grade") &&
+              settings.courseSettings.standardCTUGrading && (
+                  <InfoBanner
+                      text={"My Grade:"}
+                      value={getGrade(
+                          data.studentData.userStats.results[courseIndex]?.score
+                      )}
+                      disabled={checkComponentDisability("grade")}
+                  />
+              )}
+            </InfoBannersContainer>
+            {checkComponentVisibility("scoreHistogram") && (
               <BarChart
                 title={"Students' Score Histogram"}
                 description={
@@ -344,64 +347,69 @@ export default function StudentsDashboard(props: Props) {
                 }
                 data={{
                   datasets: [
-                    data[filter].studentData.coursesAsStudent.results[
+                    filterHistogram(data.studentData.coursesAsStudent.results[
                       courseIndex
-                    ].coursestat?.scoreHistogram.results.map(
+                    ].coursestat?.scoreHistogram.results)?.map(
                       (item) => item.frequency
                     ),
                   ],
-                  label: data[filter].studentData.coursesAsStudent.results[
+                  label: filterHistogram(data.studentData.coursesAsStudent.results[
                     courseIndex
-                  ].coursestat?.scoreHistogram.results.map((item) => [
+                  ].coursestat?.scoreHistogram.results)?.map((item) => [
                     item.score,
                   ]),
                   datasetNames: [""],
                 }}
-                disabled={checkDisabled("scoreHistogram")}
+                disabled={checkComponentDisability("scoreHistogram")}
               />
             )}
-            {checkVisibility("medianHistory") && (
+            {checkComponentVisibility("medianHistory") && (
               <LineChart
-                title={"History of Median"}
+                title={"History of Median and Score"}
                 description={
                   "Graph shows history of overall median of score and compares it to my score"
                 }
                 data={{
                   datasets: [
-                    data[filter].studentData.userStats.results[courseIndex]
+                    data.studentData.userStats.results[courseIndex]
                       .scoreHistory,
-                    data[filter].studentData.coursesAsStudent.results[
-                      courseIndex
-                    ].coursestat?.medianHistory,
+                    filter
+                      ? data.studentData.coursesAsStudent.results[courseIndex]
+                          .coursestat?.medianHistory
+                      : data.studentData.coursesAsStudent.results[courseIndex]
+                          .coursestat?.medianHistoryIdle,
                   ],
                   label: Array(settings.courseSettings.numberOfWeeks)
                     .fill(null)
                     .map((_, i) => "week " + (i + 1)),
                   datasetNames: ["My score", "Students overall median"],
                 }}
-                disabled={checkDisabled("medianHistory")}
+                disabled={checkComponentDisability("medianHistory")}
                 regression={[true, false]}
               />
             )}
-            {checkVisibility("percentileHistory") && (
+            {checkComponentVisibility("percentileHistory") && (
               <LineChart
                 title={"History of Percentile"}
                 description={"Graph shows history of my percentile"}
                 data={{
                   datasets: [
-                    data[filter].studentData.userStats.results[courseIndex]
-                      .percentileHistory,
+                    filter
+                      ? data.studentData.userStats.results[courseIndex]
+                          .percentileHistory
+                      : data.studentData.userStats.results[courseIndex]
+                          .percentileHistoryIdle,
                   ],
                   label: Array(settings.courseSettings.numberOfWeeks)
                     .fill(null)
                     .map((_, i) => "week " + (i + 1)),
                   datasetNames: ["Percentile history"],
                 }}
-                disabled={checkDisabled("percentileHistory")}
+                disabled={checkComponentDisability("percentileHistory")}
                 maxValue={0}
               />
             )}
-            {checkVisibility("performancePrediction") && (
+            {checkComponentVisibility("performancePrediction") && (
               <PieChart
                 title={"Performance prediction"}
                 description={
@@ -409,22 +417,18 @@ export default function StudentsDashboard(props: Props) {
                 }
                 data={{
                   datasets: [
-                    data[
-                      filter
-                    ].globalPerformanceData.global[0].finalGrades.map(
+                    data.globalPerformanceData.global[0].finalGrades.map(
                       (grade) => grade.percentage
                     ),
                   ],
-                  label: data[
-                    filter
-                  ].globalPerformanceData.global[0].finalGrades.map(
+                  label: data.globalPerformanceData.global[0].finalGrades.map(
                     (grade) => grade.name
                   ),
                 }}
-                disabled={checkDisabled("performancePrediction")}
+                disabled={checkComponentDisability("performancePrediction")}
               />
             )}
-            {checkVisibility("assignments") && (
+            {checkComponentVisibility("assignments") && (
               <EnumBanner
                 title={"Assignments"}
                 data={{
@@ -436,7 +440,7 @@ export default function StudentsDashboard(props: Props) {
                     "Max Score",
                     "Assigned in week",
                   ],
-                  rows: data[filter].studentData.userStats.results[
+                  rows: data.studentData.userStats.results[
                     courseIndex
                   ].userAssignmentStat?.results.map((item) => [
                     item.assignment.name,
@@ -454,70 +458,66 @@ export default function StudentsDashboard(props: Props) {
                     ? null
                     : {
                         urlPrefix: "/assignments/edit/",
-                        nameId: data[
-                          filter
-                        ].studentData.userStats.results[0].userAssignmentStat.results.map(
+                        nameId: data.studentData.userStats.results[0].userAssignmentStat.results.map(
                           (item) => item.assignment.id
                         ),
                       }
                 }
-                disabled={checkDisabled("assignments")}
+                disabled={checkComponentDisability("assignments")}
               />
             )}
           </Dashboard>
           <h3>Course Performance</h3>
           <Dashboard>
             <InfoBannersContainer>
-              {checkVisibility("throughput") && (
+              {checkComponentVisibility("throughput") && (
                 <InfoBanner
                   text={
                     "Throughput " +
-                    data[filter].globalPerformanceData.global[courseIndex]
-                      .year +
+                    data.globalPerformanceData.global[courseIndex].year +
                     ":"
                   }
                   value={
-                    data[filter].globalPerformanceData.global[courseIndex]
-                      .throughput
+                    data.globalPerformanceData.global[courseIndex].throughput
                   }
-                  disabled={checkDisabled("throughput")}
+                  disabled={checkComponentDisability("throughput")}
                 />
               )}
             </InfoBannersContainer>
-            {checkVisibility("grades") && (
+            {checkComponentVisibility("grades") && (
               <PieChart
                 title={
                   "Students grades " +
-                  data[filter].globalPerformanceData.global[courseIndex].year
+                  data.globalPerformanceData.global[courseIndex].year
                 }
                 data={{
                   datasets: [
-                    data[filter].globalPerformanceData.global[
+                    data.globalPerformanceData.global[
                       courseIndex
                     ].finalGrades.map((grade) => grade.numberOfStudents),
                   ],
-                  label: data[filter].globalPerformanceData.global[
+                  label: data.globalPerformanceData.global[
                     courseIndex
                   ].finalGrades.map((grade) => grade.name),
                 }}
-                disabled={checkDisabled("grades")}
+                disabled={checkComponentDisability("grades")}
               />
             )}
-            {checkVisibility("gradesByYear") && (
+            {checkComponentVisibility("gradesByYear") && (
               <BarChart
                 title={"Grades comparison by year"}
                 data={{
-                  datasets: data[filter].globalPerformanceData.global.map((y) =>
+                  datasets: data.globalPerformanceData.global.map((y) =>
                     y.finalGrades.map((grade) => grade.percentage)
                   ),
-                  label: data[filter].globalPerformanceData.global[
+                  label: data.globalPerformanceData.global[
                     courseIndex
                   ].finalGrades.map((grade) => grade.name),
-                  datasetNames: data[filter].globalPerformanceData.global.map(
+                  datasetNames: data.globalPerformanceData.global.map(
                     (y) => y.year
                   ),
                 }}
-                disabled={checkDisabled("gradesByYear")}
+                disabled={checkComponentDisability("gradesByYear")}
               />
             )}
           </Dashboard>
